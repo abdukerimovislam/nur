@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1072095527763",
+    "project_id": "nur-ramadan-app",
+    "storage_bucket": "nur-ramadan-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1072095527763:android:d8b4e10102d40c8d3557a6",
+        "android_client_info": {
+          "package_name": "com.midas.aion"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBW_H0fdD7GItADGPB_VUCEtY536do6Nr8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
