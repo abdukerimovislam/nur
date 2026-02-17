@@ -9,6 +9,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:adhan/adhan.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../providers/prayer_provider.dart';
@@ -112,7 +113,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
             ),
           ),
 
-          Column(
+          // ИСПРАВЛЕНИЕ: Теперь это ListView, весь экран скроллится!
+          ListView(
+            physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+            padding: const EdgeInsets.only(bottom: 100), // Отступ снизу для красоты
             children: [
               _buildTableCalendar(langCode, trackerProvider),
 
@@ -122,9 +126,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
               if (_selectedDay != null)
                 _buildHijriRow(_selectedDay!, l10n),
 
-              Expanded(
-                child: _buildPrayerList(selectedPrayerTimes, l10n),
-              ),
+              // Убрали Expanded, так как мы внутри ListView
+              _buildPrayerList(selectedPrayerTimes, l10n, langCode),
             ],
           ),
         ],
@@ -224,18 +227,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  // =======================================================================
-  // --- ОБНОВЛЕНО: 3 КНОПКИ В РЯД И БЛОКИРОВКА ТОЛЬКО БУДУЩЕГО ---
-  // =======================================================================
   Widget _buildFastingTrackerCard(DateTime date, TrackerProvider tracker, AppLocalizations l10n) {
     final status = tracker.getStatusForDate(date);
-
-    // Получаем чистые даты без учета времени (часов/минут), чтобы сравнение было точным
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final selectedDate = DateTime(date.year, date.month, date.day);
-
-    // ПРОВЕРКА: Разрешаем редактировать только если выбранный день НЕ ПОЗЖЕ сегодняшнего
     final bool canEdit = !selectedDate.isAfter(today);
 
     return Padding(
@@ -323,7 +319,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  // Обновленный дизайн кнопок: иконка сверху, текст снизу, чтобы влезало в ряд
   Widget _buildStatusButton({
     required String title,
     required IconData icon,
@@ -359,7 +354,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: isSelected ? activeColor : Colors.white70,
-                    fontSize: 11, // Мелкий шрифт, чтобы длинные слова влезали в ряд
+                    fontSize: 11,
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                   ),
                 ),
@@ -388,18 +383,31 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  Widget _buildPrayerList(dynamic times, AppLocalizations l10n) {
-    if (times == null) return const Center(child: Icon(Icons.location_off, color: Colors.white24, size: 40));
-    return ListView(
+  // ИСПРАВЛЕНИЕ: Теперь это Padding с Column внутри, а не ListView.
+  Widget _buildPrayerList(dynamic times, AppLocalizations l10n, String langCode) {
+    if (times == null) {
+      return const Padding(
+        padding: EdgeInsets.all(40.0),
+        child: Center(child: Icon(Icons.location_off, color: Colors.white24, size: 40)),
+      );
+    }
+
+    final sunnahTimes = SunnahTimes(times);
+    final tahajjudTime = sunnahTimes.lastThirdOfTheNight;
+
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      children: [
-        _buildRow(l10n.fajr, times.fajr, isHighlight: true),
-        _buildRow(l10n.sunrise, times.sunrise, isSecondary: true),
-        _buildRow(l10n.dhuhr, times.dhuhr),
-        _buildRow(l10n.asr, times.asr),
-        _buildRow(l10n.maghrib, times.maghrib, isHighlight: true),
-        _buildRow(l10n.isha, times.isha),
-      ],
+      child: Column(
+        children: [
+          _buildRow(l10n.tahajjud, tahajjudTime, isSecondary: true),
+          _buildRow(l10n.fajr, times.fajr, isHighlight: true),
+          _buildRow(l10n.sunrise, times.sunrise, isSecondary: true),
+          _buildRow(l10n.dhuhr, times.dhuhr),
+          _buildRow(l10n.asr, times.asr),
+          _buildRow(l10n.maghrib, times.maghrib, isHighlight: true),
+          _buildRow(l10n.isha, times.isha),
+        ],
+      ),
     );
   }
 

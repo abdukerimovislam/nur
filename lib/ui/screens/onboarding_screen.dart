@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart'; // Добавлено для Cupertino эффектов
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
@@ -18,10 +19,10 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
+  late FixedExtentScrollController _wheelController;
   int _currentPage = 0;
   bool _isLoading = false;
 
-  // Список всех 10 языков
   static const List<Map<String, String>> _supportedLanguages = [
     {'code': 'en', 'name': 'English'},
     {'code': 'ar', 'name': 'العربية'},
@@ -36,8 +37,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _wheelController = FixedExtentScrollController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Устанавливаем колесо на текущий язык устройства при загрузке
+    final provider = context.read<PrayerProvider>();
+    final initialIndex = _supportedLanguages.indexWhere((lang) => lang['code'] == provider.locale.languageCode);
+    if (initialIndex != -1) {
+      _wheelController = FixedExtentScrollController(initialItem: initialIndex);
+    }
+  }
+
+  @override
   void dispose() {
     _pageController.dispose();
+    _wheelController.dispose();
     super.dispose();
   }
 
@@ -45,25 +64,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     setState(() => _isLoading = true);
 
     try {
-      // 1. Запрашиваем локацию
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
       }
 
-      // 2. Запрашиваем уведомления
       await NotificationService().requestPermissions();
-
-      // 3. Сохраняем флаг, что обучение пройдено
       await PreferencesService().setFirstLaunchCompleted();
 
-      // Планируем уведомления на выбранном языке
       if (mounted) {
         context.read<PrayerProvider>().scheduleNotifications();
-      }
-
-      // 4. Переходим на главный экран
-      if (mounted) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MainNavScreen()),
@@ -87,8 +97,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final provider = context.watch<PrayerProvider>();
-
-    // У нас теперь 4 слайда
     const int totalSlides = 4;
 
     return Scaffold(
@@ -99,39 +107,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
+                physics: const NeverScrollableScrollPhysics(), // Отключаем ручной свайп для контроля
                 onPageChanged: (index) => setState(() => _currentPage = index),
                 itemCount: totalSlides,
                 itemBuilder: (context, index) {
-                  // Слайд 0: Выбор Языка
-                  if (index == 0) {
-                    return _buildLanguageSlide(context, l10n, provider);
-                  }
-                  // Слайд 1: Добро пожаловать
-                  if (index == 1) {
-                    return _buildStandardSlide(
-                      icon: Icons.star_border_rounded,
-                      title: l10n.onboardTitle1,
-                      desc: l10n.onboardDesc1,
-                    );
-                  }
-                  // Слайд 2: Локация
-                  if (index == 2) {
-                    return _buildStandardSlide(
-                      icon: Icons.location_on_outlined,
-                      title: l10n.onboardTitle2,
-                      desc: l10n.onboardDesc2,
-                    );
-                  }
-                  // Слайд 3: Умные будильники
-                  if (index == 3) {
-                    return _buildInteractiveAlarmSlide(context, l10n, provider);
-                  }
+                  if (index == 0) return _buildLanguageSlide(context, l10n, provider);
+                  if (index == 1) return _buildStandardSlide(icon: Icons.star_border_rounded, title: l10n.onboardTitle1, desc: l10n.onboardDesc1);
+                  if (index == 2) return _buildStandardSlide(icon: Icons.location_on_outlined, title: l10n.onboardTitle2, desc: l10n.onboardDesc2);
+                  if (index == 3) return _buildInteractiveAlarmSlide(context, l10n, provider);
                   return const SizedBox.shrink();
                 },
               ),
             ),
-
-            // --- ИНДИКАТОРЫ И КНОПКИ ---
             Padding(
               padding: const EdgeInsets.all(32.0),
               child: Column(
@@ -146,9 +133,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         height: 8,
                         width: _currentPage == index ? 24 : 8,
                         decoration: BoxDecoration(
-                          color: _currentPage == index
-                              ? AppColors.primary
-                              : Colors.white24,
+                          color: _currentPage == index ? AppColors.primary : Colors.white24,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -161,34 +146,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                         elevation: 0,
                       ),
                       onPressed: _isLoading
                           ? null
-                          : (_currentPage == totalSlides - 1
-                          ? _completeOnboarding
-                          : _nextPage),
+                          : (_currentPage == totalSlides - 1 ? _completeOnboarding : _nextPage),
                       child: _isLoading
-                          ? const SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
-                        ),
-                      )
+                          ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                           : Text(
-                        _currentPage == totalSlides - 1
-                            ? l10n.getStarted
-                            : l10n.next,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                        _currentPage == totalSlides - 1 ? l10n.getStarted : l10n.next,
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
                   ),
@@ -201,63 +169,75 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // --- СЛАЙД 0: ВЫБОР ЯЗЫКА ---
+  // --- НОВОЕ: СЛАЙД 0 С ЭФФЕКТОМ "СФЕРЫ" (РУЛЕТКИ) ---
   Widget _buildLanguageSlide(BuildContext context, AppLocalizations l10n, PrayerProvider provider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: 40),
-          const Icon(Icons.language, size: 80, color: AppColors.primary),
+          const SizedBox(height: 20),
+          const Icon(Icons.language, size: 60, color: AppColors.primary),
           const SizedBox(height: 24),
           Text(
-            l10n.language, // "Язык" / "Language"
+            l10n.language,
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
           ),
-          const SizedBox(height: 32),
-          Expanded(
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              itemCount: _supportedLanguages.length,
-              itemBuilder: (context, index) {
-                final lang = _supportedLanguages[index];
-                // Провайдер уже выбрал язык системы по умолчанию в init()
-                final isSelected = provider.locale.languageCode == lang['code'];
+          const SizedBox(height: 8),
+          Text(
+            "Swipe to select", // Можно заменить на ключи l10n позже, если нужно
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade400),
+          ),
+          const SizedBox(height: 40),
 
-                return GestureDetector(
-                  onTap: () => provider.changeLanguage(lang['code']!),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    decoration: BoxDecoration(
-                      color: isSelected ? AppColors.primary.withOpacity(0.15) : AppColors.surface,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: isSelected ? AppColors.primary : AppColors.surface,
-                        width: 2,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          lang['name']!,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: isSelected ? AppColors.primary : Colors.white,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                          ),
-                        ),
-                        if (isSelected)
-                          const Icon(Icons.check_circle, color: AppColors.primary),
-                      ],
-                    ),
+          // КОЛЕСО ВЫБОРА ЯЗЫКА
+          SizedBox(
+            height: 250,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Центральный маркер-выделитель
+                Container(
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.primary.withOpacity(0.5), width: 1.5),
                   ),
-                );
-              },
+                ),
+                ListWheelScrollView.useDelegate(
+                  controller: _wheelController,
+                  itemExtent: 60, // Высота каждого элемента
+                  perspective: 0.005, // Эффект 3D перспективы (чем больше цифра, тем сильнее цилиндр)
+                  diameterRatio: 1.5, // Радиус цилиндра
+                  physics: const FixedExtentScrollPhysics(), // Останавливается ровно на элементе
+                  onSelectedItemChanged: (index) {
+                    // Меняем язык на лету при прокрутке
+                    provider.changeLanguage(_supportedLanguages[index]['code']!);
+                  },
+                  childDelegate: ListWheelChildBuilderDelegate(
+                    childCount: _supportedLanguages.length,
+                    builder: (context, index) {
+                      final lang = _supportedLanguages[index];
+                      final isSelected = provider.locale.languageCode == lang['code'];
+
+                      return Center(
+                        child: AnimatedDefaultTextStyle(
+                          duration: const Duration(milliseconds: 200),
+                          style: TextStyle(
+                            fontSize: isSelected ? 24 : 18,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            color: isSelected ? AppColors.primary : Colors.white54,
+                          ),
+                          child: Text(lang['name']!),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -265,7 +245,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // --- СТАНДАРТНЫЕ СЛАЙДЫ (1 и 2) ---
   Widget _buildStandardSlide({required IconData icon, required String title, required String desc}) {
     return Padding(
       padding: const EdgeInsets.all(40.0),
@@ -290,7 +269,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // --- СЛАЙД 3: ИНТЕРАКТИВНЫЕ БУДИЛЬНИКИ ---
   Widget _buildInteractiveAlarmSlide(BuildContext context, AppLocalizations l10n, PrayerProvider provider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -311,7 +289,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             style: const TextStyle(fontSize: 15, color: Colors.white70, height: 1.4),
           ),
           const SizedBox(height: 40),
-
           _buildAlarmSelector(
             title: l10n.suhoorAlarm,
             currentValue: provider.suhoorAlarmOffset,
@@ -319,7 +296,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             l10n: l10n,
           ),
           const SizedBox(height: 20),
-
           _buildAlarmSelector(
             title: l10n.iftarAlarm,
             currentValue: provider.iftarAlarmOffset,
@@ -354,10 +330,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-              title,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)
-          ),
+          Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

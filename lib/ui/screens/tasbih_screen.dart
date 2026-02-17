@@ -11,14 +11,14 @@ import '../../providers/tasbih_provider.dart';
 import '../widgets/ad_banner_widget.dart';
 
 class TasbihScreen extends StatefulWidget {
-  final Key? key;
-  const TasbihScreen({this.key}) : super(key: key);
+  const TasbihScreen({super.key});
 
   @override
   State<TasbihScreen> createState() => _TasbihScreenState();
 }
 
-class _TasbihScreenState extends State<TasbihScreen> with TickerProviderStateMixin {
+class _TasbihScreenState extends State<TasbihScreen>
+    with TickerProviderStateMixin {
   late AnimationController _scaleController;
   late Animation<double> _scaleAnimation;
 
@@ -40,7 +40,7 @@ class _TasbihScreenState extends State<TasbihScreen> with TickerProviderStateMix
   }
 
   Future<void> _checkVibration() async {
-    _hasVibrator = await Vibration.hasVibrator() ?? false;
+    _hasVibrator = await Vibration.hasVibrator() == true;
   }
 
   @override
@@ -83,6 +83,10 @@ class _TasbihScreenState extends State<TasbihScreen> with TickerProviderStateMix
     final ripple = _RippleModel(position: position, controller: controller);
     setState(() => _ripples.add(ripple));
     controller.forward().then((_) {
+      if (!mounted) {
+        ripple.controller.dispose();
+        return;
+      }
       setState(() {
         _ripples.remove(ripple);
         ripple.controller.dispose();
@@ -103,7 +107,8 @@ class _TasbihScreenState extends State<TasbihScreen> with TickerProviderStateMix
     ];
 
     final double cycleProgress = (provider.count % 33) / 33.0;
-    final double displayProgress = (provider.count > 0 && provider.count % 33 == 0) ? 1.0 : cycleProgress;
+    final double displayProgress =
+        (provider.count > 0 && provider.count % 33 == 0) ? 1.0 : cycleProgress;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -122,7 +127,6 @@ class _TasbihScreenState extends State<TasbihScreen> with TickerProviderStateMix
       body: Stack(
         children: [
           ..._ripples.map((ripple) => _buildRippleWidget(ripple)),
-
           Column(
             children: [
               // --- БАННЕР НАВЕРХУ ---
@@ -190,12 +194,12 @@ class _TasbihScreenState extends State<TasbihScreen> with TickerProviderStateMix
                         ),
                       ),
                       const SizedBox(height: 16),
-
                       Flexible(
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: GestureDetector(
-                            onTapDown: (details) => _handleTap(provider, details.globalPosition),
+                            onTapDown: (details) =>
+                                _handleTap(provider, details.globalPosition),
                             behavior: HitTestBehavior.opaque,
                             child: ScaleTransition(
                               scale: _scaleAnimation,
@@ -232,12 +236,17 @@ class _TasbihScreenState extends State<TasbihScreen> with TickerProviderStateMix
                         backgroundColor: AppColors.surface,
                         labelStyle: TextStyle(
                           color: isSelected ? Colors.black : Colors.white70,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.w500,
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
-                          side: BorderSide(color: isSelected ? AppColors.primary : Colors.transparent),
+                          side: BorderSide(
+                              color: isSelected
+                                  ? AppColors.primary
+                                  : Colors.transparent),
                         ),
                       ),
                     );
@@ -259,15 +268,18 @@ class _TasbihScreenState extends State<TasbihScreen> with TickerProviderStateMix
         alignment: Alignment.center,
         children: [
           Container(
-            width: 240, height: 240,
+            width: 240,
+            height: 240,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               boxShadow: [
-                BoxShadow(color: AppColors.primary.withOpacity(0.1), blurRadius: 40, spreadRadius: 5),
+                BoxShadow(
+                    color: AppColors.primary.withOpacity(0.1),
+                    blurRadius: 40,
+                    spreadRadius: 5),
               ],
             ),
           ),
-
           SizedBox(
             width: 230,
             height: 230,
@@ -286,20 +298,23 @@ class _TasbihScreenState extends State<TasbihScreen> with TickerProviderStateMix
               },
             ),
           ),
-
           Container(
             width: 190,
             height: 190,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: AppColors.surface,
-                border: Border.all(color: AppColors.primary.withOpacity(0.3), width: 1),
+                border: Border.all(
+                    color: AppColors.primary.withOpacity(0.3), width: 1),
                 boxShadow: const [
-                  BoxShadow(color: Colors.black54, blurRadius: 20, offset: Offset(0, 10)),
-                ]
-            ),
+                  BoxShadow(
+                      color: Colors.black54,
+                      blurRadius: 20,
+                      offset: Offset(0, 10)),
+                ]),
             child: const Center(
-              child: Icon(Icons.touch_app_rounded, size: 60, color: AppColors.primary),
+              child: Icon(Icons.touch_app_rounded,
+                  size: 60, color: AppColors.primary),
             ),
           ),
         ],
@@ -334,7 +349,8 @@ class _TasbihScreenState extends State<TasbihScreen> with TickerProviderStateMix
     );
   }
 
-  void _showResetDialog(BuildContext context, TasbihProvider provider, AppLocalizations l10n) {
+  void _showResetDialog(
+      BuildContext context, TasbihProvider provider, AppLocalizations l10n) {
     HapticFeedback.heavyImpact();
     showDialog(
       context: context,
@@ -342,18 +358,22 @@ class _TasbihScreenState extends State<TasbihScreen> with TickerProviderStateMix
         backgroundColor: AppColors.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: Text(l10n.reset, style: const TextStyle(color: Colors.white)),
-        content: Text(l10n.resetConfirm, style: const TextStyle(color: Colors.white70)),
+        content: Text(l10n.resetConfirm,
+            style: const TextStyle(color: Colors.white70)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(l10n.cancel, style: const TextStyle(color: Colors.white54)),
+            child: Text(l10n.cancel,
+                style: const TextStyle(color: Colors.white54)),
           ),
           TextButton(
             onPressed: () {
               provider.reset();
               Navigator.pop(ctx);
             },
-            child: const Text("RESET", style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+            child: const Text("RESET",
+                style: TextStyle(
+                    color: Colors.redAccent, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

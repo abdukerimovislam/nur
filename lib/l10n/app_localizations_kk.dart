@@ -12,7 +12,13 @@ class AppLocalizationsKk extends AppLocalizations {
   String get appTitle => 'Nur';
 
   @override
-  String get loading => 'Уақыттар есептелуде...';
+  String get appName => 'NUR';
+
+  @override
+  String get appSubtitle => 'РАМАЗАН КӨМЕКШІСІ';
+
+  @override
+  String get loading => 'Уақыт есептелуде...';
 
   @override
   String get error => 'Қате';
@@ -21,22 +27,43 @@ class AppLocalizationsKk extends AppLocalizations {
   String get retry => 'Қайталау';
 
   @override
-  String get locationDetecting => 'Орналасқан жер анықталуда...';
+  String get locationDetecting => 'Орналасу анықталуда...';
 
   @override
-  String get locationError => 'Орналасқан жер табылмады';
+  String get locationError => 'Геолокация қолжетімсіз';
 
   @override
-  String get timeLeftIftar => 'Ауызашарға дейінгі уақыт';
+  String get errorLocation => 'Орналасқан жерді анықтау мүмкін болмады';
 
   @override
-  String get timeLeftSuhoor => 'Сәресіне дейінгі уақыт';
+  String get locationPermissionText => 'Намаз уақытын дәл есептеу үшін геолокация қажет.';
 
   @override
-  String get fajr => 'Бамдат';
+  String get timeLeftIftar => 'Ауызашарға дейін';
 
   @override
-  String get sunrise => 'Күн шығуы';
+  String get timeLeftSuhoor => 'Сәресіне дейін';
+
+  @override
+  String get timeRemaining => 'Уақыт қалды';
+
+  @override
+  String get untilSuhoor => 'Сәресіне дейін';
+
+  @override
+  String get untilIftar => 'Ауызашарға дейін';
+
+  @override
+  String get suhoor => 'Сәресі';
+
+  @override
+  String get iftar => 'Ауызашар';
+
+  @override
+  String get fajr => 'Таң';
+
+  @override
+  String get sunrise => 'Күн';
 
   @override
   String get dhuhr => 'Бесін';
@@ -51,136 +78,190 @@ class AppLocalizationsKk extends AppLocalizations {
   String get isha => 'Құптан';
 
   @override
-  String get qiblaTitle => 'Қыбыла';
+  String get tahajjud => 'Таһажжуд';
 
   @override
-  String get qiblaDirection => 'Қыбыла бағыты';
+  String get qiblaTitle => 'Құбыла';
 
   @override
-  String get rotatePhone => 'Калибрлеу үшін телефонды айналдырыңыз';
+  String get qiblaDirection => 'Құбыла бағыты';
+
+  @override
+  String get qiblaSearching => 'ІЗДЕУ';
+
+  @override
+  String get qiblaAligned => 'ҚҰБЫЛА ТАБЫЛДЫ';
+
+  @override
+  String get holyKaaba => 'ҚАСИЕТТІ ҚАҒБА';
+
+  @override
+  String get rotatePhone => 'Телефоныңызды тегіс жерге қойыңыз';
+
+  @override
+  String get calibrateCompass => 'Телефонды 8 пішінінде бұрап калибрлеңіз';
 
   @override
   String get north => 'С';
 
   @override
-  String get navHome => 'Басты бет';
+  String get navHome => 'Басты';
 
   @override
-  String get navQibla => 'Қыбыла';
+  String get navQibla => 'Құбыла';
 
   @override
   String get navCalendar => 'Күнтізбе';
 
   @override
-  String get calendarHeader => 'Күнтізбе';
+  String get calendarHeader => 'Рамазан күнтізбесі';
 
   @override
-  String get hijriDate => 'Хижри';
-
-  @override
-  String get settingsTitle => 'Баптаулар';
-
-  @override
-  String get generalSection => 'Жалпы';
-
-  @override
-  String get calculationMethod => 'Есептеу әдісі';
-
-  @override
-  String get madhab => 'Екінті есебі (мәзһаб)';
-
-  @override
-  String get location => 'Орналасқан жер';
-
-  @override
-  String get notifications => 'Хабарламалар';
-
-  @override
-  String get save => 'Сақтау';
-
-  @override
-  String get cancel => 'Бас тарту';
-
-  @override
-  String get madhabHanafi => 'Ханафи';
-
-  @override
-  String get madhabStandard => 'Стандарт (Шафиғи, Мәлики, Ханбали)';
-
-  @override
-  String get methodMWL => 'Мұсылмандар әлемі лигасы';
-
-  @override
-  String get methodISNA => 'ISNA (Солтүстік Америка)';
-
-  @override
-  String get methodEgypt => 'Мысыр басқармасы';
-
-  @override
-  String get methodMakkah => 'Умм әл-Кура (Мекке)';
-
-  @override
-  String get methodKarachi => 'Карачи';
-
-  @override
-  String get methodTehran => 'Тегеран';
-
-  @override
-  String get methodTurkey => 'Түркия (Диянет)';
-
-  @override
-  String get methodSingapore => 'Сингапур';
-
-  @override
-  String get methodOther => 'Басқа / Жеке';
-
-  @override
-  String get locationPermissionText => 'Намаз уақытын дәл есептеу үшін орналасқан жер қажет.';
-
-  @override
-  String get suhoor => 'Сәре';
-
-  @override
-  String get iftar => 'Ауызашар';
-
-  @override
-  String get timeRemaining => 'Қалған уақыт';
-
-  @override
-  String get errorLocation => 'Орналасқан жерді алу сәтсіз аяқталды';
+  String get hijriDate => 'Һижра күнтізбесі';
 
   @override
   String get refresh => 'Жаңарту';
 
   @override
-  String get untilSuhoor => 'Сәреге дейін';
+  String get settingsTitle => 'Баптаулар';
 
   @override
-  String get untilIftar => 'Ауызашарға дейін';
+  String get generalSection => 'Негізгі';
 
   @override
-  String get qiblaAligned => 'БАҒЫТ ДҰРЫС';
+  String get languageSection => 'Тіл';
 
   @override
-  String get calibrateCompass => 'Телефонды 8 пішінінде айналдырып калибрлеңіз';
+  String get language => 'Тіл';
 
   @override
-  String get onboardTitle1 => 'NUR қолданбасына қош келдіңіз';
+  String get english => 'English';
 
   @override
-  String get onboardDesc1 => 'Қасиетті Рамазан айына арналған премиум серігіңіз. Минималистік, дәл және жарнамасыз.';
+  String get russian => 'Орысша';
+
+  @override
+  String get calculationMethod => 'Есептеу әдісі';
+
+  @override
+  String get madhab => 'Мәзһаб (Екінті уақыты)';
+
+  @override
+  String get location => 'Локация';
+
+  @override
+  String get searchCityManually => 'Қаланы қолмен іздеу';
+
+  @override
+  String get changeLocation => 'Локацияны өзгерту';
+
+  @override
+  String get enterCityHint => 'Қала атын енгізіңіз (мыс. Алматы)';
+
+  @override
+  String get searchBtn => 'Іздеу';
+
+  @override
+  String get useAutoLocation => 'Авто-анықтауды қайтару (GPS)';
+
+  @override
+  String get notificationsSection => 'Хабарландырулар';
+
+  @override
+  String get notifications => 'Хабарландырулар';
+
+  @override
+  String get pushNotifications => 'Push-хабарландырулар';
+
+  @override
+  String get enableNotifications => 'Push-хабарландырулар';
+
+  @override
+  String get enableNotificationsDesc => 'Сәресі мен ауызашарға 5 минут қалғанда еске салу';
+
+  @override
+  String get smartAlarms => 'Ақылды оятқыштар';
+
+  @override
+  String get smartAlarmsDesc => 'Күнделікті сәресі мен ауызашар уақытына автоматты түрде бейімделеді.';
+
+  @override
+  String get suhoorAlarm => 'Сәресі оятқышы';
+
+  @override
+  String get iftarAlarm => 'Ауызашарға дайындық';
+
+  @override
+  String get tahajjudAlarm => 'Таһажжуд оятқышы';
+
+  @override
+  String get alarmOff => 'Өшірулі';
+
+  @override
+  String get alarm20Min => '20 мин бұрын';
+
+  @override
+  String get alarm30Min => '30 мин бұрын';
+
+  @override
+  String get alarm60Min => '1 сағат бұрын';
+
+  @override
+  String get save => 'Сақтау';
+
+  @override
+  String get cancel => 'Болдырмау';
+
+  @override
+  String get madhabHanafi => 'Ханафи мәзһабы';
+
+  @override
+  String get madhabStandard => 'Стандартты (Шафиғи, Мәлики, Ханбали)';
+
+  @override
+  String get methodMWL => 'Дүниежүзілік Ислам лигасы (MWL)';
+
+  @override
+  String get methodISNA => 'Солтүстік Америка (ISNA)';
+
+  @override
+  String get methodEgypt => 'Мысыр басқармасы';
+
+  @override
+  String get methodMakkah => 'Умм әл-Қура (Мекке)';
+
+  @override
+  String get methodKarachi => 'Карачи Ислам университеті';
+
+  @override
+  String get methodTehran => 'Тегеран геофизика институты';
+
+  @override
+  String get methodTurkey => 'Түркия дін істері (Diyanet)';
+
+  @override
+  String get methodSingapore => 'Сингапур (MUIS)';
+
+  @override
+  String get methodOther => 'Басқа / Пайдаланушы баптауы';
+
+  @override
+  String get onboardTitle1 => 'NUR-ға қош келдіңіз';
+
+  @override
+  String get onboardDesc1 => 'Қасиетті Рамазан айындағы премиум көмекшіңіз. Минималистік, дәл және жарнамасыз.';
 
   @override
   String get onboardTitle2 => 'Дәл уақыттар';
 
   @override
-  String get onboardDesc2 => 'Аймағыңыз үшін сәре және ауызашар уақытын есептеу үшін орналасқан жер қажет.';
+  String get onboardDesc2 => 'Сіздің аймағыңыз үшін сәресі мен ауызашар уақытын дәл есептеу үшін бізге геолокацияға рұқсат қажет.';
 
   @override
-  String get onboardTitle3 => 'Маңызды сәтті өткізіп алмаңыз';
+  String get onboardTitle3 => 'Маңызды сәтті жіберіп алмаңыз';
 
   @override
-  String get onboardDesc3 => 'Сәре мен ауызашардан 5 минут бұрын еске салу алу үшін хабарламаларды қосыңыз.';
+  String get onboardDesc3 => 'Сәресі мен ауызашарға 5 минут қалғанда еске салуымыз үшін хабарландыруларға рұқсат етіңіз.';
 
   @override
   String get next => 'Келесі';
@@ -189,183 +270,96 @@ class AppLocalizationsKk extends AppLocalizations {
   String get getStarted => 'Бастау';
 
   @override
-  String get bioTitle => 'Дене күйі';
+  String get bioTitle => 'Дененің жағдайы';
 
   @override
-  String get bioNightTitle => 'Қалпына келу және су ішу';
+  String get bioNightTitle => 'Демалу және қалыпқа келу';
 
   @override
-  String get bioNightDesc => 'Денеңіз демалуда. Көп су ішіп, оразаға дайындалыңыз.';
+  String get bioNightDesc => 'Денеңіз демалуда. Оразаға дайындалу үшін көбірек су ішіңіз.';
 
   @override
-  String get bioPhase1Title => 'Қандағы қант тұрақтанады';
+  String get bioPhase1Title => 'Қант деңгейінің төмендеуі';
 
   @override
-  String get bioPhase1Desc => 'Қандағы қант төмендеп, тұрақтанады. Инсулин азаяды.';
+  String get bioPhase1Desc => 'Қандағы қант деңгейі төмендеп, қалыпқа келеді. Инсулин өндірісі азаяды.';
 
   @override
-  String get bioPhase2Title => 'Ас қорыту демалады';
+  String get bioPhase2Title => 'Асқорыту жүйесі демалады';
 
   @override
-  String get bioPhase2Desc => 'Ас қорыту аяқталып, дене гликоген қорын пайдалана бастайды.';
+  String get bioPhase2Desc => 'Асқорыту аяқталады. Ағза энергияны гликоген қорларынан ала бастайды.';
 
   @override
-  String get bioPhase3Title => 'Май жағу (кетоз)';
+  String get bioPhase3Title => 'Май жағу (Кетоз)';
 
   @override
-  String get bioPhase3Desc => 'Гликоген таусылады. Дене энергия үшін май жағады.';
+  String get bioPhase3Desc => 'Гликоген таусылады. Дене энергия алу үшін май қорларын жаға бастайды.';
 
   @override
-  String get bioPhase4Title => 'Аутофагия басталады';
+  String get bioPhase4Title => 'Жасушалардың жаңаруы (Аутофагия)';
 
   @override
-  String get bioPhase4Desc => 'Жасушалар жаңарып, зақымдалғандары тазаланады.';
+  String get bioPhase4Desc => 'Жасушалардың қалпына келуі басталады. Ағза зақымдалған жасушалардан тазарып, жаңарады.';
 
   @override
   String get fastingProgress => 'Ораза барысы';
 
   @override
-  String get enableNotifications => 'Push-хабарламалар';
+  String get fastingStatus => 'Ораза мәртебесі';
 
   @override
-  String get enableNotificationsDesc => 'Ораза уақытынан 5 минут бұрын еске салу';
-
-  @override
-  String get smartAlarms => 'Ақылды оятқыштар';
-
-  @override
-  String get smartAlarmsDesc => 'Күнделікті сәре және ауызашар уақытына автоматты түрде бейімделеді.';
-
-  @override
-  String get suhoorAlarm => 'Сәреге ояну';
-
-  @override
-  String get iftarAlarm => 'Ауызашарға дайындалу';
-
-  @override
-  String get alarmOff => 'Өшірулі';
-
-  @override
-  String get alarm20Min => '20 мин';
-
-  @override
-  String get alarm30Min => '30 мин';
-
-  @override
-  String get alarm60Min => '1 сағат';
-
-  @override
-  String get tapForDua => 'Дұға үшін басыңыз';
-
-  @override
-  String get duaSuhoorTitle => 'Сәресі дұғасы (Ниет)';
-
-  @override
-  String get duaSuhoorArabic => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
-
-  @override
-  String get duaSuhoorTranslit => 'Науайту ән асума саума шәһри рамадана минал фәжри иләл мағриби халисан лилләһи тағала.';
-
-  @override
-  String get duaSuhoorTransl => 'Рамазан айында таң атқаннан күн батқанға дейін Алла Тағала үшін ораза ұстауға ниет еттім.';
-
-  @override
-  String get duaIftarTitle => 'Ауызашар дұғасы (Ифтар)';
-
-  @override
-  String get duaIftarArabic => 'ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللَّهُ';
-
-  @override
-  String get duaIftarTranslit => 'Аллаһуммә инни ләкә сумту уә бикә әмәнту уә \'аләйкә тәуәккәлту уә \'алә ризқикә әфтарту.';
-
-  @override
-  String get duaIftarTransl => 'Уа, Алла, Сен үшін ораза ұстадым, Саған иман келтірдім, Саған тәуекел еттім және Сен берген ризық-несібемен ауыз аштым.';
-
-  @override
-  String get language => 'Тіл';
-
-  @override
-  String get english => 'Ағылшын';
-
-  @override
-  String get russian => 'Орыс';
-
-  @override
-  String get tasbihTitle => 'Тәсбих';
-
-  @override
-  String get reset => 'Тазалау';
-
-  @override
-  String get total => 'Барлығы';
-
-  @override
-  String get subhanAllah => 'СубханАллах';
-
-  @override
-  String get alhamdulillah => 'Әлхамдулиллаһ';
-
-  @override
-  String get allahuAkbar => 'Аллаху Акбар';
-
-  @override
-  String get astaghfirullah => 'Астағфируллаһ';
-
-  @override
-  String get resetConfirm => 'Есептегішті тазалағыңыз келе ме?';
-
-  @override
-  String get resetAction => 'Тазалау';
-
-  @override
-  String get appName => 'NUR';
-
-  @override
-  String get appSubtitle => 'РАМАЗАН СЕРІГІ';
-
-  @override
-  String get languageSection => 'Тіл';
-
-  @override
-  String get notificationsSection => 'Хабарландырулар';
-
-  @override
-  String get pushNotifications => 'Push-хабарландырулар';
-
-  @override
-  String get qiblaSearching => 'ҚЫБЛА ІЗДЕУ';
-
-  @override
-  String get holyKaaba => 'ҚАСИЕТТІ ҚАҒБА';
-
-  @override
-  String get fastingStatus => 'Ораза статусы';
-
-  @override
-  String get statusFasted => 'Ораза ұстадым';
+  String get statusFasted => 'Тұттым';
 
   @override
   String get statusMissed => 'Қаза болды';
 
   @override
-  String get statusNotSet => 'Белгіленбеді';
+  String get statusNotSet => 'Белгіленбеген';
+
+  @override
+  String get futureDateError => 'Болашақ күндер үшін мәртебені белгілей алмайсыз';
 
   @override
   String shareProgress(int fasted, int missed) {
-    return 'Менің Рамазан айындағы прогресім 🌙\nҰсталған ораза: $fasted күн\nҚаза болғандар: $missed күн\nNUR қосымшасымен бірге!';
+    return 'Менің Рамазандағы оразам 🌙\nТұтқан күндерім: $fasted\nҚаза болғандар: $missed\nNUR қосымшасымен қадағаланды!';
   }
 
   @override
-  String get shareImageTitle => 'Менің Рамазандағы оразам';
+  String get shareImageTitle => 'Менің Рамазаным';
 
   @override
-  String get shareImageDays => 'Ұсталған күндер';
+  String get shareImageDays => 'Тұтқан күндер';
 
   @override
-  String get shareImageApp => 'NUR: Қосымшасы';
+  String get shareImageApp => 'NUR қосымшасы';
 
   @override
-  String get futureDateError => 'Болашақ күндерді белгілеу мүмкін емес';
+  String get tasbihTitle => 'Тасбих';
+
+  @override
+  String get reset => 'Нөлдеу';
+
+  @override
+  String get total => 'Барлығы';
+
+  @override
+  String get subhanAllah => 'Субханаллаһ';
+
+  @override
+  String get alhamdulillah => 'Әлхамдулилләһ';
+
+  @override
+  String get allahuAkbar => 'Аллаһу Әкбар';
+
+  @override
+  String get astaghfirullah => 'Астағфируллаһ';
+
+  @override
+  String get resetConfirm => 'Есептегішті нөлдеуге сенімдісіз бе?';
+
+  @override
+  String get resetAction => 'Қалпына келтіру';
 
   @override
   String get dailyInspiration => 'Күн шабыты';
@@ -374,16 +368,16 @@ class AppLocalizationsKk extends AppLocalizations {
   String get quote1_ar => 'يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ كَمَا كُتِبَ عَلَى الَّذِينَ مِن قَبْلِكُمْ لَعَلَّكُمْ تَتَّقُونَ';
 
   @override
-  String get quote1_text => 'Уа, иман келтіргендер! Сендерден бұрынғыларға парыз етілгендей, сендерге де ораза ұстау парыз етілді. Бәлкім, тақуалық қыларсыңдар.';
+  String get quote1_text => 'Уа, иман келтіргендер! Өздеріңнен бұрынғыларға парыз етілгендей, сендерге де ораза ұстау парыз етілді. Бәлкім, тақуалыққа жетерсіңдер.';
 
   @override
-  String get quote1_source => 'Құран, Бақара (2:183)';
+  String get quote1_source => 'Құран, Бақара сүресі (2:183)';
 
   @override
   String get quote2_ar => 'مَنْ صَامَ رَمَضَانَ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ';
 
   @override
-  String get quote2_text => 'Кім Рамазан айында иманмен және сауап үмітімен ораза ұстаса, оның бұрынғы күнәлары кешіріледі.';
+  String get quote2_text => 'Кімде-кім Рамазан айында шынайы иманмен әрі сауабын Алладан үміт етіп ораза ұстаса, оның бұрынғы күнәлары кешіріледі.';
 
   @override
   String get quote2_source => 'Сахих әл-Бұхари (38)';
@@ -392,10 +386,10 @@ class AppLocalizationsKk extends AppLocalizations {
   String get quote3_ar => 'لَيْلَةُ الْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ';
 
   @override
-  String get quote3_text => 'Қадір түні мың айдан қайырлы.';
+  String get quote3_text => 'Қадір түні мың айдан да қайырлы.';
 
   @override
-  String get quote3_source => 'Құран, Қадір (97:3)';
+  String get quote3_source => 'Құран, Қадір сүресі (97:3)';
 
   @override
   String get duaLibraryTitle => 'Дұғалар кітапханасы';
@@ -404,7 +398,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get categoryRamadan => 'Рамазан';
 
   @override
-  String get categoryMorningEvening => 'Таңертең және Кешке';
+  String get categoryMorningEvening => 'Таңғы және кешкі';
 
   @override
   String get categoryAfterSalah => 'Намаздан кейін';
@@ -413,43 +407,70 @@ class AppLocalizationsKk extends AppLocalizations {
   String get categoryProtection => 'Қорғаныс';
 
   @override
-  String get categoryForgiveness => 'Тәубе ету';
+  String get categoryForgiveness => 'Кешірім';
 
   @override
-  String get categoryFamily => 'Отбасы және Балалар';
+  String get categoryFamily => 'Отбасы және балалар';
 
   @override
-  String get transcription => 'Транскрипциясы';
+  String get transcription => 'Транскрипция';
 
   @override
-  String get translation => 'Мағынасы';
+  String get translation => 'Аударма';
 
   @override
   String get copied => 'Алмасу буферіне көшірілді';
 
   @override
-  String get duaSuhoorTrans => 'Науайту ан асума саума шәһри рамадана минал фәжри иләл мағриби халисан лилләһи тағала';
+  String get tapForDua => 'Дұғаны көру';
 
   @override
-  String get duaSuhoorTranslate => 'Алла Тағала үшін таңнан кешке дейін Рамазан айының оразасын ұстауға ниет еттім.';
+  String get duaSuhoorTitle => 'Сәресі дұғасы (Ниет)';
 
   @override
-  String get duaIftarTrans => 'Зәһәбә-з-зама\'у уә-бтәлләти-л-\'уруқу уә сәбәтә-л-ажру ин ша\'а-ллаһ';
+  String get duaSuhoorArabic => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
 
   @override
-  String get duaIftarTranslate => 'Шөл қанды, тамырлар нәрленді және Алланың қалауымен сауап жазылды.';
+  String get duaSuhoorTranslit => 'Нәуәйту ән асумә саумә шәһри рамаданә минәл фәжри иләл мәғриби халисан лилләһи та\'алә.';
 
   @override
-  String get dua_qadr_title => 'Қадір түніндегі дұға';
+  String get duaSuhoorTransl => 'Алла Тағаланың разылығы үшін таң білінгеннен күн батқанға дейін Рамазан айының оразасын ұстауға ниет еттім.';
+
+  @override
+  String get duaSuhoorTrans => 'Нәуәйту ән асумә саумә шәһри рамаданә минәл фәжри иләл мәғриби халисан лилләһи та\'алә';
+
+  @override
+  String get duaSuhoorTranslate => 'Алла Тағаланың разылығы үшін ертеңгі Рамазан айының оразасын ұстауға ниет еттім.';
+
+  @override
+  String get duaIftarTitle => 'Ауызашар дұғасы';
+
+  @override
+  String get duaIftarArabic => 'اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امَنْتُ وَعَليْكَ تَوَكَّلْتُ وَعَلى رِزْقِكَ اَفْطَرْتُ';
+
+  @override
+  String get duaIftarTranslit => 'Аллаһуммә инни ләкә сумту уә бикә әмәнту уә аләйкә тәуәккәлту уә алә ризқикә әфтарту.';
+
+  @override
+  String get duaIftarTransl => 'Уа, Алла! Сенің ризалығың үшін ораза ұстадым, Саған иман келтірдім, Саған тәуекел еттім және Сен берген несібеңмен ауыз аштым.';
+
+  @override
+  String get duaIftarTrans => 'Зәһәбә-ззамә\'у уәбтәлләтил-уруқу уә сәбәтәл-әжру ин шә-Аллаһ';
+
+  @override
+  String get duaIftarTranslate => 'Шөл қанды, тамырлар нәрге толды, Алла қаласа сауабы да жазылды.';
+
+  @override
+  String get dua_qadr_title => 'Қадір түнінің дұғасы';
 
   @override
   String get dua_qadr_ar => 'اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي';
 
   @override
-  String get dua_qadr_trans => 'Аллаһумма иннәкә \'афууун тухиббуль-\'афуа фә\'фу \'анни';
+  String get dua_qadr_trans => 'Аллаһуммә иннәкә афууун, тухиббул-афуә, фа\'фу әнни';
 
   @override
-  String get dua_qadr_text => 'Уа, Алла! Расында, Сен Кешірімдісің, кешіруді жақсы көресің, мені кешіре гөр!';
+  String get dua_qadr_text => 'Уа, Алла! Расында, Сен кешірімдісің, кешіруді жақсы көресің, мені кешіре гөр!';
 
   @override
   String get dua_kursi_title => 'Аят әл-Күрси';
@@ -458,22 +479,22 @@ class AppLocalizationsKk extends AppLocalizations {
   String get dua_kursi_ar => 'اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ';
 
   @override
-  String get dua_kursi_trans => 'Аллаһу лә иләһә иллә һууәл-хаййул-қаййум, лә тә\'хузуһу синәтуу-уәлә нәум, ләһу мә фис-сәмәуәти уә мә фил-ард, мән зәлләзи йәшфә\'у \'индәһу иллә би-изниһ, йә\'ләму мә бәйнә әйдиһим уә мә халфәһум, уә лә йухитунә би-шәйим-мин \'илмиһи иллә би-мә шә\', уәси\'а курсиййуһус-сәмәуәти уәл-ард, уә лә йәудуһу хифзуһумә, уә һууәл-\'алиййул-\'азыйм';
+  String get dua_kursi_trans => 'Аллаһу лә иләһә иллә һууәл-Хайюл-Қайюм. Лә тә\'хузуһу синатуу-уә лә наум...';
 
   @override
-  String get dua_kursi_text => 'Алла — Одан басқа ешбір құдай жоқ, Ол тірі, мәңгі. Оны қалғы за да, ұйқы да баспайды. Көктер мен жердегі барлық нәрсе Оныкі. Оның алдында Өзінің рұқсатынсыз кім ара түседі? Ол олардың алдындағыны да, артындағыны да біледі. Олар Оның ілімінен Оның қалауынан басқа еш нәрсені біле алмайды. Оның Күрсісі көктер мен жерді қамтиды, оларды қорғау Оған ауыр тимейді. Ол — өте Жоғары, өте Ұлы.';
+  String get dua_kursi_text => 'Алла – Одан басқа ешбір тәңір жоқ. Ол – Тірі, барлық нәрсені басқарып тұрушы. Ол қалғымайды да, ұйықтамайды...';
 
   @override
-  String get dua_istighfar_title => 'Саййидуль-Истиғфар (Тәубе дұғасы)';
+  String get dua_istighfar_title => 'Сәйидул Истиғфар';
 
   @override
   String get dua_istighfar_ar => 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ';
 
   @override
-  String get dua_istighfar_trans => 'Аллаһумма Әнтә Рабби, лә иләһә иллә Әнтә, халәқтәни уә әнә \'абдукә, уә әнә \'алә \'аһдикә уә уә\'дикә мәстата\'ту, ә\'узу бикә мин шәрри мә сана\'ту, әбуу ләкә би-ни\'мәтикә \'аләййә уә әбуу би-зәнби, фәғфирли фә-иннәһу лә йәғфируз-зунуубә иллә Әнт';
+  String get dua_istighfar_trans => 'Аллаһуммә Әнтә Рабби лә иләһә иллә Әнтә, халәқтәни уә әнә абдук...';
 
   @override
-  String get dua_istighfar_text => 'Уа, Алла! Сен менің Раббымсың! Сенен басқа ешбір құдай жоқ. Сен мені жараттың, мен Сенің құлыңмын. Күш-қуатым жеткенше Саған берген сертімде әрі уәдемде тұрамын. Жасаған істерімнің жамандығынан Өзіңе сиынамын. Маған берген нығметтеріңді мойындаймын әрі күнәларымды да мойындаймын. Мені кешіре гөр, өйткені күнәларды Сенен басқа ешкім кешірмейді!';
+  String get dua_istighfar_text => 'Уа, Алла! Сен менің Раббымсың, Сенен басқа ешбір тәңір жоқ. Сен мені жараттың, мен Сенің құлыңмын...';
 
   @override
   String get dua_sadness_title => 'Уайым мен қайғыдан құтылу дұғасы';
@@ -482,20 +503,47 @@ class AppLocalizationsKk extends AppLocalizations {
   String get dua_sadness_ar => 'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ';
 
   @override
-  String get dua_sadness_trans => 'Аллаһумма инни ә\'узу бикә минәл-һәмми уәл-хәзән';
+  String get dua_sadness_trans => 'Аллаһуммә инни әғузу бикә минәл-һәмми уәл-хәзән';
 
   @override
-  String get dua_sadness_text => 'Уа, Алла! Шын мәнінде, мен Сенен уайым мен қайғыдан пана тилеймін.';
+  String get dua_sadness_text => 'Уа, Алла! Расында, мен уайым мен қайғы-қасіреттен Саған сыйынамын.';
 
   @override
-  String get dua_morning_title => 'Күндік қорғаныс дұғасы';
+  String get dua_morning_title => 'Күні бойы қорғану дұғасы';
 
   @override
   String get dua_morning_ar => 'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ';
 
   @override
-  String get dua_morning_trans => 'Бисмилләһи-лләзи лә йәдурру мә\'әсмиһи шәйун фил-арди уә лә фис-сәмә\'и уә һууәс-сәми\'ул-\'алим';
+  String get dua_morning_trans => 'Бисмилләһил-ләзи лә йәдурру мә\'асмиһи шәй\'ун фил-арди уә лә фис-сәмә\'и уә һууәс-Сәми\'ул-\'Алим';
 
   @override
-  String get dua_morning_text => 'Алланың атымен бастаймын. Оның есімімен жерде де, көкте де ешбір нәрсе зиян тигізе алмайды. Ол — бәрін Естуші, бәрін Білуші!';
+  String get dua_morning_text => 'Алланың атымен, Оның есімімен жердегі және көктегі ешбір нәрсе зиян тигізе алмайды. Ол – бәрін Естуші, Білуші.';
+
+  @override
+  String get swipeToSelect => 'Таңдау үшін сырғытыңыз';
+
+  @override
+  String get timeAdjustments => 'Уақытты реттеу (Ихтият)';
+
+  @override
+  String get fineTuneTimes => 'Намаз уақыттарын дәлдеу';
+
+  @override
+  String get timeAdjustmentsShort => 'Уақытты реттеу';
+
+  @override
+  String get adjustmentDesc => 'Егер жергілікті мешіттің уақыты сәл өзгеше болса, минуттарды осы жерден реттеуге болады.';
+
+  @override
+  String get aboutLegal => 'Қосымша туралы және Құқықтық ақпарат';
+
+  @override
+  String get privacyPolicy => 'Құпиялылық саясаты';
+
+  @override
+  String get termsOfUse => 'Пайдалану шарттары (EULA)';
+
+  @override
+  String get appVersion => 'Қосымша нұсқасы';
 }

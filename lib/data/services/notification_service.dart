@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -8,17 +9,19 @@ import 'package:permission_handler/permission_handler.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
+  static const MethodChannel _timeZoneChannel =
+      MethodChannel('com.midas.aion/time_zone');
   factory NotificationService() => _instance;
   NotificationService._internal();
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   bool _isInitialized = false;
 
   // Стрим для прослушивания кликов по уведомлениям
   final StreamController<String?> selectNotificationStream =
-  StreamController<String?>.broadcast();
+      StreamController<String?>.broadcast();
 
   Future<void> init() async {
     if (_isInitialized) return;
@@ -27,36 +30,29 @@ class NotificationService {
     tz.initializeTimeZones();
 
     // 2. Получение таймзоны через нативный канал
-    String timeZoneName;
-    try {
-      const platform = MethodChannel('com.midas.aion/time_zone');
-      timeZoneName = await platform.invokeMethod('getLocalTimeZone');
-    } catch (e) {
-      print("⚠️ Ошибка нативного канала: $e");
-      timeZoneName = 'UTC'; // Фолбэк на случай сбоя
-    }
+    final timeZoneName = await _resolveTimeZoneName();
 
     // Применяем таймзону
     try {
       tz.setLocalLocation(tz.getLocation(timeZoneName));
-      print("✅ Timezone set to: $timeZoneName");
+      debugPrint("✅ Timezone set to: $timeZoneName");
     } catch (e) {
-      print("⚠️ Неизвестная таймзона '$timeZoneName', ставим UTC");
+      debugPrint("⚠️ Unknown timezone '$timeZoneName', falling back to UTC");
       tz.setLocalLocation(tz.getLocation('UTC'));
     }
 
     // 3. Настройки уведомлений
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    final DarwinInitializationSettings initializationSettingsDarwin =
-    DarwinInitializationSettings(
+    const DarwinInitializationSettings initializationSettingsDarwin =
+        DarwinInitializationSettings(
       requestSoundPermission: false,
       requestBadgePermission: false,
       requestAlertPermission: false,
     );
 
-    final InitializationSettings initializationSettings = InitializationSettings(
+    const InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsDarwin,
     );
@@ -64,7 +60,7 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response) {
-        print("Payload received: ${response.payload}");
+        debugPrint("Payload received: ${response.payload}");
         // Отправляем payload в стрим при клике
         if (response.payload != null) {
           selectNotificationStream.add(response.payload);
@@ -75,12 +71,26 @@ class NotificationService {
     await _createNotificationChannel();
 
     _isInitialized = true;
-    print("✅ NotificationService: Fully Initialized");
+    debugPrint("✅ NotificationService: Fully Initialized");
+  }
+
+  Future<String> _resolveTimeZoneName() async {
+    try {
+      final String? zone =
+          await _timeZoneChannel.invokeMethod<String>('getLocalTimeZone');
+      if (zone != null && zone.isNotEmpty) {
+        return zone;
+      }
+    } catch (e) {
+      debugPrint("⚠️ Timezone channel error: $e");
+    }
+    return 'UTC';
   }
 
   // Проверка холодного старта (запуск через пуш)
   Future<NotificationAppLaunchDetails?> getLaunchDetails() async {
-    return await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    return await flutterLocalNotificationsPlugin
+        .getNotificationAppLaunchDetails();
   }
 
   Future<void> _createNotificationChannel() async {
@@ -95,15 +105,15 @@ class NotificationService {
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
   }
 
   Future<void> requestPermissions() async {
     if (Platform.isAndroid) {
-      final androidImplementation = flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
+      final androidImplementation =
+          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
 
       await androidImplementation?.requestNotificationsPermission();
 
@@ -114,12 +124,12 @@ class NotificationService {
     } else if (Platform.isIOS) {
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin>()
+              IOSFlutterLocalNotificationsPlugin>()
           ?.requestPermissions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
+            alert: true,
+            badge: true,
+            sound: true,
+          );
     }
   }
 
@@ -131,7 +141,7 @@ class NotificationService {
     String? payload, // Принимаем полезную нагрузку
   }) async {
     final tz.TZDateTime tzScheduledTime =
-    tz.TZDateTime.from(scheduledTime, tz.local);
+        tz.TZDateTime.from(scheduledTime, tz.local);
 
     // Если время уже прошло
     if (tzScheduledTime.isBefore(tz.TZDateTime.now(tz.local))) {
@@ -161,12 +171,12 @@ class NotificationService {
       payload: payload,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation:
-      UILocalNotificationDateInterpretation.absoluteTime,
+          UILocalNotificationDateInterpretation.absoluteTime,
       // УДАЛЕНО: matchDateTimeComponents: DateTimeComponents.time,
       // Уведомления должны быть строго одноразовыми, так как время намаза меняется каждый день!
     );
 
-    print("📅 Scheduled: $title at $tzScheduledTime");
+    debugPrint("📅 Scheduled: $title at $tzScheduledTime");
   }
 
   Future<void> cancelAll() async {

@@ -43,6 +43,10 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
       listener: BannerAdListener(
         onAdLoaded: (ad) {
           debugPrint('AdMob: Banner loaded successfully.');
+          if (!mounted || ad != _bannerAd) {
+            ad.dispose();
+            return;
+          }
           setState(() => _isLoaded = true);
         },
         onAdFailedToLoad: (ad, err) {

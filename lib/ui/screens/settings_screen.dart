@@ -1,7 +1,7 @@
 import 'package:adhan/adhan.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart'; // Для ссылок Privacy/EULA
+import 'package:url_launcher/url_launcher.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers/prayer_provider.dart';
 import '../../core/constants/app_colors.dart';
@@ -44,9 +44,8 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          _buildSectionHeader(l10n.generalSection ?? "General"),
+          _buildSectionHeader(l10n.generalSection),
 
-          // --- ОСНОВНАЯ КАРТОЧКА НАСТРОЕК ---
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
@@ -56,7 +55,6 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 0. Выбор языка
                 _buildSettingsTile(
                   context,
                   title: l10n.language,
@@ -67,7 +65,6 @@ class SettingsScreen extends StatelessWidget {
 
                 const Divider(height: 1, indent: 56, endIndent: 16),
 
-                // 1. Настройка Мазхаба
                 _buildSettingsTile(
                   context,
                   title: l10n.madhab,
@@ -78,7 +75,6 @@ class SettingsScreen extends StatelessWidget {
 
                 const Divider(height: 1, indent: 56, endIndent: 16),
 
-                // 2. Настройка Метода расчета
                 _buildSettingsTile(
                   context,
                   title: l10n.calculationMethod,
@@ -89,22 +85,29 @@ class SettingsScreen extends StatelessWidget {
 
                 const Divider(height: 1, indent: 56, endIndent: 16),
 
-                // 3. Локация (С вызовом диалога поиска!)
                 _buildSettingsTile(
                   context,
                   title: l10n.location,
                   value: provider.isLoading
                       ? "..."
-                      : (provider.isManualLocation
-                      ? "${provider.city} (Manual)"
-                      : "${provider.city} (Auto)"),
+                      : "${provider.city}",
                   icon: provider.isManualLocation ? Icons.location_city : Icons.location_on_outlined,
-                  onTap: () => _showLocationSearchSheet(context, provider),
+                  onTap: () => _showLocationSearchSheet(context, provider, l10n),
+                ),
+
+                // --- НОВЫЙ БЛОК: КОРРЕКТИРОВКА ВРЕМЕНИ (ИХТИЯТ) ---
+                const Divider(height: 1, indent: 56, endIndent: 16),
+
+                _buildSettingsTile(
+                  context,
+                  title: l10n.timeAdjustments, // Использован новый ключ
+                  value: l10n.fineTuneTimes,   // Использован новый ключ
+                  icon: Icons.tune,
+                  onTap: () => _showAdjustmentPicker(context, provider, l10n),
                 ),
 
                 const Divider(height: 1, indent: 56, endIndent: 16),
 
-                // 4. ТУМБЛЕР ОБЩИХ УВЕДОМЛЕНИЙ
                 SwitchListTile(
                   activeColor: AppColors.primary,
                   inactiveTrackColor: Colors.white12,
@@ -121,11 +124,11 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                   title: Text(
-                      l10n.enableNotifications ?? "Push Notifications",
+                      l10n.enableNotifications,
                       style: const TextStyle(fontWeight: FontWeight.w500)
                   ),
                   subtitle: Text(
-                      l10n.enableNotificationsDesc ?? "Turn on/off all alerts",
+                      l10n.enableNotificationsDesc,
                       style: TextStyle(color: Colors.grey.shade400, fontSize: 13)
                   ),
                   value: provider.notificationsEnabled,
@@ -137,14 +140,13 @@ class SettingsScreen extends StatelessWidget {
                   },
                 ),
 
-                // --- СЕКЦИЯ: УМНЫЕ БУДИЛЬНИКИ ---
                 if (provider.notificationsEnabled) ...[
                   const Divider(height: 1, indent: 16, endIndent: 16),
 
                   Padding(
                     padding: const EdgeInsets.only(left: 24, top: 16, bottom: 8),
                     child: Text(
-                      l10n.smartAlarms?.toUpperCase() ?? "SMART ALARMS",
+                      l10n.smartAlarms.toUpperCase(),
                       style: const TextStyle(
                           color: AppColors.primary,
                           fontSize: 11,
@@ -154,39 +156,44 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
 
-                  ListTile(
-                    leading: const Padding(
-                      padding: EdgeInsets.only(left: 8.0),
-                      child: Icon(Icons.wb_twilight, color: Colors.white54, size: 24),
-                    ),
-                    title: Text(l10n.suhoorAlarm ?? "Suhoor Alarm", style: const TextStyle(fontSize: 15)),
-                    trailing: _buildDropdown(
-                      currentValue: provider.suhoorAlarmOffset,
-                      onChanged: (val) => provider.updateSuhoorAlarm(val!),
-                      l10n: l10n,
-                    ),
+                  _buildAlarmRow(
+                    title: l10n.suhoorAlarm,
+                    icon: Icons.wb_twilight,
+                    value: provider.suhoorAlarmOffset,
+                    onChanged: (val) {
+                      if (val != null) provider.updateSuhoorAlarm(val);
+                    },
+                    l10n: l10n,
                   ),
 
-                  ListTile(
-                    leading: const Padding(
-                      padding: EdgeInsets.only(left: 8.0),
-                      child: Icon(Icons.nights_stay_outlined, color: Colors.white54, size: 24),
-                    ),
-                    title: Text(l10n.iftarAlarm ?? "Iftar Alarm", style: const TextStyle(fontSize: 15)),
-                    trailing: _buildDropdown(
-                      currentValue: provider.iftarAlarmOffset,
-                      onChanged: (val) => provider.updateIftarAlarm(val!),
-                      l10n: l10n,
-                    ),
+                  _buildAlarmRow(
+                    title: l10n.iftarAlarm,
+                    icon: Icons.nights_stay_outlined,
+                    value: provider.iftarAlarmOffset,
+                    onChanged: (val) {
+                      if (val != null) provider.updateIftarAlarm(val);
+                    },
+                    l10n: l10n,
                   ),
+
+                  _buildAlarmRow(
+                    title: l10n.tahajjudAlarm,
+                    icon: Icons.star_border_purple500_outlined,
+                    value: provider.tahajjudAlarmOffset,
+                    onChanged: (val) {
+                      if (val != null) provider.updateTahajjudAlarm(val);
+                    },
+                    l10n: l10n,
+                  ),
+
                   const SizedBox(height: 8),
                 ],
               ],
             ),
           ),
 
-          // --- НОВОЕ: СЕКЦИЯ ABOUT & LEGAL (Для модераторов Apple и Play Console) ---
-          _buildSectionHeader("About & Legal"),
+          // --- СЕКЦИЯ ABOUT & LEGAL ---
+          _buildSectionHeader(l10n.aboutLegal), // Использован новый ключ
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
@@ -196,22 +203,22 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               children: [
                 _buildSimpleTile(
-                  title: "Privacy Policy",
+                  title: l10n.privacyPolicy, // Использован новый ключ
                   icon: Icons.privacy_tip_outlined,
-                  onTap: () => _launchURL("https://sites.google.com/view/nurramadan"), // ЗАМЕНИТЬ НА СВОЮ ССЫЛКУ
+                  onTap: () => _launchURL("https://sites.google.com/view/nurramadan"),
                 ),
                 const Divider(height: 1, indent: 56, endIndent: 16),
                 _buildSimpleTile(
-                  title: "Terms of Use (EULA)",
+                  title: l10n.termsOfUse, // Использован новый ключ
                   icon: Icons.gavel_outlined,
-                  onTap: () => _launchURL("https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"), // Стандартная Apple EULA
+                  onTap: () => _launchURL("https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"),
                 ),
                 const Divider(height: 1, indent: 56, endIndent: 16),
                 _buildSimpleTile(
-                  title: "App Version",
+                  title: l10n.appVersion, // Использован новый ключ
                   value: "1.0.0 (Build 1)",
                   icon: Icons.info_outline,
-                  onTap: () {}, // Ничего не делает, просто инфо
+                  onTap: () {},
                   showChevron: false,
                 ),
               ],
@@ -224,6 +231,27 @@ class SettingsScreen extends StatelessWidget {
   }
 
   // --- WIDGETS ---
+
+  Widget _buildAlarmRow({
+    required String title,
+    required IconData icon,
+    required int value,
+    required ValueChanged<int?> onChanged,
+    required AppLocalizations l10n,
+  }) {
+    return ListTile(
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: Icon(icon, color: Colors.white54, size: 24),
+      ),
+      title: Text(title, style: const TextStyle(fontSize: 15)),
+      trailing: _buildDropdown(
+        currentValue: value,
+        onChanged: onChanged,
+        l10n: l10n,
+      ),
+    );
+  }
 
   Widget _buildSectionHeader(String title) {
     return Padding(
@@ -309,16 +337,15 @@ class SettingsScreen extends StatelessWidget {
       icon: const Icon(Icons.arrow_drop_down, color: AppColors.primary),
       style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 15),
       items: [
-        DropdownMenuItem(value: 0, child: Text(l10n.alarmOff ?? "Off")),
-        DropdownMenuItem(value: 20, child: Text(l10n.alarm20Min ?? "20 min")),
-        DropdownMenuItem(value: 30, child: Text(l10n.alarm30Min ?? "30 min")),
-        DropdownMenuItem(value: 60, child: Text(l10n.alarm60Min ?? "60 min")),
+        DropdownMenuItem(value: 0, child: Text(l10n.alarmOff)),
+        DropdownMenuItem(value: 20, child: Text(l10n.alarm20Min)),
+        DropdownMenuItem(value: 30, child: Text(l10n.alarm30Min)),
+        DropdownMenuItem(value: 60, child: Text(l10n.alarm60Min)),
       ],
       onChanged: onChanged,
     );
   }
 
-  // --- МЕТОД ЗАПУСКА URL ---
   Future<void> _launchURL(String urlString) async {
     final Uri url = Uri.parse(urlString);
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
@@ -328,15 +355,8 @@ class SettingsScreen extends StatelessWidget {
 
   // --- PICKERS (MODAL BOTTOM SHEETS) ---
 
-  // Идентичный диалог поиска города с Главного экрана
-  void _showLocationSearchSheet(BuildContext context, PrayerProvider provider) {
+  void _showLocationSearchSheet(BuildContext context, PrayerProvider provider, AppLocalizations l10n) {
     final TextEditingController cityController = TextEditingController();
-    final String lang = Localizations.localeOf(context).languageCode;
-
-    final String title = lang == 'ru' ? "Изменить локацию" : "Change Location";
-    final String hint = lang == 'ru' ? "Введите город (напр. Москва)" : "Enter city name (e.g. London)";
-    final String btnSearch = lang == 'ru' ? "Найти" : "Search";
-    final String btnGps = lang == 'ru' ? "Вернуть авто-определение (GPS)" : "Use Auto-Location (GPS)";
 
     showModalBottomSheet(
       context: context,
@@ -355,14 +375,14 @@ class SettingsScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+              Text(l10n.changeLocation, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 24),
               TextField(
                 controller: cityController,
                 style: const TextStyle(color: Colors.white),
                 autofocus: true,
                 decoration: InputDecoration(
-                  hintText: hint,
+                  hintText: l10n.enterCityHint,
                   hintStyle: const TextStyle(color: Colors.white54),
                   filled: true,
                   fillColor: AppColors.surface,
@@ -391,7 +411,7 @@ class SettingsScreen extends StatelessWidget {
                       Navigator.pop(ctx);
                     }
                   },
-                  child: Text(btnSearch, style: const TextStyle(color: AppColors.background, fontWeight: FontWeight.bold, fontSize: 16)),
+                  child: Text(l10n.searchBtn, style: const TextStyle(color: AppColors.background, fontWeight: FontWeight.bold, fontSize: 16)),
                 ),
               ),
               const SizedBox(height: 12),
@@ -404,12 +424,130 @@ class SettingsScreen extends StatelessWidget {
                       Navigator.pop(ctx);
                     },
                     icon: const Icon(Icons.my_location, color: AppColors.primary),
-                    label: Text(btnGps, style: const TextStyle(color: AppColors.primary)),
+                    label: Text(l10n.useAutoLocation, style: const TextStyle(color: AppColors.primary)),
                   ),
                 ),
               const SizedBox(height: 32),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  // --- ДИАЛОГ КОРРЕКТИРОВКИ ВРЕМЕНИ (IHTIYAT) ---
+  void _showAdjustmentPicker(BuildContext context, PrayerProvider provider, AppLocalizations l10n) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.background,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              final storage = provider.getStorageService();
+              int fajrAdj = storage.getAdjustment('fajr');
+              int sunriseAdj = storage.getAdjustment('sunrise');
+              int dhuhrAdj = storage.getAdjustment('dhuhr');
+              int asrAdj = storage.getAdjustment('asr');
+              int maghribAdj = storage.getAdjustment('maghrib');
+              int ishaAdj = storage.getAdjustment('isha');
+
+              Widget buildStepper(String name, int currentValue, Function(int) onChanged) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.remove_circle_outline, color: AppColors.primary),
+                            onPressed: () {
+                              if (currentValue > -10) {
+                                onChanged(currentValue - 1);
+                              }
+                            },
+                          ),
+                          SizedBox(
+                            width: 30,
+                            child: Text(
+                              currentValue > 0 ? "+$currentValue" : "$currentValue",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
+                            onPressed: () {
+                              if (currentValue < 10) {
+                                onChanged(currentValue + 1);
+                              }
+                            },
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                );
+              }
+
+              return SafeArea(
+                child: FractionallySizedBox(
+                  heightFactor: 0.8,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            Text(l10n.timeAdjustmentsShort, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), // Использован новый ключ
+                            const SizedBox(height: 8),
+                            Text(
+                              l10n.adjustmentDesc, // Использован новый ключ
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 13, color: Colors.grey.shade400),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Divider(color: Colors.white10),
+                      Expanded(
+                        child: ListView(
+                          children: [
+                            buildStepper(l10n.fajr, fajrAdj, (val) {
+                              setState(() => fajrAdj = val);
+                              provider.updateManualAdjustment('fajr', val);
+                            }),
+                            buildStepper(l10n.sunrise, sunriseAdj, (val) {
+                              setState(() => sunriseAdj = val);
+                              provider.updateManualAdjustment('sunrise', val);
+                            }),
+                            buildStepper(l10n.dhuhr, dhuhrAdj, (val) {
+                              setState(() => dhuhrAdj = val);
+                              provider.updateManualAdjustment('dhuhr', val);
+                            }),
+                            buildStepper(l10n.asr, asrAdj, (val) {
+                              setState(() => asrAdj = val);
+                              provider.updateManualAdjustment('asr', val);
+                            }),
+                            buildStepper(l10n.maghrib, maghribAdj, (val) {
+                              setState(() => maghribAdj = val);
+                              provider.updateManualAdjustment('maghrib', val);
+                            }),
+                            buildStepper(l10n.isha, ishaAdj, (val) {
+                              setState(() => ishaAdj = val);
+                              provider.updateManualAdjustment('isha', val);
+                            }),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
         );
       },
     );
@@ -472,7 +610,7 @@ class SettingsScreen extends StatelessWidget {
                 child: Text(l10n.madhab, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ),
               ListTile(
-                title: Text(l10n.madhabHanafi ?? "Hanafi"),
+                title: Text(l10n.madhabHanafi),
                 trailing: provider.madhab == Madhab.hanafi ? const Icon(Icons.check, color: AppColors.primary) : null,
                 onTap: () {
                   provider.updateMadhab(Madhab.hanafi);
@@ -480,7 +618,7 @@ class SettingsScreen extends StatelessWidget {
                 },
               ),
               ListTile(
-                title: Text(l10n.madhabStandard ?? "Standard"),
+                title: Text(l10n.madhabStandard),
                 subtitle: const Text("Shafi, Maliki, Hanbali"),
                 trailing: provider.madhab == Madhab.shafi ? const Icon(Icons.check, color: AppColors.primary) : null,
                 onTap: () {
@@ -503,7 +641,7 @@ class SettingsScreen extends StatelessWidget {
       CalculationMethod.umm_al_qura,
       CalculationMethod.turkey,
       CalculationMethod.karachi,
-      CalculationMethod.dubai,
+      CalculationMethod.tehran,
       CalculationMethod.singapore,
     ];
 
@@ -553,22 +691,21 @@ class SettingsScreen extends StatelessWidget {
   }
 
   String _getMadhabName(Madhab madhab, AppLocalizations l10n) {
-    if (madhab == Madhab.hanafi) return l10n.madhabHanafi ?? "Hanafi";
-    return l10n.madhabStandard ?? "Standard";
+    if (madhab == Madhab.hanafi) return l10n.madhabHanafi;
+    return l10n.madhabStandard;
   }
 
   String _getMethodName(CalculationMethod method, AppLocalizations l10n) {
     switch (method) {
-      case CalculationMethod.muslim_world_league: return l10n.methodMWL ?? "MWL";
-      case CalculationMethod.north_america: return l10n.methodISNA ?? "ISNA";
-      case CalculationMethod.egyptian: return l10n.methodEgypt ?? "Egyptian";
-      case CalculationMethod.umm_al_qura: return l10n.methodMakkah ?? "Umm Al-Qura";
-      case CalculationMethod.karachi: return l10n.methodKarachi ?? "Karachi";
-      case CalculationMethod.turkey: return l10n.methodTurkey ?? "Turkey";
-      case CalculationMethod.dubai: return "Dubai";
-      case CalculationMethod.singapore: return l10n.methodSingapore ?? "Singapore";
-      case CalculationMethod.tehran: return l10n.methodTehran ?? "Tehran";
-      default: return l10n.methodOther ?? "Other";
+      case CalculationMethod.muslim_world_league: return l10n.methodMWL;
+      case CalculationMethod.north_america: return l10n.methodISNA;
+      case CalculationMethod.egyptian: return l10n.methodEgypt;
+      case CalculationMethod.umm_al_qura: return l10n.methodMakkah;
+      case CalculationMethod.karachi: return l10n.methodKarachi;
+      case CalculationMethod.turkey: return l10n.methodTurkey;
+      case CalculationMethod.singapore: return l10n.methodSingapore;
+      case CalculationMethod.tehran: return l10n.methodTehran;
+      default: return l10n.methodOther;
     }
   }
 }

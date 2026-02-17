@@ -12,31 +12,58 @@ class AppLocalizationsTg extends AppLocalizations {
   String get appTitle => 'Nur';
 
   @override
-  String get loading => 'Вақтҳо ҳисоб шуда истодаанд...';
+  String get appName => 'NUR';
 
   @override
-  String get error => 'Хато';
+  String get appSubtitle => 'ҲАМРОҲИ ШУМО ДАР РАМАЗОН';
 
   @override
-  String get retry => 'Боз кӯшиш кунед';
+  String get loading => 'Ҳисобкунии вақтҳо...';
+
+  @override
+  String get error => 'Хатогӣ';
+
+  @override
+  String get retry => 'Такрор кардан';
 
   @override
   String get locationDetecting => 'Муайян кардани ҷойгиршавӣ...';
 
   @override
-  String get locationError => 'Ҷойгиршавӣ ёфт нашуд';
+  String get locationError => 'Ҷойгиршавӣ дастрас нест';
 
   @override
-  String get timeLeftIftar => 'Вақти боқимонда то ифтор';
+  String get errorLocation => 'Ҷойгиршавӣ муайян нашуд';
 
   @override
-  String get timeLeftSuhoor => 'Вақти боқимонда то саҳарӣ';
+  String get locationPermissionText => 'Барои дақиқ ҳисоб кардани вақти намоз, дастрасӣ ба ҷойгиршавӣ лозим аст.';
 
   @override
-  String get fajr => 'Бомдод';
+  String get timeLeftIftar => 'Вақт то Ифтор';
 
   @override
-  String get sunrise => 'Тулӯи офтоб';
+  String get timeLeftSuhoor => 'Вақт то Саҳарӣ';
+
+  @override
+  String get timeRemaining => 'Вақти боқимонда';
+
+  @override
+  String get untilSuhoor => 'то Саҳарӣ';
+
+  @override
+  String get untilIftar => 'то Ифтор';
+
+  @override
+  String get suhoor => 'Саҳарӣ';
+
+  @override
+  String get iftar => 'Ифтор';
+
+  @override
+  String get fajr => 'Бамдод';
+
+  @override
+  String get sunrise => 'Офтоббаро';
 
   @override
   String get dhuhr => 'Пешин';
@@ -51,13 +78,28 @@ class AppLocalizationsTg extends AppLocalizations {
   String get isha => 'Хуфтан';
 
   @override
+  String get tahajjud => 'Таҳаҷҷуд';
+
+  @override
   String get qiblaTitle => 'Қибла';
 
   @override
   String get qiblaDirection => 'Самти Қибла';
 
   @override
-  String get rotatePhone => 'Барои калибрченӣ телефонро чарх занед';
+  String get qiblaSearching => 'ҶУСТУҶӮ';
+
+  @override
+  String get qiblaAligned => 'ҚИБЛА ЁФТ ШУД';
+
+  @override
+  String get holyKaaba => 'КАЪБАИ МУҚАДДАС';
+
+  @override
+  String get rotatePhone => 'Телефонро дар сатҳи ҳамвор гузоред';
+
+  @override
+  String get calibrateCompass => 'Телефонро бо шакли 8 ҳаракат дода, калибровка кунед';
 
   @override
   String get north => 'Ш';
@@ -72,10 +114,13 @@ class AppLocalizationsTg extends AppLocalizations {
   String get navCalendar => 'Тақвим';
 
   @override
-  String get calendarHeader => 'Тақвим';
+  String get calendarHeader => 'Тақвими Рамазон';
 
   @override
-  String get hijriDate => 'Ҳиҷрӣ';
+  String get hijriDate => 'Санаи Ҳиҷрӣ';
+
+  @override
+  String get refresh => 'Навсозӣ';
 
   @override
   String get settingsTitle => 'Танзимот';
@@ -84,259 +129,181 @@ class AppLocalizationsTg extends AppLocalizations {
   String get generalSection => 'Умумӣ';
 
   @override
-  String get calculationMethod => 'Усули ҳисоб';
-
-  @override
-  String get madhab => 'Ҳисоби Аср (мазҳаб)';
-
-  @override
-  String get location => 'Ҷойгиршавӣ';
-
-  @override
-  String get notifications => 'Огоҳӣ';
-
-  @override
-  String get save => 'Захира кардан';
-
-  @override
-  String get cancel => 'Бекор кардан';
-
-  @override
-  String get madhabHanafi => 'Ҳанафӣ';
-
-  @override
-  String get madhabStandard => 'Стандарт (Шофеъӣ, Моликӣ, Ҳанбалӣ)';
-
-  @override
-  String get methodMWL => 'Лигаи ҷаҳонии мусулмонон';
-
-  @override
-  String get methodISNA => 'ISNA (Амрикои Шимолӣ)';
-
-  @override
-  String get methodEgypt => 'Идораи Миср';
-
-  @override
-  String get methodMakkah => 'Умм ал-Қура (Макка)';
-
-  @override
-  String get methodKarachi => 'Карачи';
-
-  @override
-  String get methodTehran => 'Теҳрон';
-
-  @override
-  String get methodTurkey => 'Туркия (Диянет)';
-
-  @override
-  String get methodSingapore => 'Сингапур';
-
-  @override
-  String get methodOther => 'Дигар / Махсус';
-
-  @override
-  String get locationPermissionText => 'Барои ҳисоб кардани вақти намоз ҷойгиршавӣ лозим аст.';
-
-  @override
-  String get suhoor => 'Саҳарӣ';
-
-  @override
-  String get iftar => 'Ифтор';
-
-  @override
-  String get timeRemaining => 'Вақти боқимонда';
-
-  @override
-  String get errorLocation => 'Гирифтани ҷойгиршавӣ муваффақ нашуд';
-
-  @override
-  String get refresh => 'Навсозӣ';
-
-  @override
-  String get untilSuhoor => 'то саҳарӣ';
-
-  @override
-  String get untilIftar => 'то ифтор';
-
-  @override
-  String get qiblaAligned => 'САМТ ДУРУСТ АСТ';
-
-  @override
-  String get calibrateCompass => 'Телефонро дар шакли 8 ҳаракат диҳед';
-
-  @override
-  String get onboardTitle1 => 'Ба NUR хуш омадед';
-
-  @override
-  String get onboardDesc1 => 'Ҳамроҳи премиум барои моҳи мубораки Рамазон. Содда, дақиқ ва бе реклама.';
-
-  @override
-  String get onboardTitle2 => 'Вақтҳои дақиқ';
-
-  @override
-  String get onboardDesc2 => 'Барои ҳисоб кардани вақти саҳарӣ ва ифтор ҷойгиршавӣ лозим аст.';
-
-  @override
-  String get onboardTitle3 => 'Лаҳзаро аз даст надиҳед';
-
-  @override
-  String get onboardDesc3 => 'Барои гирифтани огоҳӣ 5 дақиқа пеш аз саҳарӣ ва ифтор, огоҳиро фаъол созед.';
-
-  @override
-  String get next => 'Навбатӣ';
-
-  @override
-  String get getStarted => 'Оғоз';
-
-  @override
-  String get bioTitle => 'Ҳолати бадан';
-
-  @override
-  String get bioNightTitle => 'Барқароршавӣ ва обнӯшӣ';
-
-  @override
-  String get bioNightDesc => 'Бадан истироҳат мекунад. Об бештар бинӯшед.';
-
-  @override
-  String get bioPhase1Title => 'Қанди хун муътадил мешавад';
-
-  @override
-  String get bioPhase1Desc => 'Қанди хун паст шуда, муътадил мегардад.';
-
-  @override
-  String get bioPhase2Title => 'Системаи ҳазм истироҳат мекунад';
-
-  @override
-  String get bioPhase2Desc => 'Ҳазм ба охир мерасад ва бадан захираҳоро истифода мебарад.';
-
-  @override
-  String get bioPhase3Title => 'Сӯзиши равған (кетоз)';
-
-  @override
-  String get bioPhase3Desc => 'Захираҳо кам шуда, бадан равған месӯзонад.';
-
-  @override
-  String get bioPhase4Title => 'Оғози аутофагия';
-
-  @override
-  String get bioPhase4Desc => 'Ҳуҷайраҳо нав мешаванд ва тоза мегарданд.';
-
-  @override
-  String get fastingProgress => 'Раванди рӯза';
-
-  @override
-  String get enableNotifications => 'Огоҳии push';
-
-  @override
-  String get enableNotificationsDesc => '5 дақиқа пеш аз вақти рӯза огоҳӣ';
-
-  @override
-  String get smartAlarms => 'Соати ҳушманд';
-
-  @override
-  String get smartAlarmsDesc => 'Ба вақти саҳарӣ ва ифтор мутобиқ мешавад.';
-
-  @override
-  String get suhoorAlarm => 'Бедоршавӣ барои саҳарӣ';
-
-  @override
-  String get iftarAlarm => 'Омодагӣ ба ифтор';
-
-  @override
-  String get alarmOff => 'Хомӯш';
-
-  @override
-  String get alarm20Min => '20 дақ';
-
-  @override
-  String get alarm30Min => '30 дақ';
-
-  @override
-  String get alarm60Min => '1 соат';
-
-  @override
-  String get tapForDua => 'Барои дуо пахш кунед';
-
-  @override
-  String get duaSuhoorTitle => 'Нияти рӯза (Саҳарӣ)';
-
-  @override
-  String get duaSuhoorArabic => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
-
-  @override
-  String get duaSuhoorTranslit => 'Nawaytu an asuma sawma shahri ramadana minal fajri ilal maghribi khalisan lillahi ta\'ala.';
-
-  @override
-  String get duaSuhoorTransl => 'Ният кардам, ки рӯзаи моҳи Рамазонро аз субҳ то ғуруби офтоб барои Аллоҳ Таъоло нигоҳ дорам.';
-
-  @override
-  String get duaIftarTitle => 'Дуои ифтор';
-
-  @override
-  String get duaIftarArabic => 'اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امَنْتُ وَعَليْكَ تَوَكَّلْتُ وَعَلى رِزْقِكَ اَفْطَرْتُ';
-
-  @override
-  String get duaIftarTranslit => 'Allahumma inni laka sumtu wa bika aamantu wa \'alayka tawakkaltu wa \'ala rizqika aftartu.';
-
-  @override
-  String get duaIftarTransl => 'Эй Аллоҳ, барои Ту рӯза доштам, ба Ту имон овардам, ба Ту таваккал кардам ва бо ризқи Ту ифтор мекунам.';
+  String get languageSection => 'Забон';
 
   @override
   String get language => 'Забон';
 
   @override
-  String get english => 'Англисӣ';
+  String get english => 'English';
 
   @override
   String get russian => 'Русӣ';
 
   @override
-  String get tasbihTitle => 'Тасбеҳ';
+  String get calculationMethod => 'Усули ҳисобкунӣ';
 
   @override
-  String get reset => 'Тоза кардан';
+  String get madhab => 'Мазҳаб (Барои Аср)';
 
   @override
-  String get total => 'Ҳамагӣ';
+  String get location => 'Ҷойгиршавӣ';
 
   @override
-  String get subhanAllah => 'Субҳоналлоҳ';
+  String get searchCityManually => 'Дастӣ интихоб кардани шаҳр';
 
   @override
-  String get alhamdulillah => 'Алҳамдулиллоҳ';
+  String get changeLocation => 'Иваз кардани ҷойгиршавӣ';
 
   @override
-  String get allahuAkbar => 'Аллоҳу Акбар';
+  String get enterCityHint => 'Номи шаҳрро ворид кунед (мас., Душанбе)';
 
   @override
-  String get astaghfirullah => 'Астағфируллоҳ';
+  String get searchBtn => 'Ҷустуҷӯ';
 
   @override
-  String get resetConfirm => 'Ҳисобкунакро тоза мекунед?';
-
-  @override
-  String get resetAction => 'Тоза кардан';
-
-  @override
-  String get appName => 'NUR';
-
-  @override
-  String get appSubtitle => 'ҲАМРОҲИ РАМАЗОН';
-
-  @override
-  String get languageSection => 'Забон';
+  String get useAutoLocation => 'Истифодаи ҷойгиршавии худкор (GPS)';
 
   @override
   String get notificationsSection => 'Огоҳиномаҳо';
 
   @override
-  String get pushNotifications => 'Огоҳиномаҳои Push';
+  String get notifications => 'Огоҳиномаҳо';
 
   @override
-  String get qiblaSearching => 'ҶУСТУҶӮИ ҚИБЛА';
+  String get pushNotifications => 'Огоҳиномаҳо (Push)';
 
   @override
-  String get holyKaaba => 'КАЪБАИ МУҚАДДАС';
+  String get enableNotifications => 'Огоҳиномаҳо (Push)';
+
+  @override
+  String get enableNotificationsDesc => 'Ёдоварӣ 5 дақиқа пеш аз Саҳарӣ ва Ифтор';
+
+  @override
+  String get smartAlarms => 'Ҳушдорҳои интеллектуалӣ';
+
+  @override
+  String get smartAlarmsDesc => 'Ба таври худкор бо вақтҳои Саҳарӣ ва Ифтор мутобиқ мешавад.';
+
+  @override
+  String get suhoorAlarm => 'Ҳушдори Саҳарӣ';
+
+  @override
+  String get iftarAlarm => 'Ҳушдори Ифтор';
+
+  @override
+  String get tahajjudAlarm => 'Ҳушдори Таҳаҷҷуд';
+
+  @override
+  String get alarmOff => 'Хомӯш';
+
+  @override
+  String get alarm20Min => '20 дақ. пеш';
+
+  @override
+  String get alarm30Min => '30 дақ. пеш';
+
+  @override
+  String get alarm60Min => '1 соат пеш';
+
+  @override
+  String get save => 'Захира';
+
+  @override
+  String get cancel => 'Бекор кардан';
+
+  @override
+  String get madhabHanafi => 'Мазҳаби Ҳанафӣ';
+
+  @override
+  String get madhabStandard => 'Стандарт (Шофеӣ, Моликӣ, Ҳанбалӣ)';
+
+  @override
+  String get methodMWL => 'Робитаи Олами Исломӣ';
+
+  @override
+  String get methodISNA => 'ISNA (Амрикои Шимолӣ)';
+
+  @override
+  String get methodEgypt => 'Идораи умумии Миср';
+
+  @override
+  String get methodMakkah => 'Умм ал-Қуро (Макка)';
+
+  @override
+  String get methodKarachi => 'Карачи (Донишгоҳи Исломӣ)';
+
+  @override
+  String get methodTehran => 'Теҳрон (Донишкадаи геофизика)';
+
+  @override
+  String get methodTurkey => 'Диёнат (Туркия)';
+
+  @override
+  String get methodSingapore => 'Сингапур (MUIS)';
+
+  @override
+  String get methodOther => 'Дигар / Фармоишӣ';
+
+  @override
+  String get onboardTitle1 => 'Хуш омадед ба NUR';
+
+  @override
+  String get onboardDesc1 => 'Ёвари беҳтарини шумо дар моҳи шарифи Рамазон. Оддӣ, дақиқ ва бе таблиғот.';
+
+  @override
+  String get onboardTitle2 => 'Вақтҳои дақиқ';
+
+  @override
+  String get onboardDesc2 => 'Барои дақиқ ҳисоб кардани вақтҳои Саҳарӣ ва Ифтор дар минтақаи шумо, ба мо дастрасӣ ба ҷойгиршавиатон лозим аст.';
+
+  @override
+  String get onboardTitle3 => 'Лаҳзаҳоро аз даст надиҳед';
+
+  @override
+  String get onboardDesc3 => 'Ба огоҳиномаҳо иҷозат диҳед, то 5 дақиқа пеш аз Саҳарӣ ва Ифтор ба шумо ёдовар шавем.';
+
+  @override
+  String get next => 'Баъдӣ';
+
+  @override
+  String get getStarted => 'Оғоз кардан';
+
+  @override
+  String get bioTitle => 'Ҳолати бадан';
+
+  @override
+  String get bioNightTitle => 'Барқароршавӣ';
+
+  @override
+  String get bioNightDesc => 'Бадани шумо истироҳат мекунад. Барои тайёрӣ ба рӯза оби бештар нӯшед.';
+
+  @override
+  String get bioPhase1Title => 'Пастшавии қанд';
+
+  @override
+  String get bioPhase1Desc => 'Сатҳи қанд дар хун паст мешавад. Истеҳсоли инсулин кам мешавад.';
+
+  @override
+  String get bioPhase2Title => 'Истироҳати системаи ҳозима';
+
+  @override
+  String get bioPhase2Desc => 'Ҳазмкунӣ ба анҷом мерасад. Бадан энергияро аз захираҳои гликоген мегирад.';
+
+  @override
+  String get bioPhase3Title => 'Сӯхтани чарбҳо (Кетоз)';
+
+  @override
+  String get bioPhase3Desc => 'Гликоген тамом мешавад. Бадан барои гирифтани энергия чарбҳоро месузонад.';
+
+  @override
+  String get bioPhase4Title => 'Тозакунӣ (Аутофагия)';
+
+  @override
+  String get bioPhase4Desc => 'Барқароршавии ҳуҷайраҳо оғоз меёбад. Бадан аз ҳуҷайраҳои вайроншуда тоза мешавад.';
+
+  @override
+  String get fastingProgress => 'Пешрафти рӯза';
 
   @override
   String get fastingStatus => 'Ҳолати рӯза';
@@ -351,21 +318,48 @@ class AppLocalizationsTg extends AppLocalizations {
   String get statusNotSet => 'Қайд нашудааст';
 
   @override
+  String get futureDateError => 'Барои рӯзҳои оянда ҳолатро қайд кардан номумкин аст';
+
+  @override
   String shareProgress(int fasted, int missed) {
-    return 'Натиҷаҳои ман дар моҳи Рамазон 🌙\nРӯза доштам: $fasted рӯз\nҚазо шуд: $missed рӯз\nБо барномаи NUR!';
+    return 'Пешрафти ман дар Рамазон 🌙\nРӯза доштам: $fasted рӯз\nҚазо шуд: $missed рӯз\nДар барномаи NUR қайд шудааст!';
   }
 
   @override
-  String get shareImageTitle => 'Рӯзаи ман дар Рамазон';
+  String get shareImageTitle => 'Рамазони ман';
 
   @override
-  String get shareImageDays => 'Рӯзҳои рӯзадорӣ';
+  String get shareImageDays => 'Рӯзҳои рӯза';
 
   @override
-  String get shareImageApp => 'NUR: Барнома';
+  String get shareImageApp => 'Барномаи NUR';
 
   @override
-  String get futureDateError => 'Рӯзҳои ояндаро қайд кардан мумкин нест';
+  String get tasbihTitle => 'Тасбеҳ';
+
+  @override
+  String get reset => 'Сифр кардан';
+
+  @override
+  String get total => 'Ҷамъ';
+
+  @override
+  String get subhanAllah => 'Субҳоналлоҳ';
+
+  @override
+  String get alhamdulillah => 'Алҳамдулиллоҳ';
+
+  @override
+  String get allahuAkbar => 'Аллоҳу Акбар';
+
+  @override
+  String get astaghfirullah => 'Астағфируллоҳ';
+
+  @override
+  String get resetConfirm => 'Оё шумо мутмаин ҳастед, ки мехоҳед ҳисобкунакро сифр кунед?';
+
+  @override
+  String get resetAction => 'Сифр кардан';
 
   @override
   String get dailyInspiration => 'Илҳоми рӯз';
@@ -374,128 +368,182 @@ class AppLocalizationsTg extends AppLocalizations {
   String get quote1_ar => 'يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ كَمَا كُتِبَ عَلَى الَّذِينَ مِن قَبْلِكُمْ لَعَلَّكُمْ تَتَّقُونَ';
 
   @override
-  String get quote1_text => 'Эй касоне, ки имон овардаед! Рӯза бар шумо фарз карда шуд, ҳамон гуна ки бар касоне, ки пеш аз шумо буданд, фарз шуда буд, то ки парҳезгор шавед.';
+  String get quote1_text => 'Эй касоне, ки имон овардаед, рӯза бар шумо муқаррар шуд, ҳамон гуна ки бар касоне, ки пеш аз шумо буданд, муқаррар шуда буд, то парҳезгор шавед.';
 
   @override
-  String get quote1_source => 'Қуръон, Бақара (2:183)';
+  String get quote1_source => 'Қуръон, Ал-Бақара (2:183)';
 
   @override
   String get quote2_ar => 'مَنْ صَامَ رَمَضَانَ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ';
 
   @override
-  String get quote2_text => 'Ҳар кас дар моҳи Рамазон аз рӯи имон ва умеди аҷр рӯза гирад, гуноҳони гузаштааш бахшида мешавад.';
+  String get quote2_text => 'Ҳар кас моҳи Рамазонро аз рӯи имон ва умеди савоб рӯза бидорад, гуноҳони гузаштаи ӯ бахшида мешаванд.';
 
   @override
-  String get quote2_source => 'Саҳеҳ ал-Бухорӣ (38)';
+  String get quote2_source => 'Саҳеҳи Бухорӣ (38)';
 
   @override
   String get quote3_ar => 'لَيْلَةُ الْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ';
 
   @override
-  String get quote3_text => 'Шаби қадр аз ҳазор моҳ беҳтар аст.';
+  String get quote3_text => 'Шаби Қадр беҳтар аз ҳазор моҳ аст.';
 
   @override
-  String get quote3_source => 'Қуръон, Қадр (97:3)';
+  String get quote3_source => 'Қуръон, Ал-Қадр (97:3)';
 
   @override
-  String get duaLibraryTitle => 'Dua Library';
+  String get duaLibraryTitle => 'Китобхонаи дуоҳо';
 
   @override
-  String get categoryRamadan => 'Ramadan';
+  String get categoryRamadan => 'Рамазон';
 
   @override
-  String get categoryMorningEvening => 'Morning & Evening';
+  String get categoryMorningEvening => 'Субҳ ва Шом';
 
   @override
-  String get categoryAfterSalah => 'After Salah';
+  String get categoryAfterSalah => 'Баъди Намоз';
 
   @override
-  String get categoryProtection => 'Protection';
+  String get categoryProtection => 'Муҳофизат';
 
   @override
-  String get categoryForgiveness => 'Forgiveness';
+  String get categoryForgiveness => 'Омурзиш';
 
   @override
-  String get categoryFamily => 'Family & Children';
+  String get categoryFamily => 'Оила ва фарзандон';
 
   @override
-  String get transcription => 'Transcription';
+  String get transcription => 'Транскрипсия';
 
   @override
-  String get translation => 'Translation';
+  String get translation => 'Тарҷума';
 
   @override
-  String get copied => 'Copied to clipboard';
+  String get copied => 'Нусхабардорӣ шуд';
 
   @override
-  String get duaSuhoorTrans => 'Nawaitu an asuma sawma shahri ramadana minal fajri ilal maghribi khalisan lillahi ta\'ala';
+  String get tapForDua => 'Барои дуо пахш кунед';
 
   @override
-  String get duaSuhoorTranslate => 'I intend to keep the fast for tomorrow in the month of Ramadan, sincerely for Allah.';
+  String get duaSuhoorTitle => 'Дуои Саҳарӣ (Ният)';
 
   @override
-  String get duaIftarTrans => 'Dhahabadh-dhama\'u wabtallatil-\'urooqu wa thabatal-ajru in sha\'Allah';
+  String get duaSuhoorArabic => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
 
   @override
-  String get duaIftarTranslate => 'The thirst has gone, the veins are quenched, and the reward is confirmed, if Allah wills.';
+  String get duaSuhoorTranslit => 'Навайту ан асума савма шаҳри рамазона минал фаҷри илал мағриби холисан лиллоҳи таъоло.';
 
   @override
-  String get dua_qadr_title => 'Dua for Laylat al-Qadr';
+  String get duaSuhoorTransl => 'Ният кардам рӯзаи моҳи Рамазонро аз субҳи содиқ то фурӯ рафтани офтоб холис барои Худо бидорам.';
+
+  @override
+  String get duaSuhoorTrans => 'Навайту ан асума савма шаҳри рамазона минал фаҷри илал мағриби холисан лиллоҳи таъоло';
+
+  @override
+  String get duaSuhoorTranslate => 'Ният кардам рӯзаи моҳи Рамазонро барои фардо холис барои Худо бидорам.';
+
+  @override
+  String get duaIftarTitle => 'Дуои Ифтор';
+
+  @override
+  String get duaIftarArabic => 'اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امَنْتُ وَعَليْكَ تَوَكَّلْتُ وَعَلى رِزْقِكَ اَفْطَرْتُ';
+
+  @override
+  String get duaIftarTranslit => 'Аллоҳумма иннӣ лака сумту ва бика оманту ва ъалайка таваккалту ва ъало ризқика афторту.';
+
+  @override
+  String get duaIftarTransl => 'Худоё, барои Ту рӯза доштам ва ба Ту имон овардам ва ба Ту таваккал кардам ва бо ризқи додаи Ту ифтор кардам.';
+
+  @override
+  String get duaIftarTrans => 'Заҳаба-ззама\'у вабталлатил-ъуруқу ва сабатал-аҷру ин шоъаллоҳ';
+
+  @override
+  String get duaIftarTranslate => 'Ташнагӣ рафт, рагҳо тар шуданд ва иншоаллоҳ аҷру савоб навишта шуд.';
+
+  @override
+  String get dua_qadr_title => 'Дуои Шаби Қадр';
 
   @override
   String get dua_qadr_ar => 'اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي';
 
   @override
-  String get dua_qadr_trans => 'Allahumma innaka \'afuwwun tuhibbul-\'afwa fa\'fu \'anni';
+  String get dua_qadr_trans => 'Аллоҳумма иннака ъафуввун туҳиббул-ъафва фаъфу ъаннӣ';
 
   @override
-  String get dua_qadr_text => 'O Allah, You are Forgiving and love forgiveness, so forgive me.';
+  String get dua_qadr_text => 'Худоё, ба дурустӣ ки Ту бахшандаӣ, бахшишро дӯст медорӣ, пас маро бубахш.';
 
   @override
-  String get dua_kursi_title => 'Ayat al-Kursi';
+  String get dua_kursi_title => 'Оятал-Курсӣ';
 
   @override
   String get dua_kursi_ar => 'اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ';
 
   @override
-  String get dua_kursi_trans => 'Allahu la ilaha illa Huwal-Hayyul-Qayyum. La ta\'khudhuhu sinatun wa la nawm...';
+  String get dua_kursi_trans => 'Аллоҳу ла илоҳа илла ҳувал-Ҳайюл-Қайюм. Ла таъхузуҳу синатун ва ла навм...';
 
   @override
-  String get dua_kursi_text => 'Allah! There is no deity except Him, the Ever-Living, the Sustainer of [all] existence. Neither drowsiness overtakes Him nor sleep...';
+  String get dua_kursi_text => 'Худост, ки ҳеҷ маъбуде барҳақ ҷуз Ӯ нест. Зиндаву побарҷост. На ӯро пинакӣ (хоболудӣ) фаро мегирад ва на хоб...';
 
   @override
-  String get dua_istighfar_title => 'Sayyidul Istighfar';
+  String get dua_istighfar_title => 'Сайидул Истиғфор';
 
   @override
   String get dua_istighfar_ar => 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ';
 
   @override
-  String get dua_istighfar_trans => 'Allahumma Anta Rabbi la ilaha illa Anta, khalaqtani wa ana \'abduka...';
+  String get dua_istighfar_trans => 'Аллоҳумма Анта Раббӣ ла илоҳа илла Анта, халақтанӣ ва ана ъабдук...';
 
   @override
-  String get dua_istighfar_text => 'O Allah, You are my Lord, there is no deity except You. You created me and I am Your servant...';
+  String get dua_istighfar_text => 'Худоё, Ту Парвардигори манӣ, ҷуз Ту маъбуде нест. Ту маро офаридӣ ва ман бандаи Туям...';
 
   @override
-  String get dua_sadness_title => 'Dua for Anxiety and Sorrow';
+  String get dua_sadness_title => 'Дуо аз ғам ва андӯҳ';
 
   @override
   String get dua_sadness_ar => 'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ';
 
   @override
-  String get dua_sadness_trans => 'Allahumma inni a\'udhu bika minal-hammi wal-hazan';
+  String get dua_sadness_trans => 'Аллоҳумма иннӣ аъузу бика минал-ҳамми вал-ҳазан';
 
   @override
-  String get dua_sadness_text => 'O Allah, I seek refuge in You from anxiety and sorrow.';
+  String get dua_sadness_text => 'Худоё, ман аз ғам ва андӯҳ ба Ту паноҳ мебарам.';
 
   @override
-  String get dua_morning_title => 'Protection for the Day';
+  String get dua_morning_title => 'Дуои муҳофизат барои рӯз';
 
   @override
   String get dua_morning_ar => 'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ';
 
   @override
-  String get dua_morning_trans => 'Bismillahil-ladhi la yadurru ma\'asmihi shay\'un fil-ardi wa la fis-sama\'i wa huwas-Sami\'ul-\'Alim';
+  String get dua_morning_trans => 'Бисмиллаҳил-лазӣ ла язурру маъасмиҳӣ шай\'ун фил-арзи ва ла фис-само\'и ва ҳувас-Самиъул-\'Алим';
 
   @override
-  String get dua_morning_text => 'In the name of Allah, with Whose name nothing can cause harm in the earth nor in the heavens, and He is the All-Hearing, the All-Knowing.';
+  String get dua_morning_text => 'Ба номи Худое, ки бо номи Ӯ ҳеҷ чиз дар замин ва осмон зарар расонида наметавонад ва Ӯ Шунавову Доност.';
+
+  @override
+  String get swipeToSelect => 'Swipe to select';
+
+  @override
+  String get timeAdjustments => 'Time Adjustments (Ihtiyat)';
+
+  @override
+  String get fineTuneTimes => 'Fine-tune prayer times';
+
+  @override
+  String get timeAdjustmentsShort => 'Time Adjustments';
+
+  @override
+  String get adjustmentDesc => 'If your local mosque times differ slightly, you can adjust the minutes here.';
+
+  @override
+  String get aboutLegal => 'About & Legal';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get termsOfUse => 'Terms of Use (EULA)';
+
+  @override
+  String get appVersion => 'App Version';
 }

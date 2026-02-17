@@ -12,7 +12,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appTitle => 'Nur';
 
   @override
-  String get loading => 'جارٍ حساب الأوقات...';
+  String get appName => 'NUR';
+
+  @override
+  String get appSubtitle => 'رفيقك في رمضان';
+
+  @override
+  String get loading => 'جاري حساب الأوقات...';
 
   @override
   String get error => 'خطأ';
@@ -21,16 +27,37 @@ class AppLocalizationsAr extends AppLocalizations {
   String get retry => 'إعادة المحاولة';
 
   @override
-  String get locationDetecting => 'جارٍ تحديد الموقع...';
+  String get locationDetecting => 'جاري تحديد الموقع...';
 
   @override
-  String get locationError => 'تعذر الحصول على الموقع';
+  String get locationError => 'الموقع غير متوفر';
+
+  @override
+  String get errorLocation => 'فشل في الحصول على الموقع';
+
+  @override
+  String get locationPermissionText => 'الموقع مطلوب لحساب أوقات الصلاة بدقة.';
 
   @override
   String get timeLeftIftar => 'الوقت المتبقي للإفطار';
 
   @override
   String get timeLeftSuhoor => 'الوقت المتبقي للسحور';
+
+  @override
+  String get timeRemaining => 'الوقت المتبقي';
+
+  @override
+  String get untilSuhoor => 'حتى السحور';
+
+  @override
+  String get untilIftar => 'حتى الإفطار';
+
+  @override
+  String get suhoor => 'السحور';
+
+  @override
+  String get iftar => 'الإفطار';
 
   @override
   String get fajr => 'الفجر';
@@ -51,13 +78,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get isha => 'العشاء';
 
   @override
+  String get tahajjud => 'التهجد';
+
+  @override
   String get qiblaTitle => 'القبلة';
 
   @override
   String get qiblaDirection => 'اتجاه القبلة';
 
   @override
-  String get rotatePhone => 'قم بتدوير هاتفك للمعايرة';
+  String get qiblaSearching => 'جاري البحث';
+
+  @override
+  String get qiblaAligned => 'في اتجاه القبلة';
+
+  @override
+  String get holyKaaba => 'الكعبة المشرفة';
+
+  @override
+  String get rotatePhone => 'ضع هاتفك على سطح مستوٍ';
+
+  @override
+  String get calibrateCompass => 'قم بالمعايرة بتحريك الهاتف على شكل رقم 8';
 
   @override
   String get north => 'ش';
@@ -72,10 +114,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get navCalendar => 'التقويم';
 
   @override
-  String get calendarHeader => 'التقويم';
+  String get calendarHeader => 'تقويم رمضان';
 
   @override
-  String get hijriDate => 'هجري';
+  String get hijriDate => 'التاريخ الهجري';
+
+  @override
+  String get refresh => 'تحديث';
 
   @override
   String get settingsTitle => 'الإعدادات';
@@ -84,16 +129,82 @@ class AppLocalizationsAr extends AppLocalizations {
   String get generalSection => 'عام';
 
   @override
+  String get languageSection => 'اللغة';
+
+  @override
+  String get language => 'اللغة';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get russian => 'Русский';
+
+  @override
   String get calculationMethod => 'طريقة الحساب';
 
   @override
-  String get madhab => 'حساب العصر (المذهب)';
+  String get madhab => 'حساب وقت العصر (المذهب)';
 
   @override
   String get location => 'الموقع';
 
   @override
+  String get searchCityManually => 'البحث عن المدينة يدوياً';
+
+  @override
+  String get changeLocation => 'تغيير الموقع';
+
+  @override
+  String get enterCityHint => 'أدخل اسم المدينة (مثل: القاهرة)';
+
+  @override
+  String get searchBtn => 'بحث';
+
+  @override
+  String get useAutoLocation => 'استخدام الموقع التلقائي (GPS)';
+
+  @override
+  String get notificationsSection => 'الإشعارات';
+
+  @override
   String get notifications => 'الإشعارات';
+
+  @override
+  String get pushNotifications => 'إشعارات التطبيق';
+
+  @override
+  String get enableNotifications => 'تفعيل الإشعارات';
+
+  @override
+  String get enableNotificationsDesc => 'تذكير قبل 5 دقائق من أوقات الصيام';
+
+  @override
+  String get smartAlarms => 'المنبهات الذكية';
+
+  @override
+  String get smartAlarmsDesc => 'تتلقى تعديلاً تلقائياً لأوقات السحور والإفطار اليومية.';
+
+  @override
+  String get suhoorAlarm => 'منبه السحور';
+
+  @override
+  String get iftarAlarm => 'منبه الإفطار';
+
+  @override
+  String get tahajjudAlarm => 'منبه التهجد';
+
+  @override
+  String get alarmOff => 'إيقاف';
+
+  @override
+  String get alarm20Min => 'قبل 20 دقيقة';
+
+  @override
+  String get alarm30Min => 'قبل 30 دقيقة';
+
+  @override
+  String get alarm60Min => 'قبل ساعة';
 
   @override
   String get save => 'حفظ';
@@ -102,199 +213,132 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cancel => 'إلغاء';
 
   @override
-  String get madhabHanafi => 'حنفي';
+  String get madhabHanafi => 'المذهب الحنفي';
 
   @override
-  String get madhabStandard => 'قياسي (شافعي، مالكي، حنبلي)';
+  String get madhabStandard => 'الجمهور (الشافعي، المالكي، الحنبلي)';
 
   @override
   String get methodMWL => 'رابطة العالم الإسلامي';
 
   @override
-  String get methodISNA => 'ISNA (أمريكا الشمالية)';
+  String get methodISNA => 'أمريكا الشمالية (ISNA)';
 
   @override
-  String get methodEgypt => 'الهيئة المصرية العامة';
+  String get methodEgypt => 'الهيئة المصرية العامة للمساحة';
 
   @override
-  String get methodMakkah => 'أم القرى (مكة)';
+  String get methodMakkah => 'جامعة أم القرى (مكة المكرمة)';
 
   @override
-  String get methodKarachi => 'كراتشي';
+  String get methodKarachi => 'جامعة العلوم الإسلامية بكراتشي';
 
   @override
-  String get methodTehran => 'طهران';
+  String get methodTehran => 'معهد الجيوفيزياء بجامعة طهران';
 
   @override
-  String get methodTurkey => 'تركيا (ديانات)';
+  String get methodTurkey => 'رئاسة الشؤون الدينية التركية';
 
   @override
-  String get methodSingapore => 'سنغافورة';
+  String get methodSingapore => 'مجلس الإدارة الإسلامية بسنغافورة';
 
   @override
   String get methodOther => 'أخرى / مخصص';
 
   @override
-  String get locationPermissionText => 'الموقع مطلوب لحساب مواقيت الصلاة بدقة.';
+  String get onboardTitle1 => 'مرحباً بك في تطبيق نور';
 
   @override
-  String get suhoor => 'السحور';
+  String get onboardDesc1 => 'رفيقك الأمثل في شهر رمضان المبارك. بتصميم بسيط ودقيق وبدون إعلانات.';
 
   @override
-  String get iftar => 'الإفطار';
+  String get onboardTitle2 => 'أوقات دقيقة';
 
   @override
-  String get timeRemaining => 'الوقت المتبقي';
+  String get onboardDesc2 => 'لحساب أوقات السحور والإفطار بدقة لمنطقتك، نحتاج إلى الوصول إلى موقعك.';
 
   @override
-  String get errorLocation => 'فشل في تحديد الموقع';
+  String get onboardTitle3 => 'لا تفوت أي لحظة';
 
   @override
-  String get refresh => 'تحديث';
-
-  @override
-  String get untilSuhoor => 'حتى السحور';
-
-  @override
-  String get untilIftar => 'حتى الإفطار';
-
-  @override
-  String get qiblaAligned => 'متحاذي';
-
-  @override
-  String get calibrateCompass => 'قم بتحريك الهاتف على شكل رقم 8 للمعايرة';
-
-  @override
-  String get onboardTitle1 => 'مرحبًا بك في NUR';
-
-  @override
-  String get onboardDesc1 => 'رفيقك المميز لشهر رمضان المبارك. بسيط، دقيق، وبدون إعلانات.';
-
-  @override
-  String get onboardTitle2 => 'مواقيت دقيقة';
-
-  @override
-  String get onboardDesc2 => 'لحساب وقت السحور والإفطار بدقة في منطقتك، نحتاج إلى موقعك.';
-
-  @override
-  String get onboardTitle3 => 'لا تفوّت لحظة';
-
-  @override
-  String get onboardDesc3 => 'فعّل الإشعارات لنذكّرك قبل السحور والإفطار بـ 5 دقائق.';
+  String get onboardDesc3 => 'اسمح بالإشعارات لتذكيرك بلطف قبل 5 دقائق من السحور والإفطار.';
 
   @override
   String get next => 'التالي';
 
   @override
-  String get getStarted => 'ابدأ';
+  String get getStarted => 'ابدأ الآن';
 
   @override
   String get bioTitle => 'حالة الجسم';
 
   @override
-  String get bioNightTitle => 'التعافي والترطيب';
+  String get bioNightTitle => 'الراحة والترطيب';
 
   @override
-  String get bioNightDesc => 'جسمك يستريح. اشرب الكثير من الماء واستعد للصيام.';
+  String get bioNightDesc => 'جسمك في حالة راحة. اشرب الكثير من الماء واستعد للصيام.';
 
   @override
-  String get bioPhase1Title => 'استقرار السكر';
+  String get bioPhase1Title => 'استقرار نسبة السكر';
 
   @override
-  String get bioPhase1Desc => 'ينخفض مستوى السكر في الدم ويستقر. يقل الإنسولين.';
+  String get bioPhase1Desc => 'ينخفض مستوى السكر في الدم ويستقر، وتقل مستويات الأنسولين.';
 
   @override
   String get bioPhase2Title => 'راحة الجهاز الهضمي';
 
   @override
-  String get bioPhase2Desc => 'تنتهي عملية الهضم ويبدأ الجسم باستخدام مخزون الجليكوجين.';
+  String get bioPhase2Desc => 'تنتهي عملية الهضم. يبدأ الجسم في استمداد الطاقة من مخزون الجليكوجين.';
 
   @override
-  String get bioPhase3Title => 'حرق الدهون (الكيتوز)';
+  String get bioPhase3Title => 'حرق الدهون (الكيتوزية)';
 
   @override
-  String get bioPhase3Desc => 'ينفد الجليكوجين ويبدأ الجسم بحرق الدهون للطاقة.';
+  String get bioPhase3Desc => 'ينفد الجليكوجين. يبدأ الجسم في حرق الدهون للحصول على الطاقة.';
 
   @override
-  String get bioPhase4Title => 'بداية الالتهام الذاتي';
+  String get bioPhase4Title => 'تجدد الخلايا (الالتهام الذاتي)';
 
   @override
-  String get bioPhase4Desc => 'يبدأ إصلاح الخلايا ويتخلص الجسم من الخلايا التالفة.';
+  String get bioPhase4Desc => 'تبدأ عملية إصلاح الخلايا. يتخلص الجسم من الخلايا التالفة ويتجدد.';
 
   @override
-  String get fastingProgress => 'تقدم الصيام';
+  String get fastingProgress => 'سجل الصيام';
 
   @override
-  String get enableNotifications => 'إشعارات فورية';
+  String get fastingStatus => 'حالة الصيام';
 
   @override
-  String get enableNotificationsDesc => 'تنبيه قبل 5 دقائق من مواعيد الصيام';
+  String get statusFasted => 'صائم';
 
   @override
-  String get smartAlarms => 'منبهات ذكية';
+  String get statusMissed => 'أفطر (قضاء)';
 
   @override
-  String get smartAlarmsDesc => 'تتكيّف تلقائيًا مع أوقات السحور والإفطار اليومية.';
+  String get statusNotSet => 'لم يُحدد';
 
   @override
-  String get suhoorAlarm => 'الاستيقاظ للسحور';
+  String get futureDateError => 'لا يمكنك تحديد حالة لأيام مستقبلية';
 
   @override
-  String get iftarAlarm => 'الاستعداد للإفطار';
+  String shareProgress(int fasted, int missed) {
+    return 'تقدمي في صيام رمضان 🌙\nصُمت: $fasted أيام\nأفطرت (قضاء): $missed أيام\nتم التتبع بواسطة تطبيق NUR!';
+  }
 
   @override
-  String get alarmOff => 'إيقاف';
+  String get shareImageTitle => 'صيامي في رمضان';
 
   @override
-  String get alarm20Min => '20 دقيقة';
+  String get shareImageDays => 'أيام الصيام';
 
   @override
-  String get alarm30Min => '30 دقيقة';
+  String get shareImageApp => 'تطبيق نور: رفيق المسلم';
 
   @override
-  String get alarm60Min => 'ساعة';
+  String get tasbihTitle => 'المسبحة';
 
   @override
-  String get tapForDua => 'اضغط للدعاء';
-
-  @override
-  String get duaSuhoorTitle => 'نية صيام رمضان';
-
-  @override
-  String get duaSuhoorArabic => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
-
-  @override
-  String get duaSuhoorTranslit => 'Nawaytu an asuma...';
-
-  @override
-  String get duaSuhoorTransl => 'نويت صيام شهر رمضان من الفجر إلى المغرب خالصًا لله تعالى.';
-
-  @override
-  String get duaIftarTitle => 'دعاء الإفطار';
-
-  @override
-  String get duaIftarArabic => 'ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللَّهُ';
-
-  @override
-  String get duaIftarTranslit => 'Allahumma inni laka sumtu...';
-
-  @override
-  String get duaIftarTransl => 'اللهم لك صمت وعلى رزقك أفطرت.';
-
-  @override
-  String get language => 'اللغة';
-
-  @override
-  String get english => 'الإنجليزية';
-
-  @override
-  String get russian => 'الروسية';
-
-  @override
-  String get tasbihTitle => 'تسبيح';
-
-  @override
-  String get reset => 'إعادة ضبط';
+  String get reset => 'تصفير';
 
   @override
   String get total => 'المجموع';
@@ -312,90 +356,40 @@ class AppLocalizationsAr extends AppLocalizations {
   String get astaghfirullah => 'أستغفر الله';
 
   @override
-  String get resetConfirm => 'هل أنت متأكد من إعادة ضبط العداد؟';
+  String get resetConfirm => 'هل أنت متأكد من رغبتك في تصفير العداد؟';
 
   @override
-  String get resetAction => 'إعادة ضبط';
+  String get resetAction => 'تصفير';
 
   @override
-  String get appName => 'NUR';
-
-  @override
-  String get appSubtitle => 'رفيق رمضان';
-
-  @override
-  String get languageSection => 'اللغة';
-
-  @override
-  String get notificationsSection => 'الإشعارات';
-
-  @override
-  String get pushNotifications => 'إشعارات فورية';
-
-  @override
-  String get qiblaSearching => 'بحث عن القبلة';
-
-  @override
-  String get holyKaaba => 'الكعبة المشرفة';
-
-  @override
-  String get fastingStatus => 'حالة الصيام';
-
-  @override
-  String get statusFasted => 'صائم';
-
-  @override
-  String get statusMissed => 'فائت (قضاء)';
-
-  @override
-  String get statusNotSet => 'غير محدد';
-
-  @override
-  String shareProgress(int fasted, int missed) {
-    return 'تقدمي في صيام رمضان 🌙\nأيام الصيام: $fasted\nالأيام الفائتة (قضاء): $missed\nتتبع مع تطبيق NUR!';
-  }
-
-  @override
-  String get shareImageTitle => 'صيامي في رمضان';
-
-  @override
-  String get shareImageDays => 'أيام الصيام';
-
-  @override
-  String get shareImageApp => 'NUR: مساعد المسلم';
-
-  @override
-  String get futureDateError => 'لا يمكن تحديد أيام في المستقبل';
-
-  @override
-  String get dailyInspiration => 'Daily Inspiration';
+  String get dailyInspiration => 'إلهام اليوم';
 
   @override
   String get quote1_ar => 'يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ كَمَا كُتِبَ عَلَى الَّذِينَ مِن قَبْلِكُمْ لَعَلَّكُمْ تَتَّقُونَ';
 
   @override
-  String get quote1_text => 'O you who have believed, decreed upon you is fasting as it was decreed upon those before you that you may become righteous.';
+  String get quote1_text => 'يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ كَمَا كُتِبَ عَلَى الَّذِينَ مِن قَبْلِكُمْ لَعَلَّكُمْ تَتَّقُونَ';
 
   @override
-  String get quote1_source => 'Quran, Al-Baqarah (2:183)';
+  String get quote1_source => 'القرآن الكريم، سورة البقرة (2:183)';
 
   @override
   String get quote2_ar => 'مَنْ صَامَ رَمَضَانَ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ';
 
   @override
-  String get quote2_text => 'Whoever observes fasts during the month of Ramadan out of sincere faith, and hoping to attain Allah\'s rewards, then all his past sins will be forgiven.';
+  String get quote2_text => 'مَنْ صَامَ رَمَضَانَ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ';
 
   @override
-  String get quote2_source => 'Sahih al-Bukhari (38)';
+  String get quote2_source => 'صحيح البخاري (38)';
 
   @override
   String get quote3_ar => 'لَيْلَةُ الْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ';
 
   @override
-  String get quote3_text => 'The Night of Decree is better than a thousand months.';
+  String get quote3_text => 'لَيْلَةُ الْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ';
 
   @override
-  String get quote3_source => 'Quran, Al-Qadr (97:3)';
+  String get quote3_source => 'القرآن الكريم، سورة القدر (97:3)';
 
   @override
   String get duaLibraryTitle => 'مكتبة الأدعية';
@@ -413,31 +407,58 @@ class AppLocalizationsAr extends AppLocalizations {
   String get categoryProtection => 'التحصين';
 
   @override
-  String get categoryForgiveness => 'التوبة والاستغفار';
+  String get categoryForgiveness => 'الاستغفار والتوبة';
 
   @override
-  String get categoryFamily => 'الأسرة والأطفال';
+  String get categoryFamily => 'الأسرة والأولاد';
 
   @override
   String get transcription => 'النطق';
 
   @override
-  String get translation => 'المعنى وفضل الدعاء';
+  String get translation => 'المعنى';
 
   @override
-  String get copied => 'تم النسخ بنجاح';
+  String get copied => 'تم النسخ إلى الحافظة';
 
   @override
-  String get duaSuhoorTrans => 'النية محلها القلب، ويُستحب استحضارها قبل الفجر.';
+  String get tapForDua => 'اضغط للدعاء';
 
   @override
-  String get duaSuhoorTranslate => 'الإخلاص في الصيام لله وحده، وهو شرط أساسي لقبول العمل.';
+  String get duaSuhoorTitle => 'دعاء نية الصيام (السحور)';
 
   @override
-  String get duaIftarTrans => 'يُقال بعد فطر الصائم، وهو من السنن المهجورة.';
+  String get duaSuhoorArabic => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
 
   @override
-  String get duaIftarTranslate => 'شكر الله على زوال التعب وحصول الأجر بإذنه تعالى.';
+  String get duaSuhoorTranslit => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
+
+  @override
+  String get duaSuhoorTransl => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
+
+  @override
+  String get duaSuhoorTrans => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
+
+  @override
+  String get duaSuhoorTranslate => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
+
+  @override
+  String get duaIftarTitle => 'دعاء الإفطار';
+
+  @override
+  String get duaIftarArabic => 'اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امَنْتُ وَعَليْكَ تَوَكَّلْتُ وَعَلى رِزْقِكَ اَفْطَرْتُ';
+
+  @override
+  String get duaIftarTranslit => 'اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امَنْتُ وَعَليْكَ تَوَكَّلْتُ وَعَلى رِزْقِكَ اَفْطَرْتُ';
+
+  @override
+  String get duaIftarTransl => 'اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امَنْتُ وَعَليْكَ تَوَكَّلْتُ وَعَلى رِزْقِكَ اَفْطَرْتُ';
+
+  @override
+  String get duaIftarTrans => 'اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امَنْتُ وَعَليْكَ تَوَكَّلْتُ وَعَلى رِزْقِكَ اَفْطَرْتُ';
+
+  @override
+  String get duaIftarTranslate => 'اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امَنْتُ وَعَليْكَ تَوَكَّلْتُ وَعَلى رِزْقِكَ اَفْطَرْتُ';
 
   @override
   String get dua_qadr_title => 'دعاء ليلة القدر';
@@ -446,10 +467,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dua_qadr_ar => 'اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي';
 
   @override
-  String get dua_qadr_trans => 'أوصى به النبي ﷺ عائشة رضي الله عنها.';
+  String get dua_qadr_trans => 'اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي';
 
   @override
-  String get dua_qadr_text => 'سؤال الله العفو والمغفرة في أعظم ليالي السنة.';
+  String get dua_qadr_text => 'اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي';
 
   @override
   String get dua_kursi_title => 'آية الكرسي';
@@ -458,10 +479,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dua_kursi_ar => 'اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ';
 
   @override
-  String get dua_kursi_trans => 'تُقرأ بعد كل صلاة وقبل النوم للحفظ.';
+  String get dua_kursi_trans => 'اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ...';
 
   @override
-  String get dua_kursi_text => 'أعظم آية في كتاب الله، تشتمل على توحيد الله وعظمته، وتحفظ المسلم من الشياطين.';
+  String get dua_kursi_text => 'اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ...';
 
   @override
   String get dua_istighfar_title => 'سيد الاستغفار';
@@ -470,10 +491,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dua_istighfar_ar => 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ';
 
   @override
-  String get dua_istighfar_trans => 'من قاله موقناً به ومات دخل الجنة.';
+  String get dua_istighfar_trans => 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ ...';
 
   @override
-  String get dua_istighfar_text => 'أفضل ما يستغفر به العبد ربه، اعترافاً بالعبودية لله، وإقراراً بنعمه، واعترافاً بالتقصير.';
+  String get dua_istighfar_text => 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ ...';
 
   @override
   String get dua_sadness_title => 'دعاء الهم والحزن';
@@ -482,20 +503,47 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dua_sadness_ar => 'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ';
 
   @override
-  String get dua_sadness_trans => 'من أدعية النبي ﷺ اليومية.';
+  String get dua_sadness_trans => 'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ';
 
   @override
-  String get dua_sadness_text => 'الالتجاء إلى الله من ضيق الصدر وكرب الحياة والديون.';
+  String get dua_sadness_text => 'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ';
 
   @override
-  String get dua_morning_title => 'حماية يومية';
+  String get dua_morning_title => 'دعاء الحفظ (صباحاً ومساءً)';
 
   @override
   String get dua_morning_ar => 'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ';
 
   @override
-  String get dua_morning_trans => 'يُقال ثلاث مرات صباحاً ومساءً.';
+  String get dua_morning_trans => 'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ';
 
   @override
-  String get dua_morning_text => 'التحصن باسم الله الذي لا يضر معه شيء، حماية من كل شر فجأة.';
+  String get dua_morning_text => 'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ';
+
+  @override
+  String get swipeToSelect => 'اسحب للاختيار';
+
+  @override
+  String get timeAdjustments => 'تعديل الوقت (الاحتياط)';
+
+  @override
+  String get fineTuneTimes => 'ضبط دقيق لأوقات الصلاة';
+
+  @override
+  String get timeAdjustmentsShort => 'تعديل الوقت';
+
+  @override
+  String get adjustmentDesc => 'إذا كانت أوقات المسجد المحلي تختلف قليلاً، يمكنك تعديل الدقائق هنا.';
+
+  @override
+  String get aboutLegal => 'حول التطبيق والمعلومات القانونية';
+
+  @override
+  String get privacyPolicy => 'سياسة الخصوصية';
+
+  @override
+  String get termsOfUse => 'شروط الاستخدام (EULA)';
+
+  @override
+  String get appVersion => 'إصدار التطبيق';
 }

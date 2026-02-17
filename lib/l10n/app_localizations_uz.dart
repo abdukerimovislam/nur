@@ -12,6 +12,12 @@ class AppLocalizationsUz extends AppLocalizations {
   String get appTitle => 'Nur';
 
   @override
+  String get appName => 'NUR';
+
+  @override
+  String get appSubtitle => 'RAMAZON HAMROHI';
+
+  @override
   String get loading => 'Vaqtlar hisoblanmoqda...';
 
   @override
@@ -27,16 +33,37 @@ class AppLocalizationsUz extends AppLocalizations {
   String get locationError => 'Joylashuv topilmadi';
 
   @override
+  String get errorLocation => 'Joylashuvni aniqlab bo\'lmadi';
+
+  @override
+  String get locationPermissionText => 'Namoz vaqtlarini aniq hisoblash uchun joylashuv kerak.';
+
+  @override
   String get timeLeftIftar => 'Iftorgacha qolgan vaqt';
 
   @override
   String get timeLeftSuhoor => 'Saharlikkacha qolgan vaqt';
 
   @override
+  String get timeRemaining => 'Qolgan vaqt';
+
+  @override
+  String get untilSuhoor => 'Saharlikkacha';
+
+  @override
+  String get untilIftar => 'Iftorgacha';
+
+  @override
+  String get suhoor => 'Saharlik';
+
+  @override
+  String get iftar => 'Iftorlik';
+
+  @override
   String get fajr => 'Bomdod';
 
   @override
-  String get sunrise => 'Quyosh chiqishi';
+  String get sunrise => 'Quyosh';
 
   @override
   String get dhuhr => 'Peshin';
@@ -51,19 +78,34 @@ class AppLocalizationsUz extends AppLocalizations {
   String get isha => 'Xufton';
 
   @override
+  String get tahajjud => 'Tahajjud';
+
+  @override
   String get qiblaTitle => 'Qibla';
 
   @override
   String get qiblaDirection => 'Qibla yo‘nalishi';
 
   @override
-  String get rotatePhone => 'Kalibrlash uchun telefonni aylantiring';
+  String get qiblaSearching => 'QIDIRILMOQDA';
 
   @override
-  String get north => 'S';
+  String get qiblaAligned => 'QIBLA TOPILDI';
 
   @override
-  String get navHome => 'Bosh sahifa';
+  String get holyKaaba => 'MUQADDAS KA\'BA';
+
+  @override
+  String get rotatePhone => 'Telefonni tekis joyga qo‘ying';
+
+  @override
+  String get calibrateCompass => 'Telefonni 8 shaklida harakatlantirib kalibrlang';
+
+  @override
+  String get north => 'Sh';
+
+  @override
+  String get navHome => 'Asosiy';
 
   @override
   String get navQibla => 'Qibla';
@@ -72,10 +114,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get navCalendar => 'Taqvim';
 
   @override
-  String get calendarHeader => 'Taqvim';
+  String get calendarHeader => 'Ramazon Taqdimi';
 
   @override
-  String get hijriDate => 'Hijriy';
+  String get hijriDate => 'Hijriy sana';
+
+  @override
+  String get refresh => 'Yangilash';
 
   @override
   String get settingsTitle => 'Sozlamalar';
@@ -84,16 +129,82 @@ class AppLocalizationsUz extends AppLocalizations {
   String get generalSection => 'Umumiy';
 
   @override
+  String get languageSection => 'Til';
+
+  @override
+  String get language => 'Til';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get russian => 'Русский';
+
+  @override
   String get calculationMethod => 'Hisoblash usuli';
 
   @override
-  String get madhab => 'Asr hisobi (mazhab)';
+  String get madhab => 'Asr hisobi (Mazhab)';
 
   @override
   String get location => 'Joylashuv';
 
   @override
+  String get searchCityManually => 'Shaharni qo\'lda qidirish';
+
+  @override
+  String get changeLocation => 'Joylashuvni o\'zgartirish';
+
+  @override
+  String get enterCityHint => 'Shahar nomini kiriting (masalan, Toshkent)';
+
+  @override
+  String get searchBtn => 'Qidirish';
+
+  @override
+  String get useAutoLocation => 'Avto-joylashuvni qaytarish (GPS)';
+
+  @override
+  String get notificationsSection => 'Bildirishnomalar';
+
+  @override
   String get notifications => 'Bildirishnomalar';
+
+  @override
+  String get pushNotifications => 'Push-bildirishnomalar';
+
+  @override
+  String get enableNotifications => 'Push-bildirishnomalar';
+
+  @override
+  String get enableNotificationsDesc => 'Saharlik va iftordan 5 daqiqa oldin eslatma';
+
+  @override
+  String get smartAlarms => 'Aqlli budilniklar';
+
+  @override
+  String get smartAlarmsDesc => 'Har kuni saharlik va iftorlik vaqtiga avtomatik moslashadi.';
+
+  @override
+  String get suhoorAlarm => 'Saharlik budilnigi';
+
+  @override
+  String get iftarAlarm => 'Iftorlikka tayyorgarlik';
+
+  @override
+  String get tahajjudAlarm => 'Tahajjud budilnigi';
+
+  @override
+  String get alarmOff => 'O‘chiq';
+
+  @override
+  String get alarm20Min => '20 daq oldin';
+
+  @override
+  String get alarm30Min => '30 daq oldin';
+
+  @override
+  String get alarm60Min => '1 soat oldin';
 
   @override
   String get save => 'Saqlash';
@@ -102,67 +213,37 @@ class AppLocalizationsUz extends AppLocalizations {
   String get cancel => 'Bekor qilish';
 
   @override
-  String get madhabHanafi => 'Hanafi';
+  String get madhabHanafi => 'Hanafiy';
 
   @override
   String get madhabStandard => 'Standart (Shofeiy, Molikiy, Hanbaliy)';
 
   @override
-  String get methodMWL => 'Jahon musulmonlar ligasi';
+  String get methodMWL => 'Jahon Musulmonlar Ligasi (MWL)';
 
   @override
   String get methodISNA => 'ISNA (Shimoliy Amerika)';
 
   @override
-  String get methodEgypt => 'Misr boshqarmasi';
+  String get methodEgypt => 'Misr Boshqarmasi';
 
   @override
   String get methodMakkah => 'Umm al-Qura (Makka)';
 
   @override
-  String get methodKarachi => 'Karachi';
+  String get methodKarachi => 'Karachi Islom Universiteti';
 
   @override
-  String get methodTehran => 'Tehron';
+  String get methodTehran => 'Tehron Geofizika Instituti';
 
   @override
   String get methodTurkey => 'Turkiya (Diyanet)';
 
   @override
-  String get methodSingapore => 'Singapur';
+  String get methodSingapore => 'Singapur (MUIS)';
 
   @override
   String get methodOther => 'Boshqa / Maxsus';
-
-  @override
-  String get locationPermissionText => 'Namoz vaqtlarini aniq hisoblash uchun joylashuv kerak.';
-
-  @override
-  String get suhoor => 'Saharlik';
-
-  @override
-  String get iftar => 'Iftorlik';
-
-  @override
-  String get timeRemaining => 'Qolgan vaqt';
-
-  @override
-  String get errorLocation => 'Joylashuvni olish muvaffaqiyatsiz';
-
-  @override
-  String get refresh => 'Yangilash';
-
-  @override
-  String get untilSuhoor => 'Saharlikkacha';
-
-  @override
-  String get untilIftar => 'Iftorgacha';
-
-  @override
-  String get qiblaAligned => 'YO\'NALISH TO\'G\'RI';
-
-  @override
-  String get calibrateCompass => 'Telefonni 8 shaklida aylantirib kalibrlang';
 
   @override
   String get onboardTitle1 => 'NUR ilovasiga xush kelibsiz';
@@ -174,13 +255,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get onboardTitle2 => 'Aniq vaqtlar';
 
   @override
-  String get onboardDesc2 => 'Hududingiz uchun saharlik va iftorlik vaqtlarini hisoblash uchun joylashuv kerak.';
+  String get onboardDesc2 => 'Hududingiz uchun saharlik va iftorlik vaqtlarini aniq hisoblash uchun joylashuv kerak.';
 
   @override
   String get onboardTitle3 => 'Muhim lahzani o‘tkazib yubormang';
 
   @override
-  String get onboardDesc3 => 'Saharlik va iftorlikdan 5 daqiqa oldin eslatma olish uchun bildirishnomalarni yoqing.';
+  String get onboardDesc3 => 'Saharlik va iftorlikdan 5 daqiqa oldin eslatma olish uchun bildirishnomalarga ruxsat bering.';
 
   @override
   String get next => 'Keyingi';
@@ -195,100 +276,63 @@ class AppLocalizationsUz extends AppLocalizations {
   String get bioNightTitle => 'Tiklanish va suv ichish';
 
   @override
-  String get bioNightDesc => 'Tanangiz dam olmoqda. Ko‘proq suv iching va ro‘zaga tayyorlaning.';
+  String get bioNightDesc => 'Tanangiz dam olmoqda. Ro‘zaga tayyorlanish uchun ko‘proq suv iching.';
 
   @override
-  String get bioPhase1Title => 'Qondagi shakar normallashadi';
+  String get bioPhase1Title => 'Shakar miqdori pasayadi';
 
   @override
-  String get bioPhase1Desc => 'Qondagi shakar kamayadi va barqarorlashadi. Insulin pasayadi.';
+  String get bioPhase1Desc => 'Qondagi shakar miqdori pasayib, normallashadi. Insulin ishlab chiqarish kamayadi.';
 
   @override
-  String get bioPhase2Title => 'Hazm tizimi dam oladi';
+  String get bioPhase2Title => 'Hazm qilish tizimi dam oladi';
 
   @override
-  String get bioPhase2Desc => 'Hazm tugaydi. Tana glikogen zaxirasidan foydalanadi.';
+  String get bioPhase2Desc => 'Hazm qilish yakunlanadi. Tana glikogen zaxirasidan energiya ola boshlaydi.';
 
   @override
-  String get bioPhase3Title => 'Yog‘ yoqish (ketoz)';
+  String get bioPhase3Title => 'Yog‘ yoqish (Ketoz)';
 
   @override
-  String get bioPhase3Desc => 'Glikogen tugaydi. Tana energiya uchun yog‘ yoqadi.';
+  String get bioPhase3Desc => 'Glikogen tugaydi. Tana energiya uchun yog‘ zaxiralarini yoqa boshlaydi.';
 
   @override
-  String get bioPhase4Title => 'Autofagiya boshlanadi';
+  String get bioPhase4Title => 'Hujayralar yangilanishi (Autofagiya)';
 
   @override
-  String get bioPhase4Desc => 'Hujayralar yangilanadi va shikastlanganlari tozalanadi.';
+  String get bioPhase4Desc => 'Hujayralarning tiklanishi boshlanadi. Tana shikastlangan hujayralardan tozalanadi.';
 
   @override
   String get fastingProgress => 'Ro‘za jarayoni';
 
   @override
-  String get enableNotifications => 'Push-bildirishnomalar';
+  String get fastingStatus => 'Ro\'za holati';
 
   @override
-  String get enableNotificationsDesc => 'Ro‘za vaqtlaridan 5 daqiqa oldin eslatma';
+  String get statusFasted => 'Tutdim';
 
   @override
-  String get smartAlarms => 'Aqlli budilniklar';
+  String get statusMissed => 'Qazo bo\'ldi';
 
   @override
-  String get smartAlarmsDesc => 'Har kuni saharlik va iftorlik vaqtiga moslashadi.';
+  String get statusNotSet => 'Belgilanmagan';
 
   @override
-  String get suhoorAlarm => 'Saharlikka uyg‘onish';
+  String get futureDateError => 'Kelajakdagi kunlarni belgilash mumkin emas';
 
   @override
-  String get iftarAlarm => 'Iftorlikka tayyorgarlik';
+  String shareProgress(int fasted, int missed) {
+    return 'Ramazon oyidagi natijalarim 🌙\nTutgan ro\'zam: $fasted kun\nQazo bo\'lganlar: $missed kun\nNUR ilovasi bilan kuzatilmoqda!';
+  }
 
   @override
-  String get alarmOff => 'O‘chiq';
+  String get shareImageTitle => 'Mening Ramazonim';
 
   @override
-  String get alarm20Min => '20 daq';
+  String get shareImageDays => 'Tutilgan kunlar';
 
   @override
-  String get alarm30Min => '30 daq';
-
-  @override
-  String get alarm60Min => '1 soat';
-
-  @override
-  String get tapForDua => 'Duo uchun bosing';
-
-  @override
-  String get duaSuhoorTitle => 'Saharlik duosi (Niyat)';
-
-  @override
-  String get duaSuhoorArabic => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
-
-  @override
-  String get duaSuhoorTranslit => 'Navaytu an asuma sovma shahri ramazona minal fajri ilal mag\'ribi xolisan lillahi ta\'ala.';
-
-  @override
-  String get duaSuhoorTransl => 'Ramazon oyida tong otgandan kun botguncha Alloh taolo uchun ro\'za tutishni niyat qildim.';
-
-  @override
-  String get duaIftarTitle => 'Iftorlik duosi';
-
-  @override
-  String get duaIftarArabic => 'ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللَّهُ';
-
-  @override
-  String get duaIftarTranslit => 'Allohumma inni laka sumtu va bika amantu va \'alayka tavakkaltu va \'ala rizqika aftortu.';
-
-  @override
-  String get duaIftarTransl => 'Yo Alloh, Sen uchun ro\'za tutdim, Senga iymon keltirdim, Senga tavakkal qildim va Sen bergan rizq bilan iftor qildim.';
-
-  @override
-  String get language => 'Til';
-
-  @override
-  String get english => 'Inglizcha';
-
-  @override
-  String get russian => 'Ruscha';
+  String get shareImageApp => 'NUR ilovasi';
 
   @override
   String get tasbihTitle => 'Tasbeh';
@@ -312,60 +356,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get astaghfirullah => 'Astaghfirulloh';
 
   @override
-  String get resetConfirm => 'Hisoblagichni tozalamoqchimisiz?';
+  String get resetConfirm => 'Hisoblagichni nolga tushirishni xohlaysizmi?';
 
   @override
   String get resetAction => 'Tozalash';
-
-  @override
-  String get appName => 'NUR';
-
-  @override
-  String get appSubtitle => 'RAMAZON HAMROHI';
-
-  @override
-  String get languageSection => 'Til';
-
-  @override
-  String get notificationsSection => 'Bildirishnomalar';
-
-  @override
-  String get pushNotifications => 'Push-bildirishnomalar';
-
-  @override
-  String get qiblaSearching => 'QIBLA QIDIRISH';
-
-  @override
-  String get holyKaaba => 'MUQADDAS KA\'BA';
-
-  @override
-  String get fastingStatus => 'Ro\'za holati';
-
-  @override
-  String get statusFasted => 'Ro\'za tutdim';
-
-  @override
-  String get statusMissed => 'Qazo bo\'ldi';
-
-  @override
-  String get statusNotSet => 'Belgilanmadi';
-
-  @override
-  String shareProgress(int fasted, int missed) {
-    return 'Mening Ramazon oyi natijalarim 🌙\nTutgan ro\'zam: $fasted kun\nQazo bo\'lganlar: $missed kun\nNUR ilovasi bilan birga!';
-  }
-
-  @override
-  String get shareImageTitle => 'Mening Ramazondagi ro\'zam';
-
-  @override
-  String get shareImageDays => 'Tutilgan kunlar';
-
-  @override
-  String get shareImageApp => 'NUR: Ilovasi';
-
-  @override
-  String get futureDateError => 'Kelajakdagi kunlarni belgilash mumkin emas';
 
   @override
   String get dailyInspiration => 'Kunning ilhomi';
@@ -419,7 +413,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get categoryFamily => 'Oila va Bolalar';
 
   @override
-  String get transcription => 'Transkripsiya';
+  String get transcription => 'O\'qilishi';
 
   @override
   String get translation => 'Ma\'nosi';
@@ -428,10 +422,37 @@ class AppLocalizationsUz extends AppLocalizations {
   String get copied => 'Nusxa olindi';
 
   @override
+  String get tapForDua => 'Duo uchun bosing';
+
+  @override
+  String get duaSuhoorTitle => 'Saharlik duosi (Niyat)';
+
+  @override
+  String get duaSuhoorArabic => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
+
+  @override
+  String get duaSuhoorTranslit => 'Navaytu an asuma sovma shahri ramazona minal fajri ilal mag\'ribi xolisan lillahi ta\'ala.';
+
+  @override
+  String get duaSuhoorTransl => 'Ramazon oyining ro\'zasini tongdan kun botguniga qadar xolis Alloh taolo uchun tutishni niyat qildim.';
+
+  @override
   String get duaSuhoorTrans => 'Navaytu an asuma sovma shahri ramazona minal fajri ilal mag\'ribi xolisan lillahi ta\'ala';
 
   @override
-  String get duaSuhoorTranslate => 'Ramazon oyining ro\'zasini tongdan kun botguniga qadar xolis Alloh taolo uchun tutishni niyat qildim.';
+  String get duaSuhoorTranslate => 'Ertangi Ramazon oyining ro\'zasini xolis Alloh taolo uchun tutishni niyat qildim.';
+
+  @override
+  String get duaIftarTitle => 'Iftorlik duosi';
+
+  @override
+  String get duaIftarArabic => 'اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امَنْتُ وَعَليْكَ تَوَكَّلْتُ وَعَلى رِزْقِكَ اَفْطَرْتُ';
+
+  @override
+  String get duaIftarTranslit => 'Allohumma inni laka sumtu va bika amantu va \'alayka tavakkaltu va \'ala rizqika aftortu.';
+
+  @override
+  String get duaIftarTransl => 'Yo Alloh, Sen uchun ro\'za tutdim, Senga iymon keltirdim, Senga tavakkal qildim va Sen bergan rizq bilan iftor qildim.';
 
   @override
   String get duaIftarTrans => 'Zahabaz-zama\'u vabtallatil-\'uruqu va sabatal-ajru in sha\'Alloh';
@@ -458,10 +479,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get dua_kursi_ar => 'اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ';
 
   @override
-  String get dua_kursi_trans => 'Allohu la ilaha illa Huval-Hayyul-Qayyum, la ta\'xuzuhu sinatuv-vala navm, lahu ma fis-samavati va ma fil-arz, man zallazi yashfa\'u \'indahu illa bi-iznih, ya\'lamu ma bayna aydihim va ma xalfahum, va la yuhituna bi-shayim-min \'ilmihi illa bi-ma sha\', vasi\'a kursiyyuhus-samavati val-arz, va la ya\'uduhu hifzuhuma, va Huval-\'Aliyyul-\'Aziym';
+  String get dua_kursi_trans => 'Allohu la ilaha illa Huval-Hayyul-Qayyum, la ta\'xuzuhu sinatuv-vala navm...';
 
   @override
-  String get dua_kursi_text => 'Alloh — Undan o\'zga iloh yo\'q, U Tirik, Abadiydir. Uni mudroq ham, uyqu ham olmaydi. Osmonlaru yerdagi jami narsalar Unikidir. Uning huzurida O\'zining iznisiz kim ham shafaat qila olar edi? U ularning oldilaridagi narsani ham, ortlaridagi narsani ham biladi. Ular Uning ilmidan faqat O\'zi xohlagan narsanigina bilurlar. Uning Kursisi osmonlaru yerni qamrab olgandir. Ularni muhofaza qilish Uni toliqtirmas. U Oliy va Buyukdir.';
+  String get dua_kursi_text => 'Alloh — Undan o\'zga iloh yo\'q, U Tirik, Abadiydir. Uni mudroq ham, uyqu ham olmaydi...';
 
   @override
   String get dua_istighfar_title => 'Sayyidul Istig\'for';
@@ -470,10 +491,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get dua_istighfar_ar => 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ';
 
   @override
-  String get dua_istighfar_trans => 'Allohumma Anta Robbi la ilaha illa Anta, xalaqtani va ana \'abduka, va ana \'ala \'ahdika va va\'dika mastata\'tu, a\'uzu bika min sharri ma sona\'tu, abuu laka bi-ni\'matika \'alayya va abuu bi-zanbi, fag\'firli fa-innahu la yag\'firuz-zunuba illa Ant';
+  String get dua_istighfar_trans => 'Allohumma Anta Robbi la ilaha illa Anta, xalaqtani va ana \'abduka...';
 
   @override
-  String get dua_istighfar_text => 'Yo Alloh, Sen mening Robbimsan! Sendan o\'zga iloh yo\'q. Sen meni yaratding, men Sening qulingman. Men kuchim yetganicha Sening ahding va va\'dangdaman. Qilgan ishlarimning yomonligidan Sendan panoh tilayman. Menga bergan ne\'matingni e\'tirof qilaman va gunohlarimni ham e\'tirof qilaman. Mening gunohlarimni kechir, chunki gunohlarni Sendan o\'zga hech kim kechira olmas!';
+  String get dua_istighfar_text => 'Yo Alloh, Sen mening Robbimsan! Sendan o\'zga iloh yo\'q. Sen meni yaratding, men Sening qulingman...';
 
   @override
   String get dua_sadness_title => 'G\'am va tashvishdan duo';
@@ -498,4 +519,31 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get dua_morning_text => 'Allohning ismi bilan boshlaymanki, Uning ismi bilan yeru osmonda biror narsa zarar yetkaza olmas. U Eshituvchi va Biluvchidir!';
+
+  @override
+  String get swipeToSelect => 'Tanlash uchun suring';
+
+  @override
+  String get timeAdjustments => 'Vaqtni to\'g\'rilash (Ehtiyot)';
+
+  @override
+  String get fineTuneTimes => 'Namoz vaqtlarini moslashtirish';
+
+  @override
+  String get timeAdjustmentsShort => 'Vaqtni to\'g\'rilash';
+
+  @override
+  String get adjustmentDesc => 'Agar mahalliy masjidingiz vaqti biroz farq qilsa, daqiqalarni bu yerdan to\'g\'rilashingiz mumkin.';
+
+  @override
+  String get aboutLegal => 'Ilova haqida va Huquqiy ma\'lumot';
+
+  @override
+  String get privacyPolicy => 'Maxfiylik siyosati';
+
+  @override
+  String get termsOfUse => 'Foydalanish shartlari (EULA)';
+
+  @override
+  String get appVersion => 'Ilova versiyasi';
 }

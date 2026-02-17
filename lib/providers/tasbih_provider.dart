@@ -4,6 +4,7 @@ import '../data/services/preferences_service.dart';
 
 class TasbihProvider extends ChangeNotifier {
   final PreferencesService _prefs = PreferencesService();
+  static const int _dhikrCount = 4;
 
   int _count = 0;
   int _selectedDhikrIndex = 0; // Индекс выбранного зикра
@@ -18,7 +19,13 @@ class TasbihProvider extends ChangeNotifier {
   Future<void> _loadData() async {
     _count = await _prefs.loadTasbihCount();
     // Загружаем сохраненный индекс зикра при старте приложения
-    _selectedDhikrIndex = await _prefs.loadTasbihIndex();
+    final loadedIndex = await _prefs.loadTasbihIndex();
+    if (loadedIndex >= 0 && loadedIndex < _dhikrCount) {
+      _selectedDhikrIndex = loadedIndex;
+    } else {
+      _selectedDhikrIndex = 0;
+      _prefs.saveTasbihIndex(0);
+    }
     notifyListeners();
   }
 
@@ -38,6 +45,7 @@ class TasbihProvider extends ChangeNotifier {
 
   // Метод выбора зикра
   void selectDhikr(int index) {
+    if (index < 0 || index >= _dhikrCount) return;
     if (_selectedDhikrIndex != index) {
       _selectedDhikrIndex = index;
       _count = 0; // Сбрасываем счетчик при выборе нового зикра

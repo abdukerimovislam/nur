@@ -12,6 +12,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appTitle => 'Nur';
 
   @override
+  String get appName => 'NUR';
+
+  @override
+  String get appSubtitle => 'COMPAGNON DE RAMADAN';
+
+  @override
   String get loading => 'Calcul des horaires...';
 
   @override
@@ -21,25 +27,46 @@ class AppLocalizationsFr extends AppLocalizations {
   String get retry => 'Réessayer';
 
   @override
-  String get locationDetecting => 'Détection de la position...';
+  String get locationDetecting => 'Détection de l\'emplacement...';
 
   @override
-  String get locationError => 'Position introuvable';
+  String get locationError => 'Emplacement indisponible';
 
   @override
-  String get timeLeftIftar => 'Temps restant avant l’Iftar';
+  String get errorLocation => 'Échec de l\'obtention de l\'emplacement';
 
   @override
-  String get timeLeftSuhoor => 'Temps restant avant le Suhoor';
+  String get locationPermissionText => 'L\'emplacement est requis pour des horaires de prière précis.';
+
+  @override
+  String get timeLeftIftar => 'Temps avant l\'Iftar';
+
+  @override
+  String get timeLeftSuhoor => 'Temps avant le Souhour';
+
+  @override
+  String get timeRemaining => 'Temps restant';
+
+  @override
+  String get untilSuhoor => 'jusqu\'au Souhour';
+
+  @override
+  String get untilIftar => 'jusqu\'à l\'Iftar';
+
+  @override
+  String get suhoor => 'Souhour';
+
+  @override
+  String get iftar => 'Iftar';
 
   @override
   String get fajr => 'Fajr';
 
   @override
-  String get sunrise => 'Lever du soleil';
+  String get sunrise => 'Lever';
 
   @override
-  String get dhuhr => 'Dhuhr';
+  String get dhuhr => 'Dohr';
 
   @override
   String get asr => 'Asr';
@@ -48,7 +75,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get maghrib => 'Maghrib';
 
   @override
-  String get isha => 'Isha';
+  String get isha => 'Icha';
+
+  @override
+  String get tahajjud => 'Tahajjud';
 
   @override
   String get qiblaTitle => 'Qibla';
@@ -57,7 +87,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get qiblaDirection => 'Direction de la Qibla';
 
   @override
-  String get rotatePhone => 'Faites pivoter votre téléphone pour calibrer';
+  String get qiblaSearching => 'RECHERCHE';
+
+  @override
+  String get qiblaAligned => 'ALIGNÉ';
+
+  @override
+  String get holyKaaba => 'SAINTE KAABA';
+
+  @override
+  String get rotatePhone => 'Placez votre téléphone sur une surface plane';
+
+  @override
+  String get calibrateCompass => 'Calibrez en faisant un 8 avec le téléphone';
 
   @override
   String get north => 'N';
@@ -72,10 +114,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get navCalendar => 'Calendrier';
 
   @override
-  String get calendarHeader => 'Calendrier';
+  String get calendarHeader => 'Calendrier du Ramadan';
 
   @override
-  String get hijriDate => 'Hégirien';
+  String get hijriDate => 'Date hégirienne';
+
+  @override
+  String get refresh => 'Actualiser';
 
   @override
   String get settingsTitle => 'Paramètres';
@@ -84,16 +129,82 @@ class AppLocalizationsFr extends AppLocalizations {
   String get generalSection => 'Général';
 
   @override
+  String get languageSection => 'Langue';
+
+  @override
+  String get language => 'Langue';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get russian => 'Russian';
+
+  @override
   String get calculationMethod => 'Méthode de calcul';
 
   @override
-  String get madhab => 'Calcul du Asr (madhhab)';
+  String get madhab => 'Calcul de l\'Asr (Madhab)';
 
   @override
-  String get location => 'Position';
+  String get location => 'Emplacement';
+
+  @override
+  String get searchCityManually => 'Rechercher la ville manuellement';
+
+  @override
+  String get changeLocation => 'Changer d\'emplacement';
+
+  @override
+  String get enterCityHint => 'Entrez le nom de la ville (ex: Paris)';
+
+  @override
+  String get searchBtn => 'Rechercher';
+
+  @override
+  String get useAutoLocation => 'Utiliser la géolocalisation (GPS)';
+
+  @override
+  String get notificationsSection => 'Notifications';
 
   @override
   String get notifications => 'Notifications';
+
+  @override
+  String get pushNotifications => 'Notifications Push';
+
+  @override
+  String get enableNotifications => 'Notifications Push';
+
+  @override
+  String get enableNotificationsDesc => 'Rappels 5 min avant le jeûne';
+
+  @override
+  String get smartAlarms => 'Alarmes intelligentes';
+
+  @override
+  String get smartAlarmsDesc => 'S\'ajuste automatiquement aux horaires de Souhour et Iftar.';
+
+  @override
+  String get suhoorAlarm => 'Réveil pour le Souhour';
+
+  @override
+  String get iftarAlarm => 'Préparation pour l\'Iftar';
+
+  @override
+  String get tahajjudAlarm => 'Alarme de Tahajjud';
+
+  @override
+  String get alarmOff => 'Désactivé';
+
+  @override
+  String get alarm20Min => '20 min avant';
+
+  @override
+  String get alarm30Min => '30 min avant';
+
+  @override
+  String get alarm60Min => '1 heure avant';
 
   @override
   String get save => 'Enregistrer';
@@ -105,10 +216,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get madhabHanafi => 'Hanafi';
 
   @override
-  String get madhabStandard => 'Standard (Shafi, Maliki, Hanbali)';
+  String get madhabStandard => 'Standard (Chaféite, Malékite, Hanbalite)';
 
   @override
-  String get methodMWL => 'Ligue Islamique Mondiale';
+  String get methodMWL => 'Ligue Musulmane Mondiale';
 
   @override
   String get methodISNA => 'ISNA (Amérique du Nord)';
@@ -135,52 +246,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get methodOther => 'Autre / Personnalisé';
 
   @override
-  String get locationPermissionText => 'La position est requise pour des horaires de prière précis.';
-
-  @override
-  String get suhoor => 'Suhoor';
-
-  @override
-  String get iftar => 'Iftar';
-
-  @override
-  String get timeRemaining => 'Temps restant';
-
-  @override
-  String get errorLocation => 'Impossible d’obtenir la position';
-
-  @override
-  String get refresh => 'Actualiser';
-
-  @override
-  String get untilSuhoor => 'avant le Suhoor';
-
-  @override
-  String get untilIftar => 'avant l’Iftar';
-
-  @override
-  String get qiblaAligned => 'ALIGNÉ';
-
-  @override
-  String get calibrateCompass => 'Calibrez en bougeant le téléphone en forme de 8';
-
-  @override
   String get onboardTitle1 => 'Bienvenue sur NUR';
 
   @override
   String get onboardDesc1 => 'Votre compagnon premium pour le mois sacré du Ramadan. Minimaliste, précis et sans publicité.';
 
   @override
-  String get onboardTitle2 => 'Horaires précis';
+  String get onboardTitle2 => 'Horaires Précis';
 
   @override
-  String get onboardDesc2 => 'Pour calculer les horaires exacts du Suhoor et de l’Iftar, nous avons besoin de votre position.';
+  String get onboardDesc2 => 'Pour calculer les heures exactes du Souhour et de l\'Iftar pour votre région, nous avons besoin d\'accéder à votre position.';
 
   @override
-  String get onboardTitle3 => 'Ne manquez aucun moment';
+  String get onboardTitle3 => 'Ne manquez aucun instant';
 
   @override
-  String get onboardDesc3 => 'Activez les notifications pour recevoir un rappel 5 minutes avant le Suhoor et l’Iftar.';
+  String get onboardDesc3 => 'Autorisez les notifications pour que nous puissions vous le rappeler 5 minutes avant le Souhour et l\'Iftar.';
 
   @override
   String get next => 'Suivant';
@@ -192,103 +273,66 @@ class AppLocalizationsFr extends AppLocalizations {
   String get bioTitle => 'État du corps';
 
   @override
-  String get bioNightTitle => 'Récupération & Hydratation';
+  String get bioNightTitle => 'Récupération et Hydratation';
 
   @override
-  String get bioNightDesc => 'Votre corps se repose. Buvez beaucoup d’eau et préparez-vous au jeûne.';
+  String get bioNightDesc => 'Votre corps se repose. Buvez beaucoup d\'eau pour vous préparer au jeûne.';
 
   @override
-  String get bioPhase1Title => 'Stabilisation du sucre';
+  String get bioPhase1Title => 'Baisse de la glycémie';
 
   @override
-  String get bioPhase1Desc => 'Le taux de sucre baisse et se stabilise. L’insuline diminue.';
+  String get bioPhase1Desc => 'Le taux de sucre dans le sang baisse et se normalise. Les niveaux d\'insuline diminuent.';
 
   @override
-  String get bioPhase2Title => 'Repos digestif';
+  String get bioPhase2Title => 'Repos du système digestif';
 
   @override
-  String get bioPhase2Desc => 'La digestion se termine. Le corps utilise ses réserves de glycogène.';
+  String get bioPhase2Desc => 'La digestion prend fin. Le corps commence à puiser de l\'énergie dans les réserves de glycogène.';
 
   @override
-  String get bioPhase3Title => 'Brûlage des graisses (cétose)';
+  String get bioPhase3Title => 'Brûlage des graisses (Cétose)';
 
   @override
-  String get bioPhase3Desc => 'Le glycogène s’épuise. Le corps brûle les graisses pour l’énergie.';
+  String get bioPhase3Desc => 'Le glycogène est épuisé. Le corps commence à brûler les graisses pour obtenir de l\'énergie.';
 
   @override
-  String get bioPhase4Title => 'Début de l’autophagie';
+  String get bioPhase4Title => 'Début de l\'autophagie';
 
   @override
-  String get bioPhase4Desc => 'Réparation cellulaire et élimination des cellules endommagées.';
+  String get bioPhase4Desc => 'La réparation cellulaire commence. Le corps élimine les cellules endommagées et se régénère.';
 
   @override
-  String get fastingProgress => 'Progression du jeûne';
+  String get fastingProgress => 'Progrès du jeûne';
 
   @override
-  String get enableNotifications => 'Notifications push';
+  String get fastingStatus => 'Statut du jeûne';
 
   @override
-  String get enableNotificationsDesc => 'Rappel 5 minutes avant les événements de jeûne';
+  String get statusFasted => 'Jeûné';
 
   @override
-  String get smartAlarms => 'Alarmes intelligentes';
+  String get statusMissed => 'Manqué (Qaza)';
 
   @override
-  String get smartAlarmsDesc => 'S’ajuste automatiquement aux horaires quotidiens.';
+  String get statusNotSet => 'Non défini';
 
   @override
-  String get suhoorAlarm => 'Se réveiller pour le Suhoor';
+  String get futureDateError => 'Impossible de marquer les jours futurs';
 
   @override
-  String get iftarAlarm => 'Préparer l’Iftar';
+  String shareProgress(int fasted, int missed) {
+    return 'Mes progrès du jeûne du Ramadan 🌙\nJeûné : $fasted jours\nManqué (Qaza) : $missed jours\nSuivi avec l\'application NUR !';
+  }
 
   @override
-  String get alarmOff => 'Désactivé';
+  String get shareImageTitle => 'Mon jeûne du Ramadan';
 
   @override
-  String get alarm20Min => '20 min';
+  String get shareImageDays => 'Jours jeûnés';
 
   @override
-  String get alarm30Min => '30 min';
-
-  @override
-  String get alarm60Min => '1 heure';
-
-  @override
-  String get tapForDua => 'Touchez pour la dua';
-
-  @override
-  String get duaSuhoorTitle => 'Intention de jeûne (Suhoor)';
-
-  @override
-  String get duaSuhoorArabic => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
-
-  @override
-  String get duaSuhoorTranslit => 'Nawaytu an asuma sawma shahri ramadana minal fajri ilal maghribi khalisan lillahi ta\'ala.';
-
-  @override
-  String get duaSuhoorTransl => 'J’ai l’intention de jeûner le mois de Ramadan de l’aube au coucher du soleil sincèrement pour Allah le Très-Haut.';
-
-  @override
-  String get duaIftarTitle => 'Dua de rupture du jeûne';
-
-  @override
-  String get duaIftarArabic => 'اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امَنْتُ وَعَليْكَ تَوَكَّلْتُ وَعَلى رِزْقِكَ اَفْطَرْتُ';
-
-  @override
-  String get duaIftarTranslit => 'Allahumma inni laka sumtu wa bika aamantu wa \'alayka tawakkaltu wa \'ala rizqika aftartu.';
-
-  @override
-  String get duaIftarTransl => 'Ô Allah, j’ai jeûné pour Toi, j’ai cru en Toi, je place ma confiance en Toi et je romps mon jeûne avec la subsistance que Tu m’as accordée.';
-
-  @override
-  String get language => 'Langue';
-
-  @override
-  String get english => 'Anglais';
-
-  @override
-  String get russian => 'Russe';
+  String get shareImageApp => 'NUR : Assistant Musulman';
 
   @override
   String get tasbihTitle => 'Tasbih';
@@ -312,69 +356,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get astaghfirullah => 'Astaghfirullah';
 
   @override
-  String get resetConfirm => 'Voulez-vous vraiment réinitialiser le compteur ?';
+  String get resetConfirm => 'Êtes-vous sûr de vouloir réinitialiser le compteur ?';
 
   @override
   String get resetAction => 'Réinitialiser';
 
   @override
-  String get appName => 'NUR';
-
-  @override
-  String get appSubtitle => 'COMPAGNON DU RAMADAN';
-
-  @override
-  String get languageSection => 'Langue';
-
-  @override
-  String get notificationsSection => 'Notifications';
-
-  @override
-  String get pushNotifications => 'Notifications Push';
-
-  @override
-  String get qiblaSearching => 'RECHERCHE QIBLA';
-
-  @override
-  String get holyKaaba => 'KAABA SACRÉE';
-
-  @override
-  String get fastingStatus => 'Statut du jeûne';
-
-  @override
-  String get statusFasted => 'A jeûné';
-
-  @override
-  String get statusMissed => 'Manqué (Qaza)';
-
-  @override
-  String get statusNotSet => 'Non défini';
-
-  @override
-  String shareProgress(int fasted, int missed) {
-    return 'Ma progression du jeûne du Ramadan 🌙\nJours de jeûne : $fasted\nJours manqués (Qaza) : $missed\nSuivi avec l\'application NUR !';
-  }
-
-  @override
-  String get shareImageTitle => 'Mon Jeûne du Ramadan';
-
-  @override
-  String get shareImageDays => 'Jours de Jeûne';
-
-  @override
-  String get shareImageApp => 'NUR : Ton Assistant';
-
-  @override
-  String get futureDateError => 'Impossible de marquer les jours futurs';
-
-  @override
-  String get dailyInspiration => 'Inspiration du jour';
+  String get dailyInspiration => 'Inspiration quotidienne';
 
   @override
   String get quote1_ar => 'يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ كَمَا كُتِبَ عَلَى الَّذِينَ مِن قَبْلِكُمْ لَعَلَّكُمْ تَتَّقُونَ';
 
   @override
-  String get quote1_text => 'Ô les croyants ! Le jeûne vous est prescrit comme il a été prescrit à ceux qui vous ont précédés, ainsi atteindrez-vous la piété.';
+  String get quote1_text => 'Ô les croyants! On vous a prescrit as-Siyam comme on l\'a prescrit à ceux d\'avant vous, ainsi atteindrez-vous la piété.';
 
   @override
   String get quote1_source => 'Coran, Al-Baqarah (2:183)';
@@ -383,7 +377,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get quote2_ar => 'مَنْ صَامَ رَمَضَانَ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ';
 
   @override
-  String get quote2_text => 'Quiconque jeûne le mois de Ramadan avec foi et en espérant la récompense d\'Allah, ses péchés précédents lui seront pardonnés.';
+  String get quote2_text => 'Quiconque jeûne le mois de Ramadan avec foi et en espérant la récompense, ses péchés passés lui seront pardonnés.';
 
   @override
   String get quote2_source => 'Sahih al-Bukhari (38)';
@@ -392,64 +386,91 @@ class AppLocalizationsFr extends AppLocalizations {
   String get quote3_ar => 'لَيْلَةُ الْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ';
 
   @override
-  String get quote3_text => 'La nuit du Destin est meilleure que mille mois.';
+  String get quote3_text => 'La nuit d\'Al-Qadr est meilleure que mille mois.';
 
   @override
   String get quote3_source => 'Coran, Al-Qadr (97:3)';
 
   @override
-  String get duaLibraryTitle => 'Dua Library';
+  String get duaLibraryTitle => 'Bibliothèque de Douas';
 
   @override
   String get categoryRamadan => 'Ramadan';
 
   @override
-  String get categoryMorningEvening => 'Morning & Evening';
+  String get categoryMorningEvening => 'Matin et Soir';
 
   @override
-  String get categoryAfterSalah => 'After Salah';
+  String get categoryAfterSalah => 'Après la prière';
 
   @override
   String get categoryProtection => 'Protection';
 
   @override
-  String get categoryForgiveness => 'Forgiveness';
+  String get categoryForgiveness => 'Pardon';
 
   @override
-  String get categoryFamily => 'Family & Children';
+  String get categoryFamily => 'Famille et Enfants';
 
   @override
-  String get transcription => 'Transcription';
+  String get transcription => 'Phonétique';
 
   @override
-  String get translation => 'Translation';
+  String get translation => 'Traduction';
 
   @override
-  String get copied => 'Copied to clipboard';
+  String get copied => 'Copié dans le presse-papiers';
 
   @override
-  String get duaSuhoorTrans => 'Nawaitu an asuma sawma shahri ramadana minal fajri ilal maghribi khalisan lillahi ta\'ala';
+  String get tapForDua => 'Appuyez pour le Doua';
 
   @override
-  String get duaSuhoorTranslate => 'I intend to keep the fast for tomorrow in the month of Ramadan, sincerely for Allah.';
+  String get duaSuhoorTitle => 'Doua pour le Souhour (Intention)';
 
   @override
-  String get duaIftarTrans => 'Dhahabadh-dhama\'u wabtallatil-\'urooqu wa thabatal-ajru in sha\'Allah';
+  String get duaSuhoorArabic => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
 
   @override
-  String get duaIftarTranslate => 'The thirst has gone, the veins are quenched, and the reward is confirmed, if Allah wills.';
+  String get duaSuhoorTranslit => 'Nawaytou an asouma sawma chahri ramadana minal fajri ilal maghribi khalisan lillahi ta\'ala.';
 
   @override
-  String get dua_qadr_title => 'Dua for Laylat al-Qadr';
+  String get duaSuhoorTransl => 'J\'ai l\'intention de jeûner le mois de Ramadan, de l\'aube au crépuscule, sincèrement pour Allah.';
+
+  @override
+  String get duaSuhoorTrans => 'Nawaytou an asouma sawma chahri ramadana minal fajri ilal maghribi khalisan lillahi ta\'ala';
+
+  @override
+  String get duaSuhoorTranslate => 'J\'ai l\'intention de jeûner demain pour le mois de Ramadan, sincèrement pour Allah.';
+
+  @override
+  String get duaIftarTitle => 'Doua pour l\'Iftar (Rupture)';
+
+  @override
+  String get duaIftarArabic => 'اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امَنْتُ وَعَليْكَ تَوَكَّلْتُ وَعَلى رِزْقِكَ اَفْطَرْتُ';
+
+  @override
+  String get duaIftarTranslit => 'Allahoumma inni laka soumtou wa bika amantou wa \'alayka tawakkaltou wa \'ala rizqika aftartou.';
+
+  @override
+  String get duaIftarTransl => 'Ô Allah, j\'ai jeûné pour Toi, j\'ai cru en Toi, je m\'en remets à Toi et je romps mon jeûne avec la nourriture que Tu m\'as donnée.';
+
+  @override
+  String get duaIftarTrans => 'Dhahabadh-dhama\'ou wabtallatil-\'ourouqou wa thabatal-ajrou in cha\'Allah';
+
+  @override
+  String get duaIftarTranslate => 'La soif est dissipée, les veines sont désaltérées et la récompense est assurée, si Allah le veut.';
+
+  @override
+  String get dua_qadr_title => 'Doua pour la Nuit du Destin';
 
   @override
   String get dua_qadr_ar => 'اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي';
 
   @override
-  String get dua_qadr_trans => 'Allahumma innaka \'afuwwun tuhibbul-\'afwa fa\'fu \'anni';
+  String get dua_qadr_trans => 'Allahoumma innaka \'afouwwoun touhibboul-\'afwa fa\'fou \'anni';
 
   @override
-  String get dua_qadr_text => 'O Allah, You are Forgiving and love forgiveness, so forgive me.';
+  String get dua_qadr_text => 'Ô Allah, Tu es Pardonneur et Tu aimes le pardon, alors pardonne-moi.';
 
   @override
   String get dua_kursi_title => 'Ayat al-Kursi';
@@ -461,41 +482,68 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dua_kursi_trans => 'Allahu la ilaha illa Huwal-Hayyul-Qayyum. La ta\'khudhuhu sinatun wa la nawm...';
 
   @override
-  String get dua_kursi_text => 'Allah! There is no deity except Him, the Ever-Living, the Sustainer of [all] existence. Neither drowsiness overtakes Him nor sleep...';
+  String get dua_kursi_text => 'Allah ! Point de divinité à part Lui, le Vivant, Celui qui subsiste par lui-même «Al-Qayyum». Ni somnolence ni sommeil ne Le saisissent...';
 
   @override
-  String get dua_istighfar_title => 'Sayyidul Istighfar';
+  String get dua_istighfar_title => 'Sayyidoul Istighfar';
 
   @override
   String get dua_istighfar_ar => 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ';
 
   @override
-  String get dua_istighfar_trans => 'Allahumma Anta Rabbi la ilaha illa Anta, khalaqtani wa ana \'abduka...';
+  String get dua_istighfar_trans => 'Allahoumma Anta Rabbi la ilaha illa Anta, khalaqtani wa ana \'abdouka...';
 
   @override
-  String get dua_istighfar_text => 'O Allah, You are my Lord, there is no deity except You. You created me and I am Your servant...';
+  String get dua_istighfar_text => 'Ô Allah, Tu es mon Seigneur, il n\'y a de divinité que Toi. Tu m\'as créé et je suis Ton serviteur...';
 
   @override
-  String get dua_sadness_title => 'Dua for Anxiety and Sorrow';
+  String get dua_sadness_title => 'Doua contre l\'anxiété et la tristesse';
 
   @override
   String get dua_sadness_ar => 'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ';
 
   @override
-  String get dua_sadness_trans => 'Allahumma inni a\'udhu bika minal-hammi wal-hazan';
+  String get dua_sadness_trans => 'Allahoumma inni a\'oudhou bika minal-hammi wal-hazan';
 
   @override
-  String get dua_sadness_text => 'O Allah, I seek refuge in You from anxiety and sorrow.';
+  String get dua_sadness_text => 'Ô Allah, je me réfugie auprès de Toi contre l\'anxiété et la tristesse.';
 
   @override
-  String get dua_morning_title => 'Protection for the Day';
+  String get dua_morning_title => 'Protection pour la journée';
 
   @override
   String get dua_morning_ar => 'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ';
 
   @override
-  String get dua_morning_trans => 'Bismillahil-ladhi la yadurru ma\'asmihi shay\'un fil-ardi wa la fis-sama\'i wa huwas-Sami\'ul-\'Alim';
+  String get dua_morning_trans => 'Bismillahil-ladhi la yadourrou ma\'asmihi chay\'oun fil-ardi wa la fis-sama\'i wa houwas-Sami\'oul-\'Alim';
 
   @override
-  String get dua_morning_text => 'In the name of Allah, with Whose name nothing can cause harm in the earth nor in the heavens, and He is the All-Hearing, the All-Knowing.';
+  String get dua_morning_text => 'Au nom d\'Allah, avec le nom Duquel rien ne peut nuire sur terre ni dans les cieux, et Il est l\'Audient, l\'Omniscient.';
+
+  @override
+  String get swipeToSelect => 'Balayez pour sélectionner';
+
+  @override
+  String get timeAdjustments => 'Ajustements d\'heure (Ihtiyat)';
+
+  @override
+  String get fineTuneTimes => 'Ajustez les heures de prière';
+
+  @override
+  String get timeAdjustmentsShort => 'Ajustements d\'heure';
+
+  @override
+  String get adjustmentDesc => 'Si les horaires de votre mosquée locale diffèrent légèrement, vous pouvez ajuster les minutes ici.';
+
+  @override
+  String get aboutLegal => 'À propos et Mentions légales';
+
+  @override
+  String get privacyPolicy => 'Politique de confidentialité';
+
+  @override
+  String get termsOfUse => 'Conditions d\'utilisation (EULA)';
+
+  @override
+  String get appVersion => 'Version de l\'application';
 }

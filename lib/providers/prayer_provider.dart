@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:io';
 import 'package:adhan/adhan.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 
 import '../data/services/location_service.dart';
-import '../data/services/storage_service.dart'; // Используем новый сервис
+import '../data/services/storage_service.dart';
 import '../data/services/notification_service.dart';
 import '../core/localization/notification_dictionary.dart';
 
@@ -30,6 +29,7 @@ class PrayerProvider extends ChangeNotifier {
 
   bool _isLoading = true;
   String? _error;
+  StorageService getStorageService() => _storageService;
 
   CalculationMethod _method = CalculationMethod.muslim_world_league;
   Madhab _madhab = Madhab.hanafi;
@@ -40,15 +40,14 @@ class PrayerProvider extends ChangeNotifier {
   int _suhoorAlarmOffset = 30;
   int _iftarAlarmOffset = 0;
 
-  Timer? _timer;
+  int _tahajjudAlarmOffset = 0;
+  DateTime? _tahajjudTime;
 
+  Timer? _timer;
   int _currentDay = DateTime.now().day;
 
-  // --- Защита от потери пушей при быстрых кликах ---
   bool _isScheduling = false;
   bool _needsReschedule = false;
-
-  // --- НОВОЕ: Флаг ручного режима ---
   bool _isManualLocation = false;
 
   // --- Getters ---
@@ -67,7 +66,9 @@ class PrayerProvider extends ChangeNotifier {
   int get suhoorAlarmOffset => _suhoorAlarmOffset;
   int get iftarAlarmOffset => _iftarAlarmOffset;
   Locale get locale => _locale;
-  bool get isManualLocation => _isManualLocation; // Геттер для UI
+  bool get isManualLocation => _isManualLocation;
+  int get tahajjudAlarmOffset => _tahajjudAlarmOffset;
+  DateTime? get tahajjudTime => _tahajjudTime;
 
   Duration get timeElapsed {
     if (_startTime == null) return Duration.zero;
@@ -100,9 +101,14 @@ class PrayerProvider extends ChangeNotifier {
       _notificationsEnabled = _storageService.getNotificationsEnabled();
       _suhoorAlarmOffset = _storageService.getSuhoorOffset();
       _iftarAlarmOffset = _storageService.getIftarOffset();
+      _tahajjudAlarmOffset = _storageService.getTahajjudOffset();
 
       final savedMadhabIdx = _storageService.getMadhabIndex();
-      if (savedMadhabIdx != null) _madhab = Madhab.values[savedMadhabIdx];
+      if (savedMadhabIdx != null &&
+          savedMadhabIdx >= 0 &&
+          savedMadhabIdx < Madhab.values.length) {
+        _madhab = Madhab.values[savedMadhabIdx];
+      }
 
       final savedLang = _storageService.getLanguage();
       if (savedLang != null) {
@@ -112,11 +118,9 @@ class PrayerProvider extends ChangeNotifier {
         _locale = Locale(['en', 'ru'].contains(sysLang) ? sysLang : 'en');
       }
 
-      // --- НОВОЕ: Проверка ручного режима локации ---
       _isManualLocation = _storageService.getIsManualLocation();
 
       if (_isManualLocation) {
-        // Загружаем сохраненные ручные координаты
         final lat = _storageService.getManualLat();
         final lng = _storageService.getManualLng();
         if (lat != null && lng != null) {
@@ -124,12 +128,10 @@ class PrayerProvider extends ChangeNotifier {
           _city = _storageService.getCity() ?? "Selected City";
           _countryCode = _storageService.getCountryCode() ?? "";
         } else {
-          // Если данные битые, сбрасываем на GPS
           _isManualLocation = false;
         }
       }
 
-      // Если ручной режим выключен, дергаем GPS
       if (!_isManualLocation) {
         final position = await _locationService.determinePosition();
         _coordinates = Coordinates(position.latitude, position.longitude);
@@ -137,7 +139,9 @@ class PrayerProvider extends ChangeNotifier {
       }
 
       final savedMethodIdx = _storageService.getCalculationMethodIndex();
-      if (savedMethodIdx != null) {
+      if (savedMethodIdx != null &&
+          savedMethodIdx >= 0 &&
+          savedMethodIdx < CalculationMethod.values.length) {
         _method = CalculationMethod.values[savedMethodIdx];
       } else {
         _method = _autoDetectMethod(_countryCode);
@@ -158,7 +162,6 @@ class PrayerProvider extends ChangeNotifier {
     }
   }
 
-  // --- НОВОЕ: Установка города вручную (Поиск) ---
   Future<void> setManualLocation(String query) async {
     try {
       _isLoading = true;
@@ -166,29 +169,33 @@ class PrayerProvider extends ChangeNotifier {
       notifyListeners();
 
       List<Location> locations = await locationFromAddress(query);
-      if (locations.isNotEmpty) {
-        final loc = locations.first;
-        _coordinates = Coordinates(loc.latitude, loc.longitude);
-
-        // Получаем красивое название и страну
-        await _determineCityAndCountry(loc.latitude, loc.longitude, fallbackCity: query);
-
-        _isManualLocation = true;
-        _storageService.saveIsManualLocation(true);
-        _storageService.saveManualLocation(loc.latitude, loc.longitude, _city, _countryCode);
-
-        // Авто-подбор метода под новую страну
-        _method = _autoDetectMethod(_countryCode);
-        _storageService.saveCalculationMethodIndex(_method.index);
-
-        _currentDay = DateTime.now().day;
-        _calculateRamadanTimings();
-        _startTimer();
-        await scheduleNotifications();
-
+      if (locations.isEmpty) {
+        _error = "City not found. Please try another name.";
         _isLoading = false;
         notifyListeners();
+        return;
       }
+
+      final loc = locations.first;
+      _coordinates = Coordinates(loc.latitude, loc.longitude);
+      await _determineCityAndCountry(loc.latitude, loc.longitude,
+          fallbackCity: query);
+
+      _isManualLocation = true;
+      _storageService.saveIsManualLocation(true);
+      _storageService.saveManualLocation(
+          loc.latitude, loc.longitude, _city, _countryCode);
+
+      _method = _autoDetectMethod(_countryCode);
+      _storageService.saveCalculationMethodIndex(_method.index);
+
+      _currentDay = DateTime.now().day;
+      _calculateRamadanTimings();
+      _startTimer();
+      await scheduleNotifications();
+
+      _isLoading = false;
+      notifyListeners();
     } catch (e) {
       _error = "City not found. Please try another name.";
       _isLoading = false;
@@ -196,26 +203,35 @@ class PrayerProvider extends ChangeNotifier {
     }
   }
 
-  // --- НОВОЕ: Возврат к GPS (Авто-локация) ---
   Future<void> enableAutoLocation() async {
     _isManualLocation = false;
     _storageService.saveIsManualLocation(false);
     _isLoading = true;
     notifyListeners();
-    await init(); // Перезапустит инициализацию с GPS
+    await init();
+  }
+
+  // --- НОВОЕ: Метод для ручной корректировки времени намазов (Ihtiyat) ---
+  void updateManualAdjustment(String prayerName, int minutes) {
+    _storageService.saveAdjustment(prayerName, minutes);
+    if (_coordinates != null) {
+      _calculateRamadanTimings();
+      scheduleNotifications();
+      notifyListeners();
+    }
   }
 
   CalculationParameters _getSmartParameters() {
     final params = _method.getParameters();
     params.madhab = _madhab;
 
-    if (['KG', 'KZ', 'UZ', 'TJ', 'RU'].contains(_countryCode.toUpperCase())) {
-      params.fajrAngle = 18.0;
-      params.ishaAngle = 15.0;
-      params.ishaInterval = 0;
-      params.adjustments.maghrib = 3;
-      params.adjustments.fajr = -2;
-    }
+    // --- НОВОЕ: Применяем пользовательские "минуты безопасности" (Offsets) ---
+    params.adjustments.fajr = _storageService.getAdjustment('fajr');
+    params.adjustments.sunrise = _storageService.getAdjustment('sunrise');
+    params.adjustments.dhuhr = _storageService.getAdjustment('dhuhr');
+    params.adjustments.asr = _storageService.getAdjustment('asr');
+    params.adjustments.maghrib = _storageService.getAdjustment('maghrib');
+    params.adjustments.isha = _storageService.getAdjustment('isha');
 
     final double currentIshaAngle = params.ishaAngle ?? 0.0;
     params.highLatitudeRule = currentIshaAngle > 0.0
@@ -231,8 +247,12 @@ class PrayerProvider extends ChangeNotifier {
     final now = DateTime.now();
     final params = _getSmartParameters();
 
-    final todayTimes = PrayerTimes(_coordinates!, DateComponents.from(now), params);
+    final todayTimes =
+        PrayerTimes(_coordinates!, DateComponents.from(now), params);
     _prayerTimes = todayTimes;
+
+    final sunnahTimes = SunnahTimes(todayTimes);
+    _tahajjudTime = sunnahTimes.lastThirdOfTheNight;
 
     final fajrToday = todayTimes.fajr;
     final maghribToday = todayTimes.maghrib;
@@ -240,7 +260,8 @@ class PrayerProvider extends ChangeNotifier {
     if (now.isBefore(fajrToday)) {
       _currentEvent = RamadanEvent.suhoor;
       final yesterday = DateTime(now.year, now.month, now.day - 1);
-      final yesterdayTimes = PrayerTimes(_coordinates!, DateComponents.from(yesterday), params);
+      final yesterdayTimes =
+          PrayerTimes(_coordinates!, DateComponents.from(yesterday), params);
       _startTime = yesterdayTimes.maghrib;
       _targetTime = fajrToday;
     } else if (now.isBefore(maghribToday)) {
@@ -251,7 +272,8 @@ class PrayerProvider extends ChangeNotifier {
       _currentEvent = RamadanEvent.suhoor;
       _startTime = maghribToday;
       final tomorrow = DateTime(now.year, now.month, now.day + 1);
-      final tomorrowTimes = PrayerTimes(_coordinates!, DateComponents.from(tomorrow), params);
+      final tomorrowTimes =
+          PrayerTimes(_coordinates!, DateComponents.from(tomorrow), params);
       _targetTime = tomorrowTimes.fajr;
     }
   }
@@ -291,6 +313,13 @@ class PrayerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateTahajjudAlarm(int minutes) {
+    _tahajjudAlarmOffset = minutes;
+    _storageService.saveTahajjudOffset(minutes);
+    scheduleNotifications();
+    notifyListeners();
+  }
+
   void updateCalculationMethod(CalculationMethod newMethod) {
     _method = newMethod;
     _storageService.saveCalculationMethodIndex(newMethod.index);
@@ -316,12 +345,9 @@ class PrayerProvider extends ChangeNotifier {
       _needsReschedule = true;
       return;
     }
-
     _isScheduling = true;
-
     do {
       _needsReschedule = false;
-
       try {
         await NotificationService().cancelAll();
         if (!_notificationsEnabled || _coordinates == null) continue;
@@ -332,11 +358,12 @@ class PrayerProvider extends ChangeNotifier {
 
         final List<PrayerTimes> calculationDays = [
           PrayerTimes(_coordinates!, DateComponents.from(now), params),
-          PrayerTimes(_coordinates!, DateComponents.from(now.add(const Duration(days: 1))), params),
+          PrayerTimes(_coordinates!,
+              DateComponents.from(now.add(const Duration(days: 1))), params),
         ];
 
+        final notificationService = NotificationService();
         int notificationIdBase = 0;
-
         for (var times in calculationDays) {
           final prayers = {
             notificationIdBase + 0: {'name': 'Fajr', 'time': times.fajr},
@@ -346,40 +373,48 @@ class PrayerProvider extends ChangeNotifier {
             notificationIdBase + 5: {'name': 'Isha', 'time': times.isha},
           };
 
-          prayers.forEach((id, data) {
+          for (final entry in prayers.entries) {
+            final id = entry.key;
+            final data = entry.value;
             final String name = data['name'] as String;
             final DateTime time = data['time'] as DateTime;
             if (time.isAfter(now)) {
-              final String title = NotificationDictionary.get('prayer_time_title', currentLang);
-              final String body = NotificationDictionary.get('prayer_time_body', currentLang).replaceAll('{prayer}', name);
-
-              NotificationService().schedulePrayerNotification(
+              final String title =
+                  NotificationDictionary.get('prayer_time_title', currentLang);
+              final String body =
+                  NotificationDictionary.get('prayer_time_body', currentLang)
+                      .replaceAll('{prayer}', name);
+              await notificationService.schedulePrayerNotification(
                 id: id,
                 title: title,
                 body: body,
                 scheduledTime: time,
               );
             }
-          });
+          }
 
-          _scheduleMotivationalPhases(times.fajr, times.maghrib, notificationIdBase);
+          await _scheduleMotivationalPhases(
+              times.fajr, times.maghrib, notificationIdBase);
 
           final suhoorWarning = times.fajr.subtract(const Duration(minutes: 5));
           if (suhoorWarning.isAfter(now)) {
-            NotificationService().schedulePrayerNotification(
+            await notificationService.schedulePrayerNotification(
               id: notificationIdBase + 201,
-              title: NotificationDictionary.get('suhoor_5min_title', currentLang),
+              title:
+                  NotificationDictionary.get('suhoor_5min_title', currentLang),
               body: NotificationDictionary.get('suhoor_5min_body', currentLang),
               scheduledTime: suhoorWarning,
               payload: 'action_dua_suhoor',
             );
           }
 
-          final iftarWarning = times.maghrib.subtract(const Duration(minutes: 5));
+          final iftarWarning =
+              times.maghrib.subtract(const Duration(minutes: 5));
           if (iftarWarning.isAfter(now)) {
-            NotificationService().schedulePrayerNotification(
+            await notificationService.schedulePrayerNotification(
               id: notificationIdBase + 202,
-              title: NotificationDictionary.get('iftar_5min_title', currentLang),
+              title:
+                  NotificationDictionary.get('iftar_5min_title', currentLang),
               body: NotificationDictionary.get('iftar_5min_body', currentLang),
               scheduledTime: iftarWarning,
               payload: 'action_dua_iftar',
@@ -387,74 +422,101 @@ class PrayerProvider extends ChangeNotifier {
           }
 
           if (_suhoorAlarmOffset > 0) {
-            final suhoorAlarmTime = times.fajr.subtract(Duration(minutes: _suhoorAlarmOffset));
+            final suhoorAlarmTime =
+                times.fajr.subtract(Duration(minutes: _suhoorAlarmOffset));
             if (suhoorAlarmTime.isAfter(now)) {
-              NotificationService().schedulePrayerNotification(
-                  id: notificationIdBase + 301,
-                  title: NotificationDictionary.get('suhoor_smart_title', currentLang),
-                  body: NotificationDictionary.get('suhoor_smart_body', currentLang).replaceAll('{min}', _suhoorAlarmOffset.toString()),
-                  scheduledTime: suhoorAlarmTime
+              await notificationService.schedulePrayerNotification(
+                id: notificationIdBase + 301,
+                title: NotificationDictionary.get(
+                    'suhoor_smart_title', currentLang),
+                body:
+                    NotificationDictionary.get('suhoor_smart_body', currentLang)
+                        .replaceAll('{min}', _suhoorAlarmOffset.toString()),
+                scheduledTime: suhoorAlarmTime,
               );
             }
           }
 
           if (_iftarAlarmOffset > 0) {
-            final iftarAlarmTime = times.maghrib.subtract(Duration(minutes: _iftarAlarmOffset));
+            final iftarAlarmTime =
+                times.maghrib.subtract(Duration(minutes: _iftarAlarmOffset));
             if (iftarAlarmTime.isAfter(now)) {
-              NotificationService().schedulePrayerNotification(
-                  id: notificationIdBase + 302,
-                  title: NotificationDictionary.get('iftar_smart_title', currentLang),
-                  body: NotificationDictionary.get('iftar_smart_body', currentLang).replaceAll('{min}', _iftarAlarmOffset.toString()),
-                  scheduledTime: iftarAlarmTime
+              await notificationService.schedulePrayerNotification(
+                id: notificationIdBase + 302,
+                title: NotificationDictionary.get(
+                    'iftar_smart_title', currentLang),
+                body:
+                    NotificationDictionary.get('iftar_smart_body', currentLang)
+                        .replaceAll('{min}', _iftarAlarmOffset.toString()),
+                scheduledTime: iftarAlarmTime,
               );
             }
           }
 
+          if (_tahajjudAlarmOffset > 0) {
+            final sunnah = SunnahTimes(times);
+            final tahajjudAlarmTime = sunnah.lastThirdOfTheNight
+                .subtract(Duration(minutes: _tahajjudAlarmOffset));
+            if (tahajjudAlarmTime.isAfter(now)) {
+              await notificationService.schedulePrayerNotification(
+                id: notificationIdBase + 303,
+                title: NotificationDictionary.get(
+                    'tahajjud_smart_title', currentLang),
+                body: NotificationDictionary.get(
+                        'tahajjud_smart_body', currentLang)
+                    .replaceAll('{min}', _tahajjudAlarmOffset.toString()),
+                scheduledTime: tahajjudAlarmTime,
+              );
+            }
+          }
           notificationIdBase += 1000;
         }
       } catch (e) {
         debugPrint("Notification Scheduling Error: $e");
       }
     } while (_needsReschedule);
-
     _isScheduling = false;
   }
 
-  void _scheduleMotivationalPhases(DateTime fajr, DateTime maghrib, int idOffset) {
+  Future<void> _scheduleMotivationalPhases(
+      DateTime fajr, DateTime maghrib, int idOffset) async {
     final now = DateTime.now();
     final String currentLang = _locale.languageCode;
-
     final phases = [
       {'id': 10, 'h': 4, 't': 'phase1_title', 'b': 'phase1_body'},
       {'id': 11, 'h': 8, 't': 'phase2_title', 'b': 'phase2_body'},
       {'id': 12, 'h': 12, 't': 'phase3_title', 'b': 'phase3_body'},
       {'id': 13, 'h': 14, 't': 'phase4_title', 'b': 'phase4_body'}
     ];
-
     for (var phase in phases) {
       final scheduledTime = fajr.add(Duration(hours: phase['h'] as int));
-      if (scheduledTime.isAfter(now) && scheduledTime.isBefore(maghrib.subtract(const Duration(minutes: 30)))) {
-        NotificationService().schedulePrayerNotification(
-            id: (phase['id'] as int) + idOffset,
-            title: NotificationDictionary.get(phase['t'] as String, currentLang),
-            body: NotificationDictionary.get(phase['b'] as String, currentLang),
-            scheduledTime: scheduledTime
+      if (scheduledTime.isAfter(now) &&
+          scheduledTime
+              .isBefore(maghrib.subtract(const Duration(minutes: 30)))) {
+        await NotificationService().schedulePrayerNotification(
+          id: (phase['id'] as int) + idOffset,
+          title: NotificationDictionary.get(phase['t'] as String, currentLang),
+          body: NotificationDictionary.get(phase['b'] as String, currentLang),
+          scheduledTime: scheduledTime,
         );
       }
     }
   }
 
-  // --- ОБНОВЛЕНО: Принимает координаты вместо объекта Position ---
-  Future<void> _determineCityAndCountry(double lat, double lng, {String? fallbackCity}) async {
+  Future<void> _determineCityAndCountry(double lat, double lng,
+      {String? fallbackCity}) async {
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
       if (placemarks.isNotEmpty) {
         final place = placemarks.first;
-        _city = place.locality ?? place.administrativeArea ?? fallbackCity ?? "Location detected";
+        _city = place.locality ??
+            place.administrativeArea ??
+            fallbackCity ??
+            "Location detected";
         _country = place.country ?? "";
         _countryCode = place.isoCountryCode ?? "";
         _storageService.saveCity(_city);
-        _storageService.saveCountryCode(_countryCode); // НОВОЕ
+        _storageService.saveCountryCode(_countryCode);
       }
     } catch (e) {
       if (fallbackCity != null) _city = fallbackCity;
@@ -464,11 +526,22 @@ class PrayerProvider extends ChangeNotifier {
 
   CalculationMethod _autoDetectMethod(String countryIso) {
     switch (countryIso.toUpperCase()) {
-      case 'RU': case 'KG': case 'KZ': case 'UZ': case 'TJ': return CalculationMethod.muslim_world_league;
-      case 'US': case 'CA': case 'GB': return CalculationMethod.north_america;
-      case 'TR': return CalculationMethod.turkey;
-      case 'SA': return CalculationMethod.umm_al_qura;
-      default: return CalculationMethod.muslim_world_league;
+      case 'RU':
+      case 'KG':
+      case 'KZ':
+      case 'UZ':
+      case 'TJ':
+        return CalculationMethod.muslim_world_league;
+      case 'US':
+      case 'CA':
+      case 'GB':
+        return CalculationMethod.north_america;
+      case 'TR':
+        return CalculationMethod.turkey;
+      case 'SA':
+        return CalculationMethod.umm_al_qura;
+      default:
+        return CalculationMethod.muslim_world_league;
     }
   }
 
@@ -477,13 +550,11 @@ class PrayerProvider extends ChangeNotifier {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_targetTime == null) return;
       final now = DateTime.now();
-
       if (now.day != _currentDay) {
         _currentDay = now.day;
         _calculateRamadanTimings();
         scheduleNotifications();
       }
-
       if (now.isAfter(_targetTime!)) {
         _calculateRamadanTimings();
         scheduleNotifications();
@@ -495,9 +566,15 @@ class PrayerProvider extends ChangeNotifier {
   }
 
   String _mapErrorMessage(dynamic e) {
-    final error = e.toString();
-    if (error.contains("disabled")) return "Location services are disabled. Tap here to set city manually.";
-    if (error.contains("denied")) return "Location permission denied. Tap here to set city manually.";
+    final error = e.toString().toLowerCase();
+    if (error.contains("disabled") || error.contains("отключ")) {
+      return "Location services are disabled. Tap here to set city manually.";
+    }
+    if (error.contains("denied") ||
+        error.contains("отказ") ||
+        error.contains("заблок")) {
+      return "Location permission denied. Tap here to set city manually.";
+    }
     return "Check connection or set city manually.";
   }
 

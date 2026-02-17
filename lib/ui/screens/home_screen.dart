@@ -23,8 +23,6 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
 
-      // ИСПРАВЛЕНИЕ: Убрали bottomNavigationBar, баннер перенесен в тело экрана
-
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(
@@ -63,18 +61,19 @@ class HomeScreen extends StatelessWidget {
               },
               child: ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.fromLTRB(24, 20, 24, 100), // Слегка уменьшили нижний отступ, так как баннера там больше нет
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 100),
                 children: [
-                  _buildHeader(context, provider), // Это наш "AppBar"
+                  _buildHeader(context, provider),
 
                   const SizedBox(height: 24),
 
-                  // --- БАННЕР ТЕПЕРЬ ЗДЕСЬ (ПОД ШАПКОЙ) ---
                   const AdBannerWidget(),
 
                   const SizedBox(height: 24),
 
                   _buildArcTimer(provider, l10n),
+
+                  _buildTahajjudCard(context, provider, l10n),
 
                   const SizedBox(height: 32),
 
@@ -98,10 +97,111 @@ class HomeScreen extends StatelessWidget {
 
   // --- ВСПОМОГАТЕЛЬНЫЕ ВИДЖЕТЫ ---
 
-  Widget _buildErrorState(BuildContext context, PrayerProvider provider, AppLocalizations l10n) {
-    final String lang = Localizations.localeOf(context).languageCode;
-    final String searchBtnTitle = lang == 'ru' ? "Выбрать город вручную" : "Search City Manually";
+  Widget _buildTahajjudCard(BuildContext context, PrayerProvider provider, AppLocalizations l10n) {
+    if (provider.tahajjudAlarmOffset <= 0 || provider.tahajjudTime == null) {
+      return const SizedBox.shrink();
+    }
 
+    final now = DateTime.now();
+    final tahajjudTime = provider.tahajjudTime!;
+
+    if (now.isAfter(tahajjudTime)) {
+      return const SizedBox.shrink();
+    }
+
+    final remaining = tahajjudTime.difference(now);
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    final hours = twoDigits(remaining.inHours);
+    final minutes = twoDigits(remaining.inMinutes.remainder(60));
+    final seconds = twoDigits(remaining.inSeconds.remainder(60));
+
+    double progress = 0.0;
+    if (provider.prayerTimes != null) {
+      final maghrib = provider.prayerTimes!.maghrib;
+      if (now.isAfter(maghrib)) {
+        final total = tahajjudTime.difference(maghrib).inSeconds;
+        final elapsed = now.difference(maghrib).inSeconds;
+        if (total > 0) {
+          progress = (elapsed / total).clamp(0.0, 1.0);
+        }
+      }
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(top: 24),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.primary.withOpacity(0.2), width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // ИСПРАВЛЕНИЕ ОШИБКИ OVERFLOW
+              Expanded(
+                child: Row(
+                  children: [
+                    const Icon(Icons.star_border_purple500_outlined, color: AppColors.primary, size: 22),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        l10n.tahajjud.toUpperCase(), // Используем короткое слово "Тахаджуд"
+                        style: const TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.5,
+                        ),
+                        overflow: TextOverflow.ellipsis, // Защита от переполнения
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                "$hours:$minutes:$seconds",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontFeatures: [FontFeature.tabularFigures()],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor: Colors.white10,
+              color: AppColors.primary,
+              minHeight: 8,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Center(
+            child: Text(
+              l10n.timeRemaining.toUpperCase(),
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.0,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState(BuildContext context, PrayerProvider provider, AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -125,7 +225,7 @@ class HomeScreen extends StatelessWidget {
               onPressed: () => _showLocationSearchSheet(context, provider),
               icon: const Icon(Icons.search, color: AppColors.background),
               label: Text(
-                searchBtnTitle,
+                l10n.searchCityManually,
                 style: const TextStyle(color: AppColors.background, fontWeight: FontWeight.bold),
               ),
             ),
@@ -203,16 +303,9 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // --- Окно поиска города ---
   void _showLocationSearchSheet(BuildContext context, PrayerProvider provider) {
     final TextEditingController cityController = TextEditingController();
-    final String lang = Localizations.localeOf(context).languageCode;
-
-    // Временные адаптивные переводы
-    final String title = lang == 'ru' ? "Изменить локацию" : "Change Location";
-    final String hint = lang == 'ru' ? "Введите город (напр. Москва)" : "Enter city name (e.g. London)";
-    final String btnSearch = lang == 'ru' ? "Найти" : "Search";
-    final String btnGps = lang == 'ru' ? "Вернуть авто-определение (GPS)" : "Use Auto-Location (GPS)";
+    final l10n = AppLocalizations.of(context)!;
 
     showModalBottomSheet(
       context: context,
@@ -232,7 +325,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title,
+                l10n.changeLocation,
                 style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
@@ -241,7 +334,7 @@ class HomeScreen extends StatelessWidget {
                 style: const TextStyle(color: Colors.white),
                 autofocus: true,
                 decoration: InputDecoration(
-                  hintText: hint,
+                  hintText: l10n.enterCityHint,
                   hintStyle: const TextStyle(color: Colors.white54),
                   filled: true,
                   fillColor: AppColors.surface,
@@ -273,7 +366,7 @@ class HomeScreen extends StatelessWidget {
                       Navigator.pop(ctx);
                     }
                   },
-                  child: Text(btnSearch, style: const TextStyle(color: AppColors.background, fontWeight: FontWeight.bold, fontSize: 16)),
+                  child: Text(l10n.searchBtn, style: const TextStyle(color: AppColors.background, fontWeight: FontWeight.bold, fontSize: 16)),
                 ),
               ),
               const SizedBox(height: 12),
@@ -286,7 +379,7 @@ class HomeScreen extends StatelessWidget {
                       Navigator.pop(ctx);
                     },
                     icon: const Icon(Icons.my_location, color: AppColors.primary),
-                    label: Text(btnGps, style: const TextStyle(color: AppColors.primary)),
+                    label: Text(l10n.useAutoLocation, style: const TextStyle(color: AppColors.primary)),
                   ),
                 ),
               const SizedBox(height: 32),

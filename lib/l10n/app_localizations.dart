@@ -99,15 +99,15 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('ar'),
     Locale('en'),
     Locale('fr'),
+    Locale('id'),
     Locale('kk'),
     Locale('ky'),
     Locale('ru'),
-    Locale('tr'),
-    Locale('ar'),
-    Locale('id'),
     Locale('tg'),
+    Locale('tr'),
     Locale('uz')
   ];
 
@@ -116,6 +116,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nur'**
   String get appTitle;
+
+  /// No description provided for @appName.
+  ///
+  /// In en, this message translates to:
+  /// **'NUR'**
+  String get appName;
+
+  /// No description provided for @appSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'RAMADAN COMPANION'**
+  String get appSubtitle;
 
   /// No description provided for @loading.
   ///
@@ -147,6 +159,18 @@ abstract class AppLocalizations {
   /// **'Location unavailable'**
   String get locationError;
 
+  /// No description provided for @errorLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to get location'**
+  String get errorLocation;
+
+  /// No description provided for @locationPermissionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Location is required for accurate prayer times.'**
+  String get locationPermissionText;
+
   /// No description provided for @timeLeftIftar.
   ///
   /// In en, this message translates to:
@@ -158,6 +182,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time until Suhoor'**
   String get timeLeftSuhoor;
+
+  /// No description provided for @timeRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Time remaining'**
+  String get timeRemaining;
+
+  /// No description provided for @untilSuhoor.
+  ///
+  /// In en, this message translates to:
+  /// **'until Suhoor'**
+  String get untilSuhoor;
+
+  /// No description provided for @untilIftar.
+  ///
+  /// In en, this message translates to:
+  /// **'until Iftar'**
+  String get untilIftar;
+
+  /// No description provided for @suhoor.
+  ///
+  /// In en, this message translates to:
+  /// **'Suhoor'**
+  String get suhoor;
+
+  /// No description provided for @iftar.
+  ///
+  /// In en, this message translates to:
+  /// **'Iftar'**
+  String get iftar;
 
   /// No description provided for @fajr.
   ///
@@ -195,6 +249,12 @@ abstract class AppLocalizations {
   /// **'Isha'**
   String get isha;
 
+  /// No description provided for @tahajjud.
+  ///
+  /// In en, this message translates to:
+  /// **'Tahajjud'**
+  String get tahajjud;
+
   /// No description provided for @qiblaTitle.
   ///
   /// In en, this message translates to:
@@ -207,11 +267,35 @@ abstract class AppLocalizations {
   /// **'Qibla Direction'**
   String get qiblaDirection;
 
+  /// No description provided for @qiblaSearching.
+  ///
+  /// In en, this message translates to:
+  /// **'SEARCHING'**
+  String get qiblaSearching;
+
+  /// No description provided for @qiblaAligned.
+  ///
+  /// In en, this message translates to:
+  /// **'ALIGNED'**
+  String get qiblaAligned;
+
+  /// No description provided for @holyKaaba.
+  ///
+  /// In en, this message translates to:
+  /// **'HOLY KAABA'**
+  String get holyKaaba;
+
   /// No description provided for @rotatePhone.
   ///
   /// In en, this message translates to:
-  /// **'Rotate your phone to calibrate'**
+  /// **'Place your phone on a flat surface'**
   String get rotatePhone;
+
+  /// No description provided for @calibrateCompass.
+  ///
+  /// In en, this message translates to:
+  /// **'Calibrate by waving phone in a figure-8'**
+  String get calibrateCompass;
 
   /// No description provided for @north.
   ///
@@ -240,14 +324,20 @@ abstract class AppLocalizations {
   /// No description provided for @calendarHeader.
   ///
   /// In en, this message translates to:
-  /// **'Calendar'**
+  /// **'Ramadan Calendar'**
   String get calendarHeader;
 
   /// No description provided for @hijriDate.
   ///
   /// In en, this message translates to:
-  /// **'Hijri'**
+  /// **'Hijri Date'**
   String get hijriDate;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
 
   /// No description provided for @settingsTitle.
   ///
@@ -260,6 +350,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'General'**
   String get generalSection;
+
+  /// No description provided for @languageSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get languageSection;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english;
+
+  /// No description provided for @russian.
+  ///
+  /// In en, this message translates to:
+  /// **'Russian'**
+  String get russian;
 
   /// No description provided for @calculationMethod.
   ///
@@ -279,11 +393,119 @@ abstract class AppLocalizations {
   /// **'Location'**
   String get location;
 
+  /// No description provided for @searchCityManually.
+  ///
+  /// In en, this message translates to:
+  /// **'Search City Manually'**
+  String get searchCityManually;
+
+  /// No description provided for @changeLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Location'**
+  String get changeLocation;
+
+  /// No description provided for @enterCityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter city name (e.g. London)'**
+  String get enterCityHint;
+
+  /// No description provided for @searchBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get searchBtn;
+
+  /// No description provided for @useAutoLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Auto-Location (GPS)'**
+  String get useAutoLocation;
+
+  /// No description provided for @notificationsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsSection;
+
   /// No description provided for @notifications.
   ///
   /// In en, this message translates to:
   /// **'Notifications'**
   String get notifications;
+
+  /// No description provided for @pushNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get pushNotifications;
+
+  /// No description provided for @enableNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get enableNotifications;
+
+  /// No description provided for @enableNotificationsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders 5 mins before fasting events'**
+  String get enableNotificationsDesc;
+
+  /// No description provided for @smartAlarms.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Alarms'**
+  String get smartAlarms;
+
+  /// No description provided for @smartAlarmsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically adjusts to daily Suhoor and Iftar times.'**
+  String get smartAlarmsDesc;
+
+  /// No description provided for @suhoorAlarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake up for Suhoor'**
+  String get suhoorAlarm;
+
+  /// No description provided for @iftarAlarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Prepare for Iftar'**
+  String get iftarAlarm;
+
+  /// No description provided for @tahajjudAlarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Tahajjud Alarm'**
+  String get tahajjudAlarm;
+
+  /// No description provided for @alarmOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get alarmOff;
+
+  /// No description provided for @alarm20Min.
+  ///
+  /// In en, this message translates to:
+  /// **'20 min'**
+  String get alarm20Min;
+
+  /// No description provided for @alarm30Min.
+  ///
+  /// In en, this message translates to:
+  /// **'30 min'**
+  String get alarm30Min;
+
+  /// No description provided for @alarm60Min.
+  ///
+  /// In en, this message translates to:
+  /// **'1 hour'**
+  String get alarm60Min;
 
   /// No description provided for @save.
   ///
@@ -362,66 +584,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other / Custom'**
   String get methodOther;
-
-  /// No description provided for @locationPermissionText.
-  ///
-  /// In en, this message translates to:
-  /// **'Location is required for accurate prayer times.'**
-  String get locationPermissionText;
-
-  /// No description provided for @suhoor.
-  ///
-  /// In en, this message translates to:
-  /// **'Suhoor'**
-  String get suhoor;
-
-  /// No description provided for @iftar.
-  ///
-  /// In en, this message translates to:
-  /// **'Iftar'**
-  String get iftar;
-
-  /// No description provided for @timeRemaining.
-  ///
-  /// In en, this message translates to:
-  /// **'Time remaining'**
-  String get timeRemaining;
-
-  /// No description provided for @errorLocation.
-  ///
-  /// In en, this message translates to:
-  /// **'Failed to get location'**
-  String get errorLocation;
-
-  /// No description provided for @refresh.
-  ///
-  /// In en, this message translates to:
-  /// **'Refresh'**
-  String get refresh;
-
-  /// No description provided for @untilSuhoor.
-  ///
-  /// In en, this message translates to:
-  /// **'until Suhoor'**
-  String get untilSuhoor;
-
-  /// No description provided for @untilIftar.
-  ///
-  /// In en, this message translates to:
-  /// **'until Iftar'**
-  String get untilIftar;
-
-  /// No description provided for @qiblaAligned.
-  ///
-  /// In en, this message translates to:
-  /// **'ALIGNED'**
-  String get qiblaAligned;
-
-  /// No description provided for @calibrateCompass.
-  ///
-  /// In en, this message translates to:
-  /// **'Calibrate by waving phone in a figure-8'**
-  String get calibrateCompass;
 
   /// No description provided for @onboardTitle1.
   ///
@@ -543,137 +705,59 @@ abstract class AppLocalizations {
   /// **'Fasting Progress'**
   String get fastingProgress;
 
-  /// No description provided for @enableNotifications.
+  /// No description provided for @fastingStatus.
   ///
   /// In en, this message translates to:
-  /// **'Push Notifications'**
-  String get enableNotifications;
+  /// **'Fasting Status'**
+  String get fastingStatus;
 
-  /// No description provided for @enableNotificationsDesc.
+  /// No description provided for @statusFasted.
   ///
   /// In en, this message translates to:
-  /// **'Reminders 5 mins before fasting events'**
-  String get enableNotificationsDesc;
+  /// **'Fasted'**
+  String get statusFasted;
 
-  /// No description provided for @smartAlarms.
+  /// No description provided for @statusMissed.
   ///
   /// In en, this message translates to:
-  /// **'Smart Alarms'**
-  String get smartAlarms;
+  /// **'Missed (Qaza)'**
+  String get statusMissed;
 
-  /// No description provided for @smartAlarmsDesc.
+  /// No description provided for @statusNotSet.
   ///
   /// In en, this message translates to:
-  /// **'Automatically adjusts to daily Suhoor and Iftar times.'**
-  String get smartAlarmsDesc;
+  /// **'Not set'**
+  String get statusNotSet;
 
-  /// No description provided for @suhoorAlarm.
+  /// No description provided for @futureDateError.
   ///
   /// In en, this message translates to:
-  /// **'Wake up for Suhoor'**
-  String get suhoorAlarm;
+  /// **'Cannot mark future days'**
+  String get futureDateError;
 
-  /// No description provided for @iftarAlarm.
+  /// No description provided for @shareProgress.
   ///
   /// In en, this message translates to:
-  /// **'Prepare for Iftar'**
-  String get iftarAlarm;
+  /// **'My Ramadan Fasting Progress 🌙\nFasted: {fasted} days\nMissed (Qaza): {missed} days\nTracked with NUR app!'**
+  String shareProgress(int fasted, int missed);
 
-  /// No description provided for @alarmOff.
+  /// No description provided for @shareImageTitle.
   ///
   /// In en, this message translates to:
-  /// **'Off'**
-  String get alarmOff;
+  /// **'My Ramadan Fasting'**
+  String get shareImageTitle;
 
-  /// No description provided for @alarm20Min.
+  /// No description provided for @shareImageDays.
   ///
   /// In en, this message translates to:
-  /// **'20 min'**
-  String get alarm20Min;
+  /// **'Days Fasted'**
+  String get shareImageDays;
 
-  /// No description provided for @alarm30Min.
+  /// No description provided for @shareImageApp.
   ///
   /// In en, this message translates to:
-  /// **'30 min'**
-  String get alarm30Min;
-
-  /// No description provided for @alarm60Min.
-  ///
-  /// In en, this message translates to:
-  /// **'1 hour'**
-  String get alarm60Min;
-
-  /// No description provided for @tapForDua.
-  ///
-  /// In en, this message translates to:
-  /// **'Tap for Dua'**
-  String get tapForDua;
-
-  /// No description provided for @duaSuhoorTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Dua for Suhoor (Fasting Intention)'**
-  String get duaSuhoorTitle;
-
-  /// No description provided for @duaSuhoorArabic.
-  ///
-  /// In en, this message translates to:
-  /// **'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى'**
-  String get duaSuhoorArabic;
-
-  /// No description provided for @duaSuhoorTranslit.
-  ///
-  /// In en, this message translates to:
-  /// **'Nawaytu an asuma sawma shahri ramadana minal fajri ilal maghribi khalisan lillahi ta\'ala.'**
-  String get duaSuhoorTranslit;
-
-  /// No description provided for @duaSuhoorTransl.
-  ///
-  /// In en, this message translates to:
-  /// **'I intend to keep the fast for the month of Ramadan from dawn till dusk sincerely for Allah.'**
-  String get duaSuhoorTransl;
-
-  /// No description provided for @duaIftarTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Dua for Iftar (Breaking Fast)'**
-  String get duaIftarTitle;
-
-  /// No description provided for @duaIftarArabic.
-  ///
-  /// In en, this message translates to:
-  /// **'ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللَّهُ'**
-  String get duaIftarArabic;
-
-  /// No description provided for @duaIftarTranslit.
-  ///
-  /// In en, this message translates to:
-  /// **'Allahumma inni laka sumtu wa bika aamantu wa \'alayka tawakkaltu wa \'ala rizqika aftartu.'**
-  String get duaIftarTranslit;
-
-  /// No description provided for @duaIftarTransl.
-  ///
-  /// In en, this message translates to:
-  /// **'O Allah, I fasted for You and I believe in You and I put my trust in You and I break my fast with Your sustenance.'**
-  String get duaIftarTransl;
-
-  /// No description provided for @language.
-  ///
-  /// In en, this message translates to:
-  /// **'Language'**
-  String get language;
-
-  /// No description provided for @english.
-  ///
-  /// In en, this message translates to:
-  /// **'English'**
-  String get english;
-
-  /// No description provided for @russian.
-  ///
-  /// In en, this message translates to:
-  /// **'Russian'**
-  String get russian;
+  /// **'NUR: Muslim Assistant'**
+  String get shareImageApp;
 
   /// No description provided for @tasbihTitle.
   ///
@@ -728,102 +812,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset'**
   String get resetAction;
-
-  /// No description provided for @appName.
-  ///
-  /// In en, this message translates to:
-  /// **'NUR'**
-  String get appName;
-
-  /// No description provided for @appSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'RAMADAN COMPANION'**
-  String get appSubtitle;
-
-  /// No description provided for @languageSection.
-  ///
-  /// In en, this message translates to:
-  /// **'Language'**
-  String get languageSection;
-
-  /// No description provided for @notificationsSection.
-  ///
-  /// In en, this message translates to:
-  /// **'Notifications'**
-  String get notificationsSection;
-
-  /// No description provided for @pushNotifications.
-  ///
-  /// In en, this message translates to:
-  /// **'Push Notifications'**
-  String get pushNotifications;
-
-  /// No description provided for @qiblaSearching.
-  ///
-  /// In en, this message translates to:
-  /// **'SEARCHING'**
-  String get qiblaSearching;
-
-  /// No description provided for @holyKaaba.
-  ///
-  /// In en, this message translates to:
-  /// **'HOLY KAABA'**
-  String get holyKaaba;
-
-  /// No description provided for @fastingStatus.
-  ///
-  /// In en, this message translates to:
-  /// **'Fasting Status'**
-  String get fastingStatus;
-
-  /// No description provided for @statusFasted.
-  ///
-  /// In en, this message translates to:
-  /// **'Fasted'**
-  String get statusFasted;
-
-  /// No description provided for @statusMissed.
-  ///
-  /// In en, this message translates to:
-  /// **'Missed (Qaza)'**
-  String get statusMissed;
-
-  /// No description provided for @statusNotSet.
-  ///
-  /// In en, this message translates to:
-  /// **'Not set'**
-  String get statusNotSet;
-
-  /// No description provided for @shareProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'My Ramadan Fasting Progress 🌙\nFasted: {fasted} days\nMissed (Qaza): {missed} days\nTracked with NUR app!'**
-  String shareProgress(int fasted, int missed);
-
-  /// No description provided for @shareImageTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'My Ramadan Fasting'**
-  String get shareImageTitle;
-
-  /// No description provided for @shareImageDays.
-  ///
-  /// In en, this message translates to:
-  /// **'Days Fasted'**
-  String get shareImageDays;
-
-  /// No description provided for @shareImageApp.
-  ///
-  /// In en, this message translates to:
-  /// **'NUR: Muslim Assistant'**
-  String get shareImageApp;
-
-  /// No description provided for @futureDateError.
-  ///
-  /// In en, this message translates to:
-  /// **'Cannot mark future days'**
-  String get futureDateError;
 
   /// No description provided for @dailyInspiration.
   ///
@@ -945,6 +933,36 @@ abstract class AppLocalizations {
   /// **'Copied to clipboard'**
   String get copied;
 
+  /// No description provided for @tapForDua.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for Dua'**
+  String get tapForDua;
+
+  /// No description provided for @duaSuhoorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dua for Suhoor (Fasting Intention)'**
+  String get duaSuhoorTitle;
+
+  /// No description provided for @duaSuhoorArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى'**
+  String get duaSuhoorArabic;
+
+  /// No description provided for @duaSuhoorTranslit.
+  ///
+  /// In en, this message translates to:
+  /// **'Nawaytu an asuma sawma shahri ramadana minal fajri ilal maghribi khalisan lillahi ta\'ala.'**
+  String get duaSuhoorTranslit;
+
+  /// No description provided for @duaSuhoorTransl.
+  ///
+  /// In en, this message translates to:
+  /// **'I intend to keep the fast for the month of Ramadan from dawn till dusk sincerely for Allah.'**
+  String get duaSuhoorTransl;
+
   /// No description provided for @duaSuhoorTrans.
   ///
   /// In en, this message translates to:
@@ -956,6 +974,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I intend to keep the fast for tomorrow in the month of Ramadan, sincerely for Allah.'**
   String get duaSuhoorTranslate;
+
+  /// No description provided for @duaIftarTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dua for Iftar (Breaking Fast)'**
+  String get duaIftarTitle;
+
+  /// No description provided for @duaIftarArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امَنْتُ وَعَليْكَ تَوَكَّلْتُ وَعَلى رِزْقِكَ اَفْطَرْتُ'**
+  String get duaIftarArabic;
+
+  /// No description provided for @duaIftarTranslit.
+  ///
+  /// In en, this message translates to:
+  /// **'Allahumma inni laka sumtu wa bika aamantu wa \'alayka tawakkaltu wa \'ala rizqika aftartu.'**
+  String get duaIftarTranslit;
+
+  /// No description provided for @duaIftarTransl.
+  ///
+  /// In en, this message translates to:
+  /// **'O Allah, I fasted for You and I believe in You and I put my trust in You and I break my fast with Your sustenance.'**
+  String get duaIftarTransl;
 
   /// No description provided for @duaIftarTrans.
   ///
@@ -1088,6 +1130,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'In the name of Allah, with Whose name nothing can cause harm in the earth nor in the heavens, and He is the All-Hearing, the All-Knowing.'**
   String get dua_morning_text;
+
+  /// No description provided for @swipeToSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe to select'**
+  String get swipeToSelect;
+
+  /// No description provided for @timeAdjustments.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Adjustments (Ihtiyat)'**
+  String get timeAdjustments;
+
+  /// No description provided for @fineTuneTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Fine-tune prayer times'**
+  String get fineTuneTimes;
+
+  /// No description provided for @timeAdjustmentsShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Adjustments'**
+  String get timeAdjustmentsShort;
+
+  /// No description provided for @adjustmentDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'If your local mosque times differ slightly, you can adjust the minutes here.'**
+  String get adjustmentDesc;
+
+  /// No description provided for @aboutLegal.
+  ///
+  /// In en, this message translates to:
+  /// **'About & Legal'**
+  String get aboutLegal;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @termsOfUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use (EULA)'**
+  String get termsOfUse;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'App Version'**
+  String get appVersion;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
@@ -1099,7 +1195,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'fr', 'kk', 'ky', 'ru', 'tr', 'ar', 'id', 'tg', 'uz'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['ar', 'en', 'fr', 'id', 'kk', 'ky', 'ru', 'tg', 'tr', 'uz'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1110,15 +1206,15 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'ar': return AppLocalizationsAr();
     case 'en': return AppLocalizationsEn();
     case 'fr': return AppLocalizationsFr();
+    case 'id': return AppLocalizationsId();
     case 'kk': return AppLocalizationsKk();
     case 'ky': return AppLocalizationsKy();
     case 'ru': return AppLocalizationsRu();
-    case 'tr': return AppLocalizationsTr();
-    case 'ar': return AppLocalizationsAr();
-    case 'id': return AppLocalizationsId();
     case 'tg': return AppLocalizationsTg();
+    case 'tr': return AppLocalizationsTr();
     case 'uz': return AppLocalizationsUz();
   }
 

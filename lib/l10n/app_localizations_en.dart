@@ -12,6 +12,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Nur';
 
   @override
+  String get appName => 'NUR';
+
+  @override
+  String get appSubtitle => 'RAMADAN COMPANION';
+
+  @override
   String get loading => 'Calculating times...';
 
   @override
@@ -27,10 +33,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get locationError => 'Location unavailable';
 
   @override
+  String get errorLocation => 'Failed to get location';
+
+  @override
+  String get locationPermissionText => 'Location is required for accurate prayer times.';
+
+  @override
   String get timeLeftIftar => 'Time until Iftar';
 
   @override
   String get timeLeftSuhoor => 'Time until Suhoor';
+
+  @override
+  String get timeRemaining => 'Time remaining';
+
+  @override
+  String get untilSuhoor => 'until Suhoor';
+
+  @override
+  String get untilIftar => 'until Iftar';
+
+  @override
+  String get suhoor => 'Suhoor';
+
+  @override
+  String get iftar => 'Iftar';
 
   @override
   String get fajr => 'Fajr';
@@ -51,13 +78,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get isha => 'Isha';
 
   @override
+  String get tahajjud => 'Tahajjud';
+
+  @override
   String get qiblaTitle => 'Qibla';
 
   @override
   String get qiblaDirection => 'Qibla Direction';
 
   @override
-  String get rotatePhone => 'Rotate your phone to calibrate';
+  String get qiblaSearching => 'SEARCHING';
+
+  @override
+  String get qiblaAligned => 'ALIGNED';
+
+  @override
+  String get holyKaaba => 'HOLY KAABA';
+
+  @override
+  String get rotatePhone => 'Place your phone on a flat surface';
+
+  @override
+  String get calibrateCompass => 'Calibrate by waving phone in a figure-8';
 
   @override
   String get north => 'N';
@@ -72,16 +114,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navCalendar => 'Calendar';
 
   @override
-  String get calendarHeader => 'Calendar';
+  String get calendarHeader => 'Ramadan Calendar';
 
   @override
-  String get hijriDate => 'Hijri';
+  String get hijriDate => 'Hijri Date';
+
+  @override
+  String get refresh => 'Refresh';
 
   @override
   String get settingsTitle => 'Settings';
 
   @override
   String get generalSection => 'General';
+
+  @override
+  String get languageSection => 'Language';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get russian => 'Russian';
 
   @override
   String get calculationMethod => 'Calculation Method';
@@ -93,7 +150,61 @@ class AppLocalizationsEn extends AppLocalizations {
   String get location => 'Location';
 
   @override
+  String get searchCityManually => 'Search City Manually';
+
+  @override
+  String get changeLocation => 'Change Location';
+
+  @override
+  String get enterCityHint => 'Enter city name (e.g. London)';
+
+  @override
+  String get searchBtn => 'Search';
+
+  @override
+  String get useAutoLocation => 'Use Auto-Location (GPS)';
+
+  @override
+  String get notificationsSection => 'Notifications';
+
+  @override
   String get notifications => 'Notifications';
+
+  @override
+  String get pushNotifications => 'Push Notifications';
+
+  @override
+  String get enableNotifications => 'Push Notifications';
+
+  @override
+  String get enableNotificationsDesc => 'Reminders 5 mins before fasting events';
+
+  @override
+  String get smartAlarms => 'Smart Alarms';
+
+  @override
+  String get smartAlarmsDesc => 'Automatically adjusts to daily Suhoor and Iftar times.';
+
+  @override
+  String get suhoorAlarm => 'Wake up for Suhoor';
+
+  @override
+  String get iftarAlarm => 'Prepare for Iftar';
+
+  @override
+  String get tahajjudAlarm => 'Tahajjud Alarm';
+
+  @override
+  String get alarmOff => 'Off';
+
+  @override
+  String get alarm20Min => '20 min';
+
+  @override
+  String get alarm30Min => '30 min';
+
+  @override
+  String get alarm60Min => '1 hour';
 
   @override
   String get save => 'Save';
@@ -133,36 +244,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get methodOther => 'Other / Custom';
-
-  @override
-  String get locationPermissionText => 'Location is required for accurate prayer times.';
-
-  @override
-  String get suhoor => 'Suhoor';
-
-  @override
-  String get iftar => 'Iftar';
-
-  @override
-  String get timeRemaining => 'Time remaining';
-
-  @override
-  String get errorLocation => 'Failed to get location';
-
-  @override
-  String get refresh => 'Refresh';
-
-  @override
-  String get untilSuhoor => 'until Suhoor';
-
-  @override
-  String get untilIftar => 'until Iftar';
-
-  @override
-  String get qiblaAligned => 'ALIGNED';
-
-  @override
-  String get calibrateCompass => 'Calibrate by waving phone in a figure-8';
 
   @override
   String get onboardTitle1 => 'Welcome to NUR';
@@ -225,70 +306,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fastingProgress => 'Fasting Progress';
 
   @override
-  String get enableNotifications => 'Push Notifications';
+  String get fastingStatus => 'Fasting Status';
 
   @override
-  String get enableNotificationsDesc => 'Reminders 5 mins before fasting events';
+  String get statusFasted => 'Fasted';
 
   @override
-  String get smartAlarms => 'Smart Alarms';
+  String get statusMissed => 'Missed (Qaza)';
 
   @override
-  String get smartAlarmsDesc => 'Automatically adjusts to daily Suhoor and Iftar times.';
+  String get statusNotSet => 'Not set';
 
   @override
-  String get suhoorAlarm => 'Wake up for Suhoor';
+  String get futureDateError => 'Cannot mark future days';
 
   @override
-  String get iftarAlarm => 'Prepare for Iftar';
+  String shareProgress(int fasted, int missed) {
+    return 'My Ramadan Fasting Progress 🌙\nFasted: $fasted days\nMissed (Qaza): $missed days\nTracked with NUR app!';
+  }
 
   @override
-  String get alarmOff => 'Off';
+  String get shareImageTitle => 'My Ramadan Fasting';
 
   @override
-  String get alarm20Min => '20 min';
+  String get shareImageDays => 'Days Fasted';
 
   @override
-  String get alarm30Min => '30 min';
-
-  @override
-  String get alarm60Min => '1 hour';
-
-  @override
-  String get tapForDua => 'Tap for Dua';
-
-  @override
-  String get duaSuhoorTitle => 'Dua for Suhoor (Fasting Intention)';
-
-  @override
-  String get duaSuhoorArabic => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
-
-  @override
-  String get duaSuhoorTranslit => 'Nawaytu an asuma sawma shahri ramadana minal fajri ilal maghribi khalisan lillahi ta\'ala.';
-
-  @override
-  String get duaSuhoorTransl => 'I intend to keep the fast for the month of Ramadan from dawn till dusk sincerely for Allah.';
-
-  @override
-  String get duaIftarTitle => 'Dua for Iftar (Breaking Fast)';
-
-  @override
-  String get duaIftarArabic => 'ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللَّهُ';
-
-  @override
-  String get duaIftarTranslit => 'Allahumma inni laka sumtu wa bika aamantu wa \'alayka tawakkaltu wa \'ala rizqika aftartu.';
-
-  @override
-  String get duaIftarTransl => 'O Allah, I fasted for You and I believe in You and I put my trust in You and I break my fast with Your sustenance.';
-
-  @override
-  String get language => 'Language';
-
-  @override
-  String get english => 'English';
-
-  @override
-  String get russian => 'Russian';
+  String get shareImageApp => 'NUR: Muslim Assistant';
 
   @override
   String get tasbihTitle => 'Tasbih';
@@ -316,56 +360,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resetAction => 'Reset';
-
-  @override
-  String get appName => 'NUR';
-
-  @override
-  String get appSubtitle => 'RAMADAN COMPANION';
-
-  @override
-  String get languageSection => 'Language';
-
-  @override
-  String get notificationsSection => 'Notifications';
-
-  @override
-  String get pushNotifications => 'Push Notifications';
-
-  @override
-  String get qiblaSearching => 'SEARCHING';
-
-  @override
-  String get holyKaaba => 'HOLY KAABA';
-
-  @override
-  String get fastingStatus => 'Fasting Status';
-
-  @override
-  String get statusFasted => 'Fasted';
-
-  @override
-  String get statusMissed => 'Missed (Qaza)';
-
-  @override
-  String get statusNotSet => 'Not set';
-
-  @override
-  String shareProgress(int fasted, int missed) {
-    return 'My Ramadan Fasting Progress 🌙\nFasted: $fasted days\nMissed (Qaza): $missed days\nTracked with NUR app!';
-  }
-
-  @override
-  String get shareImageTitle => 'My Ramadan Fasting';
-
-  @override
-  String get shareImageDays => 'Days Fasted';
-
-  @override
-  String get shareImageApp => 'NUR: Muslim Assistant';
-
-  @override
-  String get futureDateError => 'Cannot mark future days';
 
   @override
   String get dailyInspiration => 'Daily Inspiration';
@@ -428,10 +422,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get copied => 'Copied to clipboard';
 
   @override
+  String get tapForDua => 'Tap for Dua';
+
+  @override
+  String get duaSuhoorTitle => 'Dua for Suhoor (Fasting Intention)';
+
+  @override
+  String get duaSuhoorArabic => 'نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ خَالِصًا لِلَّهِ تَعَالَى';
+
+  @override
+  String get duaSuhoorTranslit => 'Nawaytu an asuma sawma shahri ramadana minal fajri ilal maghribi khalisan lillahi ta\'ala.';
+
+  @override
+  String get duaSuhoorTransl => 'I intend to keep the fast for the month of Ramadan from dawn till dusk sincerely for Allah.';
+
+  @override
   String get duaSuhoorTrans => 'Nawaitu an asuma sawma shahri ramadana minal fajri ilal maghribi khalisan lillahi ta\'ala';
 
   @override
   String get duaSuhoorTranslate => 'I intend to keep the fast for tomorrow in the month of Ramadan, sincerely for Allah.';
+
+  @override
+  String get duaIftarTitle => 'Dua for Iftar (Breaking Fast)';
+
+  @override
+  String get duaIftarArabic => 'اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امَنْتُ وَعَليْكَ تَوَكَّلْتُ وَعَلى رِزْقِكَ اَفْطَرْتُ';
+
+  @override
+  String get duaIftarTranslit => 'Allahumma inni laka sumtu wa bika aamantu wa \'alayka tawakkaltu wa \'ala rizqika aftartu.';
+
+  @override
+  String get duaIftarTransl => 'O Allah, I fasted for You and I believe in You and I put my trust in You and I break my fast with Your sustenance.';
 
   @override
   String get duaIftarTrans => 'Dhahabadh-dhama\'u wabtallatil-\'urooqu wa thabatal-ajru in sha\'Allah';
@@ -498,4 +519,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dua_morning_text => 'In the name of Allah, with Whose name nothing can cause harm in the earth nor in the heavens, and He is the All-Hearing, the All-Knowing.';
+
+  @override
+  String get swipeToSelect => 'Swipe to select';
+
+  @override
+  String get timeAdjustments => 'Time Adjustments (Ihtiyat)';
+
+  @override
+  String get fineTuneTimes => 'Fine-tune prayer times';
+
+  @override
+  String get timeAdjustmentsShort => 'Time Adjustments';
+
+  @override
+  String get adjustmentDesc => 'If your local mosque times differ slightly, you can adjust the minutes here.';
+
+  @override
+  String get aboutLegal => 'About & Legal';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get termsOfUse => 'Terms of Use (EULA)';
+
+  @override
+  String get appVersion => 'App Version';
 }
