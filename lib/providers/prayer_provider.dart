@@ -211,7 +211,6 @@ class PrayerProvider extends ChangeNotifier {
     await init();
   }
 
-  // --- НОВОЕ: Метод для ручной корректировки времени намазов (Ihtiyat) ---
   void updateManualAdjustment(String prayerName, int minutes) {
     _storageService.saveAdjustment(prayerName, minutes);
     if (_coordinates != null) {
@@ -225,7 +224,6 @@ class PrayerProvider extends ChangeNotifier {
     final params = _method.getParameters();
     params.madhab = _madhab;
 
-    // --- НОВОЕ: Применяем пользовательские "минуты безопасности" (Offsets) ---
     params.adjustments.fajr = _storageService.getAdjustment('fajr');
     params.adjustments.sunrise = _storageService.getAdjustment('sunrise');
     params.adjustments.dhuhr = _storageService.getAdjustment('dhuhr');
@@ -247,33 +245,37 @@ class PrayerProvider extends ChangeNotifier {
     final now = DateTime.now();
     final params = _getSmartParameters();
 
-    final todayTimes =
-        PrayerTimes(_coordinates!, DateComponents.from(now), params);
+    final todayTimes = PrayerTimes(_coordinates!, DateComponents.from(now), params);
     _prayerTimes = todayTimes;
-
-    final sunnahTimes = SunnahTimes(todayTimes);
-    _tahajjudTime = sunnahTimes.lastThirdOfTheNight;
 
     final fajrToday = todayTimes.fajr;
     final maghribToday = todayTimes.maghrib;
 
+    // ИСПРАВЛЕНИЕ: Точный расчет Тахаджуда до и после полуночи
     if (now.isBefore(fajrToday)) {
       _currentEvent = RamadanEvent.suhoor;
-      final yesterday = DateTime(now.year, now.month, now.day - 1);
-      final yesterdayTimes =
-          PrayerTimes(_coordinates!, DateComponents.from(yesterday), params);
+      // Мы после полуночи, но до Фаджра. Тахаджуд относится к прошедшему дню
+      final yesterday = now.subtract(const Duration(days: 1));
+      final yesterdayTimes = PrayerTimes(_coordinates!, DateComponents.from(yesterday), params);
+
+      _tahajjudTime = SunnahTimes(yesterdayTimes).lastThirdOfTheNight;
       _startTime = yesterdayTimes.maghrib;
       _targetTime = fajrToday;
+
     } else if (now.isBefore(maghribToday)) {
       _currentEvent = RamadanEvent.iftar;
+      // День. Тахаджуд будет предстоящей ночью
+      _tahajjudTime = SunnahTimes(todayTimes).lastThirdOfTheNight;
       _startTime = fajrToday;
       _targetTime = maghribToday;
+
     } else {
       _currentEvent = RamadanEvent.suhoor;
+      // Вечер после Магриба. Тахаджуд будет предстоящей ночью
+      _tahajjudTime = SunnahTimes(todayTimes).lastThirdOfTheNight;
       _startTime = maghribToday;
-      final tomorrow = DateTime(now.year, now.month, now.day + 1);
-      final tomorrowTimes =
-          PrayerTimes(_coordinates!, DateComponents.from(tomorrow), params);
+      final tomorrow = now.add(const Duration(days: 1));
+      final tomorrowTimes = PrayerTimes(_coordinates!, DateComponents.from(tomorrow), params);
       _targetTime = tomorrowTimes.fajr;
     }
   }
@@ -356,14 +358,15 @@ class PrayerProvider extends ChangeNotifier {
         final String currentLang = _locale.languageCode;
         final params = _getSmartParameters();
 
-        final List<PrayerTimes> calculationDays = [
-          PrayerTimes(_coordinates!, DateComponents.from(now), params),
-          PrayerTimes(_coordinates!,
-              DateComponents.from(now.add(const Duration(days: 1))), params),
-        ];
+        // ИСПРАВЛЕНИЕ: Планируем пуши на 5 дней вперед, чтобы не сбросились, если юзер не открывает апп
+        final List<PrayerTimes> calculationDays = [];
+        for (int i = 0; i < 5; i++) {
+          calculationDays.add(PrayerTimes(_coordinates!, DateComponents.from(now.add(Duration(days: i))), params));
+        }
 
         final notificationService = NotificationService();
         int notificationIdBase = 0;
+
         for (var times in calculationDays) {
           final prayers = {
             notificationIdBase + 0: {'name': 'Fajr', 'time': times.fajr},
@@ -380,10 +383,10 @@ class PrayerProvider extends ChangeNotifier {
             final DateTime time = data['time'] as DateTime;
             if (time.isAfter(now)) {
               final String title =
-                  NotificationDictionary.get('prayer_time_title', currentLang);
+              NotificationDictionary.get('prayer_time_title', currentLang);
               final String body =
-                  NotificationDictionary.get('prayer_time_body', currentLang)
-                      .replaceAll('{prayer}', name);
+              NotificationDictionary.get('prayer_time_body', currentLang)
+                  .replaceAll('{prayer}', name);
               await notificationService.schedulePrayerNotification(
                 id: id,
                 title: title,
@@ -401,7 +404,7 @@ class PrayerProvider extends ChangeNotifier {
             await notificationService.schedulePrayerNotification(
               id: notificationIdBase + 201,
               title:
-                  NotificationDictionary.get('suhoor_5min_title', currentLang),
+              NotificationDictionary.get('suhoor_5min_title', currentLang),
               body: NotificationDictionary.get('suhoor_5min_body', currentLang),
               scheduledTime: suhoorWarning,
               payload: 'action_dua_suhoor',
@@ -409,12 +412,12 @@ class PrayerProvider extends ChangeNotifier {
           }
 
           final iftarWarning =
-              times.maghrib.subtract(const Duration(minutes: 5));
+          times.maghrib.subtract(const Duration(minutes: 5));
           if (iftarWarning.isAfter(now)) {
             await notificationService.schedulePrayerNotification(
               id: notificationIdBase + 202,
               title:
-                  NotificationDictionary.get('iftar_5min_title', currentLang),
+              NotificationDictionary.get('iftar_5min_title', currentLang),
               body: NotificationDictionary.get('iftar_5min_body', currentLang),
               scheduledTime: iftarWarning,
               payload: 'action_dua_iftar',
@@ -423,15 +426,15 @@ class PrayerProvider extends ChangeNotifier {
 
           if (_suhoorAlarmOffset > 0) {
             final suhoorAlarmTime =
-                times.fajr.subtract(Duration(minutes: _suhoorAlarmOffset));
+            times.fajr.subtract(Duration(minutes: _suhoorAlarmOffset));
             if (suhoorAlarmTime.isAfter(now)) {
               await notificationService.schedulePrayerNotification(
                 id: notificationIdBase + 301,
                 title: NotificationDictionary.get(
                     'suhoor_smart_title', currentLang),
                 body:
-                    NotificationDictionary.get('suhoor_smart_body', currentLang)
-                        .replaceAll('{min}', _suhoorAlarmOffset.toString()),
+                NotificationDictionary.get('suhoor_smart_body', currentLang)
+                    .replaceAll('{min}', _suhoorAlarmOffset.toString()),
                 scheduledTime: suhoorAlarmTime,
               );
             }
@@ -439,15 +442,15 @@ class PrayerProvider extends ChangeNotifier {
 
           if (_iftarAlarmOffset > 0) {
             final iftarAlarmTime =
-                times.maghrib.subtract(Duration(minutes: _iftarAlarmOffset));
+            times.maghrib.subtract(Duration(minutes: _iftarAlarmOffset));
             if (iftarAlarmTime.isAfter(now)) {
               await notificationService.schedulePrayerNotification(
                 id: notificationIdBase + 302,
                 title: NotificationDictionary.get(
                     'iftar_smart_title', currentLang),
                 body:
-                    NotificationDictionary.get('iftar_smart_body', currentLang)
-                        .replaceAll('{min}', _iftarAlarmOffset.toString()),
+                NotificationDictionary.get('iftar_smart_body', currentLang)
+                    .replaceAll('{min}', _iftarAlarmOffset.toString()),
                 scheduledTime: iftarAlarmTime,
               );
             }
@@ -463,7 +466,7 @@ class PrayerProvider extends ChangeNotifier {
                 title: NotificationDictionary.get(
                     'tahajjud_smart_title', currentLang),
                 body: NotificationDictionary.get(
-                        'tahajjud_smart_body', currentLang)
+                    'tahajjud_smart_body', currentLang)
                     .replaceAll('{min}', _tahajjudAlarmOffset.toString()),
                 scheduledTime: tahajjudAlarmTime,
               );

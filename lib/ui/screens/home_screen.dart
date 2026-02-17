@@ -116,14 +116,13 @@ class HomeScreen extends StatelessWidget {
     final seconds = twoDigits(remaining.inSeconds.remainder(60));
 
     double progress = 0.0;
-    if (provider.prayerTimes != null) {
-      final maghrib = provider.prayerTimes!.maghrib;
-      if (now.isAfter(maghrib)) {
-        final total = tahajjudTime.difference(maghrib).inSeconds;
-        final elapsed = now.difference(maghrib).inSeconds;
-        if (total > 0) {
-          progress = (elapsed / total).clamp(0.0, 1.0);
-        }
+
+    // ИСПРАВЛЕНИЕ: Прогресс-бар Тахаджуда теперь работает правильно даже после 00:00
+    if (provider.startTime != null && provider.currentEvent == RamadanEvent.suhoor) {
+      final total = tahajjudTime.difference(provider.startTime!).inSeconds;
+      final elapsed = now.difference(provider.startTime!).inSeconds;
+      if (total > 0 && elapsed >= 0) {
+        progress = (elapsed / total).clamp(0.0, 1.0);
       }
     }
 
@@ -141,7 +140,6 @@ class HomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // ИСПРАВЛЕНИЕ ОШИБКИ OVERFLOW
               Expanded(
                 child: Row(
                   children: [
@@ -149,14 +147,14 @@ class HomeScreen extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        l10n.tahajjud.toUpperCase(), // Используем короткое слово "Тахаджуд"
+                        l10n.tahajjud.toUpperCase(),
                         style: const TextStyle(
                           color: AppColors.primary,
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.5,
                         ),
-                        overflow: TextOverflow.ellipsis, // Защита от переполнения
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
@@ -320,70 +318,73 @@ class HomeScreen extends StatelessWidget {
             bottom: MediaQuery.of(ctx).viewInsets.bottom,
             left: 24, right: 24, top: 24,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l10n.changeLocation,
-                style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 24),
-              TextField(
-                controller: cityController,
-                style: const TextStyle(color: Colors.white),
-                autofocus: true,
-                decoration: InputDecoration(
-                  hintText: l10n.enterCityHint,
-                  hintStyle: const TextStyle(color: Colors.white54),
-                  filled: true,
-                  fillColor: AppColors.surface,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none,
-                  ),
-                  prefixIcon: const Icon(Icons.search, color: Colors.white54),
+          // ИСПРАВЛЕНИЕ: Добавлен скролл, чтобы шторка не крашилась на мелких экранах
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.changeLocation,
+                  style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                onSubmitted: (value) {
-                  if (value.trim().isNotEmpty) {
-                    provider.setManualLocation(value.trim());
-                    Navigator.pop(ctx);
-                  }
-                },
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                const SizedBox(height: 24),
+                TextField(
+                  controller: cityController,
+                  style: const TextStyle(color: Colors.white),
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    hintText: l10n.enterCityHint,
+                    hintStyle: const TextStyle(color: Colors.white54),
+                    filled: true,
+                    fillColor: AppColors.surface,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    prefixIcon: const Icon(Icons.search, color: Colors.white54),
                   ),
-                  onPressed: () {
-                    if (cityController.text.trim().isNotEmpty) {
-                      provider.setManualLocation(cityController.text.trim());
+                  onSubmitted: (value) {
+                    if (value.trim().isNotEmpty) {
+                      provider.setManualLocation(value.trim());
                       Navigator.pop(ctx);
                     }
                   },
-                  child: Text(l10n.searchBtn, style: const TextStyle(color: AppColors.background, fontWeight: FontWeight.bold, fontSize: 16)),
                 ),
-              ),
-              const SizedBox(height: 12),
-              if (provider.isManualLocation || provider.error != null)
+                const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
-                  child: TextButton.icon(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    ),
                     onPressed: () {
-                      provider.enableAutoLocation();
-                      Navigator.pop(ctx);
+                      if (cityController.text.trim().isNotEmpty) {
+                        provider.setManualLocation(cityController.text.trim());
+                        Navigator.pop(ctx);
+                      }
                     },
-                    icon: const Icon(Icons.my_location, color: AppColors.primary),
-                    label: Text(l10n.useAutoLocation, style: const TextStyle(color: AppColors.primary)),
+                    child: Text(l10n.searchBtn, style: const TextStyle(color: AppColors.background, fontWeight: FontWeight.bold, fontSize: 16)),
                   ),
                 ),
-              const SizedBox(height: 32),
-            ],
+                const SizedBox(height: 12),
+                if (provider.isManualLocation || provider.error != null)
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextButton.icon(
+                      onPressed: () {
+                        provider.enableAutoLocation();
+                        Navigator.pop(ctx);
+                      },
+                      icon: const Icon(Icons.my_location, color: AppColors.primary),
+                      label: Text(l10n.useAutoLocation, style: const TextStyle(color: AppColors.primary)),
+                    ),
+                  ),
+                const SizedBox(height: 32),
+              ],
+            ),
           ),
         );
       },
