@@ -31,6 +31,10 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
   bool _hasVibrated = false;
   bool _isProcessing = false;
 
+  // Переменные для математического сглаживания компаса
+  double? _smoothedHeading;
+  bool _isAlignedHysteresis = false;
+
   late AnimationController _pulseController;
 
   @override
@@ -139,7 +143,6 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
     if (provider.prayerTimes == null) return const Scaffold(backgroundColor: AppColors.background);
     final qiblaDirection = Qibla(provider.prayerTimes!.coordinates).direction;
 
-    // Безопасная проверка готовности камеры к отображению превью
     final bool canShowCamera = widget.isActive &&
         _isCameraInitialized &&
         _cameraController != null &&
@@ -178,12 +181,34 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
               builder: (context, snapshot) {
                 if (!snapshot.hasData) return const Center(child: CircularProgressIndicator(color: AppColors.primary));
 
-                final heading = snapshot.data?.heading ?? 0.0;
-                double diff = (qiblaDirection - heading).abs();
-                if (diff > 180) diff = 360 - diff;
-                final bool isAligned = diff < 4.0;
+                // ИСПРАВЛЕНИЕ: Фильтр нижних частот (EMA) для устранения аппаратной тряски сенсора
+                final rawHeading = snapshot.data?.heading ?? 0.0;
+                if (_smoothedHeading == null) {
+                  _smoothedHeading = rawHeading;
+                } else {
+                  double diff = rawHeading - _smoothedHeading!;
+                  if (diff > 180) diff -= 360;
+                  if (diff < -180) diff += 360;
+                  // Коэффициент 0.15 создает идеальную плавность стрелки
+                  _smoothedHeading = _smoothedHeading! + (diff * 0.15);
+                  if (_smoothedHeading! < 0) _smoothedHeading = _smoothedHeading! + 360;
+                  if (_smoothedHeading! >= 360) _smoothedHeading = _smoothedHeading! - 360;
+                }
 
-                // Используем PostFrameCallback для предотвращения Side Effects внутри функции build
+                final heading = _smoothedHeading!;
+
+                double diffToQibla = (qiblaDirection - heading).abs();
+                if (diffToQibla > 180) diffToQibla = 360 - diffToQibla;
+
+                // ИСПРАВЛЕНИЕ: Логика гистерезиса, чтобы экран не "моргал" при дрожании рук на границе угла
+                if (diffToQibla < 2.5) {
+                  _isAlignedHysteresis = true;
+                } else if (diffToQibla > 4.5) {
+                  _isAlignedHysteresis = false;
+                }
+
+                final bool isAligned = _isAlignedHysteresis;
+
                 if (isAligned && !_hasVibrated) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     HapticFeedback.mediumImpact();
@@ -272,13 +297,12 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
     );
   }
 
-  // Нативно нарисованная Кааба (без картинок)
   Widget _buildNativeKaaba(bool isAligned) {
     return Container(
       width: 50,
       height: 60,
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A), // Почти черный куб
+        color: const Color(0xFF1A1A1A),
         borderRadius: BorderRadius.circular(4),
         border: Border.all(
           color: isAligned ? AppColors.primary.withOpacity(0.8) : Colors.transparent,
@@ -291,13 +315,13 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
           Container(
             height: 8,
             width: double.infinity,
-            color: const Color(0xFFD4AF37), // Широкая золотая лента
+            color: const Color(0xFFD4AF37),
           ),
           const SizedBox(height: 3),
           Container(
             height: 1.5,
             width: double.infinity,
-            color: const Color(0xFFD4AF37), // Тонкая золотая лента
+            color: const Color(0xFFD4AF37),
           ),
         ],
       ),
@@ -309,7 +333,6 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
     if (offset > 180) offset -= 360;
     if (offset < -180) offset += 360;
 
-    // Плавное вычисление смещения по X
     double horizontalAlignment = (offset / 30).clamp(-1.5, 1.5);
 
     return AnimatedAlign(
@@ -334,7 +357,6 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
                 ],
               ),
               child: Center(
-                // Используем нативный виджет вместо картинки
                 child: _buildNativeKaaba(isAligned),
               ),
             ),

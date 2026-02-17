@@ -73,7 +73,8 @@ class HomeScreen extends StatelessWidget {
 
                   _buildArcTimer(provider, l10n),
 
-                  _buildTahajjudCard(context, provider, l10n),
+                  // Вызов анимированной карточки Тахаджуда
+                  TahajjudCardAnimated(provider: provider, l10n: l10n),
 
                   const SizedBox(height: 32),
 
@@ -91,151 +92,6 @@ class HomeScreen extends StatelessWidget {
             );
           },
         ),
-      ),
-    );
-  }
-
-  Widget _buildTahajjudCard(BuildContext context, PrayerProvider provider, AppLocalizations l10n) {
-    if (provider.tahajjudTime == null || provider.targetTime == null) {
-      return const SizedBox.shrink();
-    }
-
-    final now = DateTime.now();
-    final tahajjudTime = provider.tahajjudTime!;
-
-    bool isTahajjudActive = false;
-    DateTime? fajrTime;
-
-    if (provider.currentEvent == RamadanEvent.suhoor) {
-      fajrTime = provider.targetTime!;
-      if (now.isAfter(tahajjudTime) && now.isBefore(fajrTime)) {
-        isTahajjudActive = true;
-      }
-    }
-
-    final target = isTahajjudActive ? fajrTime! : tahajjudTime;
-    final remaining = target.difference(now);
-
-    if (remaining.isNegative) {
-      return const SizedBox.shrink();
-    }
-
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    final hours = twoDigits(remaining.inHours);
-    final minutes = twoDigits(remaining.inMinutes.remainder(60));
-    final seconds = twoDigits(remaining.inSeconds.remainder(60));
-
-    double progress = 0.0;
-
-    if (isTahajjudActive && fajrTime != null) {
-      final total = fajrTime.difference(tahajjudTime).inSeconds;
-      final elapsed = now.difference(tahajjudTime).inSeconds;
-      if (total > 0 && elapsed >= 0) {
-        progress = (elapsed / total).clamp(0.0, 1.0);
-      }
-    } else {
-      if (provider.startTime != null) {
-        final total = tahajjudTime.difference(provider.startTime!).inSeconds;
-        final elapsed = now.difference(provider.startTime!).inSeconds;
-        if (total > 0 && elapsed >= 0) {
-          progress = (elapsed / total).clamp(0.0, 1.0);
-        }
-      }
-    }
-
-    final barColor = isTahajjudActive ? Colors.greenAccent : AppColors.primary;
-    final locale = Localizations.localeOf(context).languageCode;
-    final statusText = isTahajjudActive
-        ? (locale == 'ru' ? "ВРЕМЯ ТАХАДЖУДА" : "TAHAJJUD NOW")
-        : l10n.tahajjud.toUpperCase();
-
-    return Container(
-      margin: const EdgeInsets.only(top: 24),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-            color: isTahajjudActive ? Colors.greenAccent.withOpacity(0.4) : AppColors.primary.withOpacity(0.2),
-            width: 1
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                flex: 3,
-                child: Row(
-                  children: [
-                    Icon(
-                        isTahajjudActive ? Icons.star : Icons.star_border_purple500_outlined,
-                        color: barColor,
-                        size: 22
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        statusText,
-                        style: TextStyle(
-                          color: barColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 2,
-                // ИСПРАВЛЕНИЕ: Защита от Overflow на узких экранах
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    "$hours:$minutes:$seconds",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      fontFeatures: [FontFeature.tabularFigures()],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: LinearProgressIndicator(
-              value: progress,
-              backgroundColor: Colors.white10,
-              color: barColor,
-              minHeight: 8,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Center(
-            child: Text(
-              isTahajjudActive
-                  ? (locale == 'ru' ? "ДО ОКОНЧАНИЯ (ФАДЖР)" : "UNTIL END (FAJR)")
-                  : l10n.timeRemaining.toUpperCase(),
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.0,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -432,7 +288,9 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildArcTimer(PrayerProvider provider, AppLocalizations l10n) {
-    final duration = provider.timeRemaining;
+    final rawDuration = provider.timeRemaining;
+    final duration = rawDuration.isNegative ? Duration.zero : rawDuration;
+
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     final hours = twoDigits(duration.inHours);
     final minutes = twoDigits(duration.inMinutes.remainder(60));
@@ -475,7 +333,6 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    // ИСПРАВЛЕНИЕ: Защита огромного текста от Overflow
                     SizedBox(
                       width: 250,
                       child: FittedBox(
@@ -697,6 +554,237 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+// --- ИСПРАВЛЕННАЯ АНИМИРОВАННАЯ КАРТОЧКА ТАХАДЖУДА ---
+class TahajjudCardAnimated extends StatefulWidget {
+  final PrayerProvider provider;
+  final AppLocalizations l10n;
+
+  const TahajjudCardAnimated({super.key, required this.provider, required this.l10n});
+
+  @override
+  State<TahajjudCardAnimated> createState() => _TahajjudCardAnimatedState();
+}
+
+class _TahajjudCardAnimatedState extends State<TahajjudCardAnimated> with SingleTickerProviderStateMixin {
+  late AnimationController _pulseController;
+  late Animation<double> _glowAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    // Анимация работает всегда, но ее интенсивность и цвет будут зависеть от статуса
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2), // Базовая скорость дыхания
+    )..repeat(reverse: true);
+
+    _glowAnimation = Tween<double>(begin: 0.1, end: 0.5).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void didUpdateWidget(TahajjudCardAnimated oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Динамически меняем скорость анимации в зависимости от того, наступил Тахаджуд или нет
+    bool isNowActive = _isTahajjudCurrentlyActive(widget.provider);
+    bool wasActive = _isTahajjudCurrentlyActive(oldWidget.provider);
+
+    if (isNowActive != wasActive) {
+      if (isNowActive) {
+        _pulseController.duration = const Duration(milliseconds: 1200); // Ускоренное биение во время молитвы
+        _pulseController.repeat(reverse: true);
+      } else {
+        _pulseController.duration = const Duration(seconds: 3); // Медленное, спокойное дыхание до молитвы
+        _pulseController.repeat(reverse: true);
+      }
+    }
+  }
+
+  bool _isTahajjudCurrentlyActive(PrayerProvider provider) {
+    if (provider.tahajjudTime == null || provider.targetTime == null) return false;
+    final now = DateTime.now();
+    if (provider.currentEvent == RamadanEvent.suhoor) {
+      if (now.isAfter(provider.tahajjudTime!) && now.isBefore(provider.targetTime!)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.provider.tahajjudTime == null || widget.provider.targetTime == null) {
+      return const SizedBox.shrink();
+    }
+
+    final now = DateTime.now();
+    final tahajjudTime = widget.provider.tahajjudTime!;
+
+    bool isTahajjudActive = _isTahajjudCurrentlyActive(widget.provider);
+    DateTime? fajrTime;
+
+    if (widget.provider.currentEvent == RamadanEvent.suhoor) {
+      fajrTime = widget.provider.targetTime!;
+    }
+
+    final target = isTahajjudActive ? fajrTime! : tahajjudTime;
+    final remaining = target.difference(now);
+
+    if (remaining.isNegative) {
+      return const SizedBox.shrink();
+    }
+
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    final hours = twoDigits(remaining.inHours);
+    final minutes = twoDigits(remaining.inMinutes.remainder(60));
+    final seconds = twoDigits(remaining.inSeconds.remainder(60));
+
+    double progress = 0.0;
+
+    if (isTahajjudActive && fajrTime != null) {
+      final total = fajrTime.difference(tahajjudTime).inSeconds;
+      final elapsed = now.difference(tahajjudTime).inSeconds;
+      if (total > 0 && elapsed >= 0) {
+        progress = (elapsed / total).clamp(0.0, 1.0);
+      }
+    } else {
+      if (widget.provider.startTime != null) {
+        final total = tahajjudTime.difference(widget.provider.startTime!).inSeconds;
+        final elapsed = now.difference(widget.provider.startTime!).inSeconds;
+        if (total > 0 && elapsed >= 0) {
+          progress = (elapsed / total).clamp(0.0, 1.0);
+        }
+      }
+    }
+
+    // ИСПРАВЛЕНИЕ UX:
+    // Днем: золотистый цвет (primary).
+    // Ночью (во время молитвы): неоново-зеленый (greenAccent).
+    final baseColor = isTahajjudActive ? Colors.greenAccent : AppColors.primary;
+    final locale = Localizations.localeOf(context).languageCode;
+    final statusText = isTahajjudActive
+        ? (locale == 'ru' ? "ВРЕМЯ ТАХАДЖУДА" : "TAHAJJUD NOW")
+        : widget.l10n.tahajjud.toUpperCase();
+
+    return AnimatedBuilder(
+        animation: _glowAnimation,
+        builder: (context, child) {
+          return Container(
+            margin: const EdgeInsets.only(top: 24),
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(24),
+              // Мягкое пульсирующее свечение рамки всегда активно
+              border: Border.all(
+                  color: baseColor.withOpacity(0.2 + (_glowAnimation.value * 0.5)),
+                  width: 1.5
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: baseColor.withOpacity(_glowAnimation.value * (isTahajjudActive ? 0.4 : 0.15)),
+                  blurRadius: isTahajjudActive ? 20 : 10,
+                  spreadRadius: isTahajjudActive ? 2 : 0,
+                )
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Row(
+                        children: [
+                          Icon(
+                              isTahajjudActive ? Icons.star : Icons.star_border_purple500_outlined,
+                              // Иконка "дышит" цветом
+                              color: baseColor.withOpacity(0.5 + (_glowAnimation.value * 0.5)),
+                              size: 22
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              statusText,
+                              style: TextStyle(
+                                color: baseColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.5,
+                                shadows: isTahajjudActive ? [
+                                  Shadow(
+                                    color: baseColor.withOpacity(_glowAnimation.value),
+                                    blurRadius: 10,
+                                  )
+                                ] : [],
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      flex: 2,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "$hours:$minutes:$seconds",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFeatures: [FontFeature.tabularFigures()],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    backgroundColor: Colors.white10,
+                    color: baseColor,
+                    minHeight: 8,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    isTahajjudActive
+                        ? (locale == 'ru' ? "ДО ОКОНЧАНИЯ (ФАДЖР)" : "UNTIL END (FAJR)")
+                        : widget.l10n.timeRemaining.toUpperCase(),
+                    style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
     );
   }
 }

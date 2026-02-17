@@ -26,9 +26,22 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final provider = Provider.of<PrayerProvider>(context);
 
-    final currentLangCode = provider.locale.languageCode;
+    // ИСПРАВЛЕНИЕ FPS: Читаем провайдер без подписки на все изменения (чтобы таймер не дергал экран)
+    final provider = context.read<PrayerProvider>();
+
+    // ИСПРАВЛЕНИЕ FPS: Подписываемся точечно ТОЛЬКО на те поля, которые влияют на UI
+    final currentLangCode = context.select<PrayerProvider, String>((p) => p.locale.languageCode);
+    final currentMadhab = context.select<PrayerProvider, Madhab>((p) => p.madhab);
+    final currentMethod = context.select<PrayerProvider, CalculationMethod>((p) => p.method);
+    final isManualLocation = context.select<PrayerProvider, bool>((p) => p.isManualLocation);
+    final currentCity = context.select<PrayerProvider, String>((p) => p.city);
+    final isLoading = context.select<PrayerProvider, bool>((p) => p.isLoading);
+    final notificationsEnabled = context.select<PrayerProvider, bool>((p) => p.notificationsEnabled);
+    final suhoorAlarmOffset = context.select<PrayerProvider, int>((p) => p.suhoorAlarmOffset);
+    final iftarAlarmOffset = context.select<PrayerProvider, int>((p) => p.iftarAlarmOffset);
+    final tahajjudAlarmOffset = context.select<PrayerProvider, int>((p) => p.tahajjudAlarmOffset);
+
     final currentLangName = _supportedLanguages.firstWhere(
             (lang) => lang['code'] == currentLangCode,
         orElse: () => {'name': 'English'}
@@ -68,7 +81,7 @@ class SettingsScreen extends StatelessWidget {
                 _buildSettingsTile(
                   context,
                   title: l10n.madhab,
-                  value: _getMadhabName(provider.madhab, l10n),
+                  value: _getMadhabName(currentMadhab, l10n),
                   icon: Icons.people_outline,
                   onTap: () => _showMadhabPicker(context, provider, l10n),
                 ),
@@ -78,7 +91,7 @@ class SettingsScreen extends StatelessWidget {
                 _buildSettingsTile(
                   context,
                   title: l10n.calculationMethod,
-                  value: _getMethodName(provider.method, l10n),
+                  value: _getMethodName(currentMethod, l10n),
                   icon: Icons.calculate_outlined,
                   onTap: () => _showMethodPicker(context, provider, l10n),
                 ),
@@ -88,20 +101,17 @@ class SettingsScreen extends StatelessWidget {
                 _buildSettingsTile(
                   context,
                   title: l10n.location,
-                  value: provider.isLoading
-                      ? "..."
-                      : "${provider.city}",
-                  icon: provider.isManualLocation ? Icons.location_city : Icons.location_on_outlined,
+                  value: isLoading ? "..." : currentCity,
+                  icon: isManualLocation ? Icons.location_city : Icons.location_on_outlined,
                   onTap: () => _showLocationSearchSheet(context, provider, l10n),
                 ),
 
-                // --- НОВЫЙ БЛОК: КОРРЕКТИРОВКА ВРЕМЕНИ (ИХТИЯТ) ---
                 const Divider(height: 1, indent: 56, endIndent: 16),
 
                 _buildSettingsTile(
                   context,
-                  title: l10n.timeAdjustments, // Использован новый ключ
-                  value: l10n.fineTuneTimes,   // Использован новый ключ
+                  title: l10n.timeAdjustments,
+                  value: l10n.fineTuneTimes,
                   icon: Icons.tune,
                   onTap: () => _showAdjustmentPicker(context, provider, l10n),
                 ),
@@ -131,7 +141,7 @@ class SettingsScreen extends StatelessWidget {
                       l10n.enableNotificationsDesc,
                       style: TextStyle(color: Colors.grey.shade400, fontSize: 13)
                   ),
-                  value: provider.notificationsEnabled,
+                  value: notificationsEnabled,
                   onChanged: (bool value) async {
                     provider.toggleNotifications(value);
                     if (value) {
@@ -140,7 +150,7 @@ class SettingsScreen extends StatelessWidget {
                   },
                 ),
 
-                if (provider.notificationsEnabled) ...[
+                if (notificationsEnabled) ...[
                   const Divider(height: 1, indent: 16, endIndent: 16),
 
                   Padding(
@@ -159,7 +169,7 @@ class SettingsScreen extends StatelessWidget {
                   _buildAlarmRow(
                     title: l10n.suhoorAlarm,
                     icon: Icons.wb_twilight,
-                    value: provider.suhoorAlarmOffset,
+                    value: suhoorAlarmOffset,
                     onChanged: (val) {
                       if (val != null) provider.updateSuhoorAlarm(val);
                     },
@@ -169,7 +179,7 @@ class SettingsScreen extends StatelessWidget {
                   _buildAlarmRow(
                     title: l10n.iftarAlarm,
                     icon: Icons.nights_stay_outlined,
-                    value: provider.iftarAlarmOffset,
+                    value: iftarAlarmOffset,
                     onChanged: (val) {
                       if (val != null) provider.updateIftarAlarm(val);
                     },
@@ -179,7 +189,7 @@ class SettingsScreen extends StatelessWidget {
                   _buildAlarmRow(
                     title: l10n.tahajjudAlarm,
                     icon: Icons.star_border_purple500_outlined,
-                    value: provider.tahajjudAlarmOffset,
+                    value: tahajjudAlarmOffset,
                     onChanged: (val) {
                       if (val != null) provider.updateTahajjudAlarm(val);
                     },
@@ -192,8 +202,7 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
 
-          // --- СЕКЦИЯ ABOUT & LEGAL ---
-          _buildSectionHeader(l10n.aboutLegal), // Использован новый ключ
+          _buildSectionHeader(l10n.aboutLegal),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
@@ -203,19 +212,19 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               children: [
                 _buildSimpleTile(
-                  title: l10n.privacyPolicy, // Использован новый ключ
+                  title: l10n.privacyPolicy,
                   icon: Icons.privacy_tip_outlined,
                   onTap: () => _launchURL("https://sites.google.com/view/nurramadan"),
                 ),
                 const Divider(height: 1, indent: 56, endIndent: 16),
                 _buildSimpleTile(
-                  title: l10n.termsOfUse, // Использован новый ключ
+                  title: l10n.termsOfUse,
                   icon: Icons.gavel_outlined,
                   onTap: () => _launchURL("https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"),
                 ),
                 const Divider(height: 1, indent: 56, endIndent: 16),
                 _buildSimpleTile(
-                  title: l10n.appVersion, // Использован новый ключ
+                  title: l10n.appVersion,
                   value: "1.0.0 (Build 1)",
                   icon: Icons.info_outline,
                   onTap: () {},
@@ -229,8 +238,6 @@ class SettingsScreen extends StatelessWidget {
       ),
     );
   }
-
-  // --- WIDGETS ---
 
   Widget _buildAlarmRow({
     required String title,
@@ -353,8 +360,6 @@ class SettingsScreen extends StatelessWidget {
     }
   }
 
-  // --- PICKERS (MODAL BOTTOM SHEETS) ---
-
   void _showLocationSearchSheet(BuildContext context, PrayerProvider provider, AppLocalizations l10n) {
     final TextEditingController cityController = TextEditingController();
 
@@ -435,7 +440,6 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  // --- ДИАЛОГ КОРРЕКТИРОВКИ ВРЕМЕНИ (IHTIYAT) ---
   void _showAdjustmentPicker(BuildContext context, PrayerProvider provider, AppLocalizations l10n) {
     showModalBottomSheet(
       context: context,
@@ -502,10 +506,10 @@ class SettingsScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
                           children: [
-                            Text(l10n.timeAdjustmentsShort, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), // Использован новый ключ
+                            Text(l10n.timeAdjustmentsShort, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                             const SizedBox(height: 8),
                             Text(
-                              l10n.adjustmentDesc, // Использован новый ключ
+                              l10n.adjustmentDesc,
                               textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 13, color: Colors.grey.shade400),
                             ),

@@ -11,7 +11,7 @@ import '../core/localization/notification_dictionary.dart';
 
 enum RamadanEvent { suhoor, iftar }
 
-class PrayerProvider extends ChangeNotifier {
+class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
   final LocationService _locationService = LocationService();
   final StorageService _storageService = StorageService();
 
@@ -50,7 +50,6 @@ class PrayerProvider extends ChangeNotifier {
   bool _needsReschedule = false;
   bool _isManualLocation = false;
 
-  // --- Getters ---
   PrayerTimes? get prayerTimes => _prayerTimes;
   RamadanEvent get currentEvent => _currentEvent;
   DateTime? get targetTime => _targetTime;
@@ -86,7 +85,22 @@ class PrayerProvider extends ChangeNotifier {
   }
 
   PrayerProvider() {
+    WidgetsBinding.instance.addObserver(this);
     init();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      _timer?.cancel();
+    } else if (state == AppLifecycleState.resumed) {
+      if (_coordinates != null) {
+        _currentDay = DateTime.now().day;
+        _calculateRamadanTimings();
+      }
+      _startTimer();
+      notifyListeners();
+    }
   }
 
   Future<void> init() async {
@@ -115,7 +129,8 @@ class PrayerProvider extends ChangeNotifier {
         _locale = Locale(savedLang);
       } else {
         final String sysLang = Platform.localeName.split('_')[0];
-        _locale = Locale(['en', 'ru'].contains(sysLang) ? sysLang : 'en');
+        final supportedLanguages = ['en', 'ru', 'ar', 'tr', 'id', 'fr', 'ky', 'kk', 'uz', 'tg'];
+        _locale = Locale(supportedLanguages.contains(sysLang) ? sysLang : 'en');
       }
 
       _isManualLocation = _storageService.getIsManualLocation();
@@ -137,6 +152,9 @@ class PrayerProvider extends ChangeNotifier {
         _coordinates = Coordinates(position.latitude, position.longitude);
         await _determineCityAndCountry(position.latitude, position.longitude);
       }
+
+      // ИСПРАВЛЕНИЕ DEADLOCK'а: Безопасный запрос прав на пуши (Только ПОСЛЕ геолокации)
+      await NotificationService().requestPermissions();
 
       final savedMethodIdx = _storageService.getCalculationMethodIndex();
       if (savedMethodIdx != null &&
@@ -168,7 +186,9 @@ class PrayerProvider extends ChangeNotifier {
       _error = null;
       notifyListeners();
 
-      List<Location> locations = await locationFromAddress(query);
+      List<Location> locations = await locationFromAddress(query)
+          .timeout(const Duration(seconds: 5));
+
       if (locations.isEmpty) {
         _error = "City not found. Please try another name.";
         _isLoading = false;
@@ -186,6 +206,9 @@ class PrayerProvider extends ChangeNotifier {
       _storageService.saveManualLocation(
           loc.latitude, loc.longitude, _city, _countryCode);
 
+      // ИСПРАВЛЕНИЕ: Также запрашиваем пуши, если юзер выбрал ручной поиск в первый раз
+      await NotificationService().requestPermissions();
+
       _method = _autoDetectMethod(_countryCode);
       _storageService.saveCalculationMethodIndex(_method.index);
 
@@ -194,6 +217,10 @@ class PrayerProvider extends ChangeNotifier {
       _startTimer();
       await scheduleNotifications();
 
+      _isLoading = false;
+      notifyListeners();
+    } on TimeoutException {
+      _error = "Network timeout. Check your connection.";
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -251,10 +278,8 @@ class PrayerProvider extends ChangeNotifier {
     final fajrToday = todayTimes.fajr;
     final maghribToday = todayTimes.maghrib;
 
-    // ИСПРАВЛЕНИЕ: Точный расчет Тахаджуда до и после полуночи
     if (now.isBefore(fajrToday)) {
       _currentEvent = RamadanEvent.suhoor;
-      // Мы после полуночи, но до Фаджра. Тахаджуд относится к прошедшему дню
       final yesterday = now.subtract(const Duration(days: 1));
       final yesterdayTimes = PrayerTimes(_coordinates!, DateComponents.from(yesterday), params);
 
@@ -264,14 +289,12 @@ class PrayerProvider extends ChangeNotifier {
 
     } else if (now.isBefore(maghribToday)) {
       _currentEvent = RamadanEvent.iftar;
-      // День. Тахаджуд будет предстоящей ночью
       _tahajjudTime = SunnahTimes(todayTimes).lastThirdOfTheNight;
       _startTime = fajrToday;
       _targetTime = maghribToday;
 
     } else {
       _currentEvent = RamadanEvent.suhoor;
-      // Вечер после Магриба. Тахаджуд будет предстоящей ночью
       _tahajjudTime = SunnahTimes(todayTimes).lastThirdOfTheNight;
       _startTime = maghribToday;
       final tomorrow = now.add(const Duration(days: 1));
@@ -352,15 +375,15 @@ class PrayerProvider extends ChangeNotifier {
       _needsReschedule = false;
       try {
         await NotificationService().cancelAll();
-        if (!_notificationsEnabled || _coordinates == null) continue;
+        if (!_notificationsEnabled || _coordinates == null) break;
 
         final now = DateTime.now();
         final String currentLang = _locale.languageCode;
         final params = _getSmartParameters();
 
-        // ИСПРАВЛЕНИЕ: Планируем пуши на 5 дней вперед, чтобы не сбросились, если юзер не открывает апп
         final List<PrayerTimes> calculationDays = [];
-        for (int i = 0; i < 5; i++) {
+
+        for (int i = 0; i < 4; i++) {
           calculationDays.add(PrayerTimes(_coordinates!, DateComponents.from(now.add(Duration(days: i))), params));
         }
 
@@ -509,7 +532,9 @@ class PrayerProvider extends ChangeNotifier {
   Future<void> _determineCityAndCountry(double lat, double lng,
       {String? fallbackCity}) async {
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
+      List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng)
+          .timeout(const Duration(seconds: 5));
+
       if (placemarks.isNotEmpty) {
         final place = placemarks.first;
         _city = place.locality ??
@@ -521,6 +546,13 @@ class PrayerProvider extends ChangeNotifier {
         _storageService.saveCity(_city);
         _storageService.saveCountryCode(_countryCode);
       }
+    } on TimeoutException {
+      if (fallbackCity != null) {
+        _city = fallbackCity;
+      } else {
+        _city = "Location Found";
+      }
+      debugPrint("Geocoding timeout gracefully handled");
     } catch (e) {
       if (fallbackCity != null) _city = fallbackCity;
       debugPrint("Geocoding error: $e");
@@ -583,6 +615,7 @@ class PrayerProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _timer?.cancel();
     super.dispose();
   }

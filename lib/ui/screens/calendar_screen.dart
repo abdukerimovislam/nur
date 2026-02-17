@@ -39,6 +39,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Future<void> _captureAndShareImage(TrackerProvider tracker, AppLocalizations l10n) async {
     if (_isSharing) return;
 
+    // Защита от вызова до полного построения дерева виджетов
+    if (_shareCardKey.currentContext == null) return;
+
     setState(() => _isSharing = true);
     HapticFeedback.lightImpact();
 
@@ -54,7 +57,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
         await imagePath.writeAsBytes(pngBytes);
 
         final text = l10n.shareProgress(tracker.fastedCount, tracker.missedCount);
-        await Share.shareXFiles([XFile(imagePath.path)], text: text);
+
+        // ИСПРАВЛЕНИЕ: Вычисляем позицию экрана для предотвращения краша на iPad
+        final RenderBox? box = context.findRenderObject() as RenderBox?;
+
+        await Share.shareXFiles(
+          [XFile(imagePath.path)],
+          text: text,
+          // Без этой строки iPad неминуемо выдаст Fatal Crash
+          sharePositionOrigin: box != null ? box.localToGlobal(Offset.zero) & box.size : null,
+        );
       }
     } catch (e) {
       debugPrint('Share error: $e');
@@ -65,10 +77,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ИСПРАВЛЕНИЕ FPS: Используем select, чтобы экран не перерисовывался каждую секунду от таймера PrayerProvider!
     final isPrayerLoading = context.select<PrayerProvider, bool>((p) => p.isLoading);
     final String currentCity = context.select<PrayerProvider, String>((p) => p.city);
-    final prayerProvider = context.read<PrayerProvider>(); // Читаем методы без подписки на таймер
+    final prayerProvider = context.read<PrayerProvider>();
 
     final trackerProvider = context.watch<TrackerProvider>();
     final l10n = AppLocalizations.of(context)!;
@@ -310,6 +321,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   void _showLockMessage(BuildContext context, AppLocalizations l10n) {
     HapticFeedback.heavyImpact();
+    ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(l10n.futureDateError, style: const TextStyle(color: Colors.white)),

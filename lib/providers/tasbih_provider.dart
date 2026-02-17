@@ -1,61 +1,85 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../data/services/preferences_service.dart';
 
-class TasbihProvider extends ChangeNotifier {
+class TasbihProvider extends ChangeNotifier with WidgetsBindingObserver {
   final PreferencesService _prefs = PreferencesService();
-  static const int _dhikrCount = 4;
 
   int _count = 0;
-  int _selectedDhikrIndex = 0; // Индекс выбранного зикра
+  int _selectedDhikrIndex = 0;
+
+  // Таймер для дебаунса сохранения в память
+  Timer? _debounceTimer;
 
   int get count => _count;
   int get selectedDhikrIndex => _selectedDhikrIndex;
 
   TasbihProvider() {
+    // Подписываемся на события жизненного цикла ОС
+    WidgetsBinding.instance.addObserver(this);
     _loadData();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // ЖЕЛЕЗОБЕТОННАЯ ЗАЩИТА: Если приложение сворачивают или убивают,
+    // мгновенно сохраняем данные, не дожидаясь окончания таймера.
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached) {
+      if (_debounceTimer?.isActive ?? false) {
+        _debounceTimer?.cancel();
+        _prefs.saveTasbihCount(_count);
+      }
+    }
   }
 
   Future<void> _loadData() async {
     _count = await _prefs.loadTasbihCount();
-    // Загружаем сохраненный индекс зикра при старте приложения
-    final loadedIndex = await _prefs.loadTasbihIndex();
-    if (loadedIndex >= 0 && loadedIndex < _dhikrCount) {
-      _selectedDhikrIndex = loadedIndex;
-    } else {
-      _selectedDhikrIndex = 0;
-      _prefs.saveTasbihIndex(0);
-    }
+    _selectedDhikrIndex = await _prefs.loadTasbihIndex();
     notifyListeners();
   }
 
   void increment() {
     _count++;
     HapticFeedback.mediumImpact();
-    _prefs.saveTasbihCount(_count);
     notifyListeners();
+
+    // Сбрасываем таймер и сохраняем данные в память только когда юзер перестанет кликать
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      _prefs.saveTasbihCount(_count);
+    });
   }
 
   void reset() {
     _count = 0;
     HapticFeedback.vibrate();
-    _prefs.saveTasbihCount(0);
     notifyListeners();
+
+    _debounceTimer?.cancel();
+    _prefs.saveTasbihCount(0);
   }
 
-  // Метод выбора зикра
   void selectDhikr(int index) {
-    if (index < 0 || index >= _dhikrCount) return;
     if (_selectedDhikrIndex != index) {
       _selectedDhikrIndex = index;
-      _count = 0; // Сбрасываем счетчик при выборе нового зикра
+      _count = 0;
       HapticFeedback.lightImpact();
 
-      // Сохраняем новый индекс и обнуленный счетчик в память
+      _debounceTimer?.cancel();
       _prefs.saveTasbihIndex(index);
       _prefs.saveTasbihCount(0);
 
       notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _debounceTimer?.cancel();
+    super.dispose();
   }
 }

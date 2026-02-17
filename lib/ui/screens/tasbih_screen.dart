@@ -108,7 +108,7 @@ class _TasbihScreenState extends State<TasbihScreen>
 
     final double cycleProgress = (provider.count % 33) / 33.0;
     final double displayProgress =
-        (provider.count > 0 && provider.count % 33 == 0) ? 1.0 : cycleProgress;
+    (provider.count > 0 && provider.count % 33 == 0) ? 1.0 : cycleProgress;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -129,7 +129,6 @@ class _TasbihScreenState extends State<TasbihScreen>
           ..._ripples.map((ripple) => _buildRippleWidget(ripple)),
           Column(
             children: [
-              // --- БАННЕР НАВЕРХУ ---
               const SafeArea(
                 bottom: false,
                 child: AdBannerWidget(),
@@ -139,7 +138,6 @@ class _TasbihScreenState extends State<TasbihScreen>
               Expanded(
                 flex: 2,
                 child: Center(
-                  // ИСПРАВЛЕНИЕ: Обернули счетчик в FittedBox
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: FittedBox(
@@ -226,7 +224,14 @@ class _TasbihScreenState extends State<TasbihScreen>
                     return Padding(
                       padding: const EdgeInsets.only(right: 12),
                       child: ChoiceChip(
-                        label: Text(dhikrs[index]),
+                        // ИСПРАВЛЕНИЕ: Защита текста от Overflow длинных переводов
+                        label: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 150),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(dhikrs[index]),
+                          ),
+                        ),
                         selected: isSelected,
                         onSelected: (_) {
                           HapticFeedback.lightImpact();
@@ -237,7 +242,7 @@ class _TasbihScreenState extends State<TasbihScreen>
                         labelStyle: TextStyle(
                           color: isSelected ? Colors.black : Colors.white70,
                           fontWeight:
-                              isSelected ? FontWeight.bold : FontWeight.w500,
+                          isSelected ? FontWeight.bold : FontWeight.w500,
                         ),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 14),

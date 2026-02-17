@@ -41,6 +41,7 @@ dependencies:
   app_tracking_transparency: ^2.0.6+1
   url_launcher: ^6.3.2
   flutter_native_splash: ^2.4.7
+  upgrader: ^12.5.0
 
 dev_dependencies:
   flutter_test:
