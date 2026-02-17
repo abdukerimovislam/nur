@@ -95,21 +95,35 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // --- ВСПОМОГАТЕЛЬНЫЕ ВИДЖЕТЫ ---
+  // --- ИСПРАВЛЕННЫЙ ТАХАДЖУД ВИДЖЕТ ---
 
   Widget _buildTahajjudCard(BuildContext context, PrayerProvider provider, AppLocalizations l10n) {
-    if (provider.tahajjudAlarmOffset <= 0 || provider.tahajjudTime == null) {
+    if (provider.tahajjudTime == null || provider.targetTime == null) {
       return const SizedBox.shrink();
     }
 
     final now = DateTime.now();
     final tahajjudTime = provider.tahajjudTime!;
 
-    if (now.isAfter(tahajjudTime)) {
+    // Определяем, активен ли Тахаджуд прямо сейчас (только если сейчас ночь и мы прошли время начала)
+    bool isTahajjudActive = false;
+    DateTime? fajrTime;
+
+    if (provider.currentEvent == RamadanEvent.suhoor) {
+      fajrTime = provider.targetTime!;
+      if (now.isAfter(tahajjudTime) && now.isBefore(fajrTime)) {
+        isTahajjudActive = true;
+      }
+    }
+
+    final target = isTahajjudActive ? fajrTime! : tahajjudTime;
+    final remaining = target.difference(now);
+
+    // Защита от отрицательного времени (если провайдер еще не обновил данные)
+    if (remaining.isNegative) {
       return const SizedBox.shrink();
     }
 
-    final remaining = tahajjudTime.difference(now);
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     final hours = twoDigits(remaining.inHours);
     final minutes = twoDigits(remaining.inMinutes.remainder(60));
@@ -117,14 +131,29 @@ class HomeScreen extends StatelessWidget {
 
     double progress = 0.0;
 
-    // ИСПРАВЛЕНИЕ: Прогресс-бар Тахаджуда теперь работает правильно даже после 00:00
-    if (provider.startTime != null && provider.currentEvent == RamadanEvent.suhoor) {
-      final total = tahajjudTime.difference(provider.startTime!).inSeconds;
-      final elapsed = now.difference(provider.startTime!).inSeconds;
+    if (isTahajjudActive && fajrTime != null) {
+      // Прогресс: от начала Тахаджуда до Фаджра
+      final total = fajrTime.difference(tahajjudTime).inSeconds;
+      final elapsed = now.difference(tahajjudTime).inSeconds;
       if (total > 0 && elapsed >= 0) {
         progress = (elapsed / total).clamp(0.0, 1.0);
       }
+    } else {
+      // Прогресс: от startTime (Фаджра утром или Магриба вечером) до начала Тахаджуда
+      if (provider.startTime != null) {
+        final total = tahajjudTime.difference(provider.startTime!).inSeconds;
+        final elapsed = now.difference(provider.startTime!).inSeconds;
+        if (total > 0 && elapsed >= 0) {
+          progress = (elapsed / total).clamp(0.0, 1.0);
+        }
+      }
     }
+
+    final barColor = isTahajjudActive ? Colors.greenAccent : AppColors.primary;
+    final locale = Localizations.localeOf(context).languageCode;
+    final statusText = isTahajjudActive
+        ? (locale == 'ru' ? "ВРЕМЯ ТАХАДЖУДА" : "TAHAJJUD NOW")
+        : l10n.tahajjud.toUpperCase();
 
     return Container(
       margin: const EdgeInsets.only(top: 24),
@@ -132,7 +161,10 @@ class HomeScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.primary.withOpacity(0.2), width: 1),
+        border: Border.all(
+            color: isTahajjudActive ? Colors.greenAccent.withOpacity(0.4) : AppColors.primary.withOpacity(0.2),
+            width: 1
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,13 +175,17 @@ class HomeScreen extends StatelessWidget {
               Expanded(
                 child: Row(
                   children: [
-                    const Icon(Icons.star_border_purple500_outlined, color: AppColors.primary, size: 22),
+                    Icon(
+                        isTahajjudActive ? Icons.star : Icons.star_border_purple500_outlined,
+                        color: barColor,
+                        size: 22
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        l10n.tahajjud.toUpperCase(),
-                        style: const TextStyle(
-                          color: AppColors.primary,
+                        statusText,
+                        style: TextStyle(
+                          color: barColor,
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.5,
@@ -178,14 +214,16 @@ class HomeScreen extends StatelessWidget {
             child: LinearProgressIndicator(
               value: progress,
               backgroundColor: Colors.white10,
-              color: AppColors.primary,
+              color: barColor,
               minHeight: 8,
             ),
           ),
           const SizedBox(height: 8),
           Center(
             child: Text(
-              l10n.timeRemaining.toUpperCase(),
+              isTahajjudActive
+                  ? (locale == 'ru' ? "ДО ОКОНЧАНИЯ (ФАДЖР)" : "UNTIL END (FAJR)")
+                  : l10n.timeRemaining.toUpperCase(),
               style: const TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 10,
@@ -318,7 +356,6 @@ class HomeScreen extends StatelessWidget {
             bottom: MediaQuery.of(ctx).viewInsets.bottom,
             left: 24, right: 24, top: 24,
           ),
-          // ИСПРАВЛЕНИЕ: Добавлен скролл, чтобы шторка не крашилась на мелких экранах
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,

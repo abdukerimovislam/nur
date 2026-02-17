@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'dart:ui';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -137,14 +136,21 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
     final provider = context.watch<PrayerProvider>();
     final l10n = AppLocalizations.of(context)!;
 
-    if (provider.prayerTimes == null) return const Scaffold(backgroundColor: Colors.black);
+    if (provider.prayerTimes == null) return const Scaffold(backgroundColor: AppColors.background);
     final qiblaDirection = Qibla(provider.prayerTimes!.coordinates).direction;
 
+    // Безопасная проверка готовности камеры к отображению превью
+    final bool canShowCamera = widget.isActive &&
+        _isCameraInitialized &&
+        _cameraController != null &&
+        _cameraController!.value.isInitialized &&
+        _cameraController!.value.aspectRatio > 0;
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          if (widget.isActive && _isCameraInitialized && _cameraController != null)
+          if (canShowCamera)
             Positioned.fill(
               child: AspectRatio(
                 aspectRatio: _cameraController!.value.aspectRatio,
@@ -152,7 +158,7 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
               ),
             )
           else
-            Container(color: Colors.black),
+            Container(color: AppColors.background),
 
           Positioned.fill(
             child: Container(
@@ -160,7 +166,7 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
                 gradient: RadialGradient(
                   center: Alignment.center,
                   radius: 1.2,
-                  colors: [Colors.transparent, Colors.black.withOpacity(0.6)],
+                  colors: [Colors.transparent, AppColors.background.withOpacity(0.8)],
                 ),
               ),
             ),
@@ -177,8 +183,11 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
                 if (diff > 180) diff = 360 - diff;
                 final bool isAligned = diff < 4.0;
 
+                // Используем PostFrameCallback для предотвращения Side Effects внутри функции build
                 if (isAligned && !_hasVibrated) {
-                  HapticFeedback.mediumImpact();
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    HapticFeedback.mediumImpact();
+                  });
                   _hasVibrated = true;
                 } else if (!isAligned) {
                   _hasVibrated = false;
@@ -222,7 +231,6 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(provider.city.toUpperCase(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
-                    // --- ЛОКАЛИЗАЦИЯ: Поиск или Успех ---
                     Text(
                         isAligned ? l10n.qiblaAligned : l10n.qiblaSearching,
                         style: TextStyle(color: isAligned ? AppColors.primary : Colors.white54, fontSize: 11)
@@ -264,10 +272,44 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
     );
   }
 
+  // Нативно нарисованная Кааба (без картинок)
+  Widget _buildNativeKaaba(bool isAligned) {
+    return Container(
+      width: 50,
+      height: 60,
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A1A), // Почти черный куб
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(
+          color: isAligned ? AppColors.primary.withOpacity(0.8) : Colors.transparent,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 10),
+          Container(
+            height: 8,
+            width: double.infinity,
+            color: const Color(0xFFD4AF37), // Широкая золотая лента
+          ),
+          const SizedBox(height: 3),
+          Container(
+            height: 1.5,
+            width: double.infinity,
+            color: const Color(0xFFD4AF37), // Тонкая золотая лента
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildKaabaMarker(double heading, double qibla, bool isAligned, AppLocalizations l10n) {
     double offset = qibla - heading;
     if (offset > 180) offset -= 360;
     if (offset < -180) offset += 360;
+
+    // Плавное вычисление смещения по X
     double horizontalAlignment = (offset / 30).clamp(-1.5, 1.5);
 
     return AnimatedAlign(
@@ -284,15 +326,16 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 boxShadow: [
-                  BoxShadow(color: (isAligned ? AppColors.primary : Colors.white).withOpacity(0.3), blurRadius: 40, spreadRadius: 2)
+                  BoxShadow(
+                      color: (isAligned ? AppColors.primary : Colors.white).withOpacity(0.3),
+                      blurRadius: 40,
+                      spreadRadius: 2
+                  )
                 ],
               ),
               child: Center(
-                child: Image.asset(
-                  'assets/images/kaaba_icon.png',
-                  width: 80,
-                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.mosque, size: 60, color: Colors.white),
-                ),
+                // Используем нативный виджет вместо картинки
+                child: _buildNativeKaaba(isAligned),
               ),
             ),
             const SizedBox(height: 20),
@@ -303,7 +346,6 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), border: Border.all(color: Colors.white12)),
-                  // --- ЛОКАЛИЗАЦИЯ: Священная Кааба ---
                   child: Text(
                       l10n.holyKaaba.toUpperCase(),
                       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 4, fontSize: 13)
@@ -331,7 +373,6 @@ class _QiblaScreenState extends State<QiblaScreen> with WidgetsBindingObserver, 
               color: isAligned ? AppColors.primary : Colors.white.withOpacity(0.1),
               borderRadius: BorderRadius.circular(40),
             ),
-            // --- ЛОКАЛИЗАЦИЯ: Направление верное или просьба калибровки/поворота ---
             child: Text(
                 isAligned ? l10n.qiblaAligned : l10n.rotatePhone,
                 style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)
