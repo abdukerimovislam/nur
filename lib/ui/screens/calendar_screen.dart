@@ -65,7 +65,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final prayerProvider = context.watch<PrayerProvider>();
+    // ИСПРАВЛЕНИЕ FPS: Используем select, чтобы экран не перерисовывался каждую секунду от таймера PrayerProvider!
+    final isPrayerLoading = context.select<PrayerProvider, bool>((p) => p.isLoading);
+    final String currentCity = context.select<PrayerProvider, String>((p) => p.city);
+    final prayerProvider = context.read<PrayerProvider>(); // Читаем методы без подписки на таймер
+
     final trackerProvider = context.watch<TrackerProvider>();
     final l10n = AppLocalizations.of(context)!;
 
@@ -73,7 +77,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final String hijriLocale = (langCode == 'ar' || langCode == 'id') ? langCode : 'en';
     HijriCalendar.setLocal(hijriLocale);
 
-    if (prayerProvider.isLoading || trackerProvider.isLoading) {
+    if (isPrayerLoading || trackerProvider.isLoading) {
       return const Scaffold(
         backgroundColor: AppColors.background,
         body: Center(child: CircularProgressIndicator(color: AppColors.primary)),
@@ -113,10 +117,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
             ),
           ),
 
-          // ИСПРАВЛЕНИЕ: Теперь это ListView, весь экран скроллится!
           ListView(
             physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-            padding: const EdgeInsets.only(bottom: 100), // Отступ снизу для красоты
+            padding: const EdgeInsets.only(bottom: 100),
             children: [
               _buildTableCalendar(langCode, trackerProvider),
 
@@ -126,7 +129,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
               if (_selectedDay != null)
                 _buildHijriRow(_selectedDay!, l10n),
 
-              // Убрали Expanded, так как мы внутри ListView
               _buildPrayerList(selectedPrayerTimes, l10n, langCode),
             ],
           ),
@@ -383,7 +385,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  // ИСПРАВЛЕНИЕ: Теперь это Padding с Column внутри, а не ListView.
   Widget _buildPrayerList(dynamic times, AppLocalizations l10n, String langCode) {
     if (times == null) {
       return const Padding(

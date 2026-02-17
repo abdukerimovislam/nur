@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../data/services/storage_service.dart'; // <--- НОВЫЙ ИМПОРТ ХРАНИЛИЩА
+import '../data/services/storage_service.dart';
 
 // Строгая типизация статусов дня
 enum FastingStatus {
@@ -9,7 +9,7 @@ enum FastingStatus {
 }
 
 class TrackerProvider extends ChangeNotifier {
-  final StorageService _storage = StorageService(); // <--- ИСПОЛЬЗУЕМ СИНГЛТОН
+  final StorageService _storage = StorageService();
 
   // Кэш в оперативной памяти для мгновенного доступа
   Map<String, FastingStatus> _fastingDays = {};
@@ -33,7 +33,6 @@ class TrackerProvider extends ChangeNotifier {
     return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
   }
 
-  // <--- ИЗМЕНЕНИЕ: Теперь метод синхронный, данные грузятся мгновенно
   void _loadData() {
     _isLoading = true;
 
@@ -54,6 +53,12 @@ class TrackerProvider extends ChangeNotifier {
 
   // --- МЕТОД ДЛЯ 3-Х КНОПОК ---
   Future<void> setDayStatus(DateTime date, FastingStatus newStatus) async {
+    // ИСПРАВЛЕНИЕ: Железобетонная защита бэкенда от будущих дат!
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final checkDate = DateTime(date.year, date.month, date.day);
+    if (checkDate.isAfter(today)) return;
+
     final key = _formatDateKey(date);
 
     if (newStatus == FastingStatus.none) {
@@ -68,6 +73,12 @@ class TrackerProvider extends ChangeNotifier {
 
   // Метод переключения статуса по тапу на день в календаре
   Future<void> toggleDayStatus(DateTime date) async {
+    // ИСПРАВЛЕНИЕ: Защита бэкенда при переключении тапом
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final checkDate = DateTime(date.year, date.month, date.day);
+    if (checkDate.isAfter(today)) return;
+
     final key = _formatDateKey(date);
     final currentStatus = _fastingDays[key] ?? FastingStatus.none;
 
@@ -91,10 +102,7 @@ class TrackerProvider extends ChangeNotifier {
       _fastingDays[key] = newStatus;
     }
 
-    // Реактивно обновляем UI
     notifyListeners();
-
-    // Асинхронно сохраняем в БД (не блокируя UI)
     _saveData();
   }
 
@@ -105,9 +113,8 @@ class TrackerProvider extends ChangeNotifier {
   }
 
   Future<void> _saveData() async {
-    // Конвертируем Enum обратно в строки для JSON
     final Map<String, String> dataToSave = _fastingDays.map((key, value) {
-      return MapEntry(key, value.name); // .name вернет 'fasted' или 'missed'
+      return MapEntry(key, value.name);
     });
 
     await _storage.saveFastingData(dataToSave);

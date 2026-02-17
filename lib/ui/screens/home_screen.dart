@@ -95,8 +95,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // --- ИСПРАВЛЕННЫЙ ТАХАДЖУД ВИДЖЕТ ---
-
   Widget _buildTahajjudCard(BuildContext context, PrayerProvider provider, AppLocalizations l10n) {
     if (provider.tahajjudTime == null || provider.targetTime == null) {
       return const SizedBox.shrink();
@@ -105,7 +103,6 @@ class HomeScreen extends StatelessWidget {
     final now = DateTime.now();
     final tahajjudTime = provider.tahajjudTime!;
 
-    // Определяем, активен ли Тахаджуд прямо сейчас (только если сейчас ночь и мы прошли время начала)
     bool isTahajjudActive = false;
     DateTime? fajrTime;
 
@@ -119,7 +116,6 @@ class HomeScreen extends StatelessWidget {
     final target = isTahajjudActive ? fajrTime! : tahajjudTime;
     final remaining = target.difference(now);
 
-    // Защита от отрицательного времени (если провайдер еще не обновил данные)
     if (remaining.isNegative) {
       return const SizedBox.shrink();
     }
@@ -132,14 +128,12 @@ class HomeScreen extends StatelessWidget {
     double progress = 0.0;
 
     if (isTahajjudActive && fajrTime != null) {
-      // Прогресс: от начала Тахаджуда до Фаджра
       final total = fajrTime.difference(tahajjudTime).inSeconds;
       final elapsed = now.difference(tahajjudTime).inSeconds;
       if (total > 0 && elapsed >= 0) {
         progress = (elapsed / total).clamp(0.0, 1.0);
       }
     } else {
-      // Прогресс: от startTime (Фаджра утром или Магриба вечером) до начала Тахаджуда
       if (provider.startTime != null) {
         final total = tahajjudTime.difference(provider.startTime!).inSeconds;
         final elapsed = now.difference(provider.startTime!).inSeconds;
@@ -173,6 +167,7 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
+                flex: 3,
                 child: Row(
                   children: [
                     Icon(
@@ -197,13 +192,21 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              Text(
-                "$hours:$minutes:$seconds",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  fontFeatures: [FontFeature.tabularFigures()],
+              Expanded(
+                flex: 2,
+                // ИСПРАВЛЕНИЕ: Защита от Overflow на узких экранах
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    "$hours:$minutes:$seconds",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      fontFeatures: [FontFeature.tabularFigures()],
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -472,13 +475,21 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      "$hours:$minutes:$seconds",
-                      style: const TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontFeatures: [FontFeature.tabularFigures()],
+                    // ИСПРАВЛЕНИЕ: Защита огромного текста от Overflow
+                    SizedBox(
+                      width: 250,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.center,
+                        child: Text(
+                          "$hours:$minutes:$seconds",
+                          style: const TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontFeatures: [FontFeature.tabularFigures()],
+                          ),
+                        ),
                       ),
                     ),
                   ],
