@@ -39,8 +39,11 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
 
   int _suhoorAlarmOffset = 30;
   int _iftarAlarmOffset = 0;
-
   int _tahajjudAlarmOffset = 0;
+
+  // --- НОВОЕ: Переменная сдвига Хиджры ---
+  int _hijriAdjustment = 0;
+
   DateTime? _tahajjudTime;
 
   Timer? _timer;
@@ -68,6 +71,9 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
   bool get isManualLocation => _isManualLocation;
   int get tahajjudAlarmOffset => _tahajjudAlarmOffset;
   DateTime? get tahajjudTime => _tahajjudTime;
+
+  // --- НОВОЕ: Геттер для сдвига Хиджры ---
+  int get hijriAdjustment => _hijriAdjustment;
 
   Duration get timeElapsed {
     if (_startTime == null) return Duration.zero;
@@ -117,6 +123,9 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
       _iftarAlarmOffset = _storageService.getIftarOffset();
       _tahajjudAlarmOffset = _storageService.getTahajjudOffset();
 
+      // --- НОВОЕ: Загружаем настройку из памяти ---
+      _hijriAdjustment = _storageService.getHijriAdjustment();
+
       final savedMadhabIdx = _storageService.getMadhabIndex();
       if (savedMadhabIdx != null &&
           savedMadhabIdx >= 0 &&
@@ -153,7 +162,6 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
         await _determineCityAndCountry(position.latitude, position.longitude);
       }
 
-      // ИСПРАВЛЕНИЕ DEADLOCK'а: Безопасный запрос прав на пуши (Только ПОСЛЕ геолокации)
       await NotificationService().requestPermissions();
 
       final savedMethodIdx = _storageService.getCalculationMethodIndex();
@@ -206,7 +214,6 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
       _storageService.saveManualLocation(
           loc.latitude, loc.longitude, _city, _countryCode);
 
-      // ИСПРАВЛЕНИЕ: Также запрашиваем пуши, если юзер выбрал ручной поиск в первый раз
       await NotificationService().requestPermissions();
 
       _method = _autoDetectMethod(_countryCode);
@@ -245,6 +252,13 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
       scheduleNotifications();
       notifyListeners();
     }
+  }
+
+  // --- НОВОЕ: Функция для изменения дней Хиджры ---
+  void updateHijriAdjustment(int days) {
+    _hijriAdjustment = days;
+    _storageService.saveHijriAdjustment(days);
+    notifyListeners(); // Экран мгновенно обновится
   }
 
   CalculationParameters _getSmartParameters() {
@@ -603,14 +617,14 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
   String _mapErrorMessage(dynamic e) {
     final error = e.toString().toLowerCase();
     if (error.contains("disabled") || error.contains("отключ")) {
-      return "Location services are disabled. Tap here to set city manually.";
+      return "Location services are disabled. Please enable them in Settings or set your city manually.";
     }
     if (error.contains("denied") ||
         error.contains("отказ") ||
         error.contains("заблок")) {
-      return "Location permission denied. Tap here to set city manually.";
+      return "Location permission is required for accurate prayer times. Please enable it in Settings or set your city manually.";
     }
-    return "Check connection or set city manually.";
+    return "Failed to detect location. Check connection or set city manually.";
   }
 
   @override

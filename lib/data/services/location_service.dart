@@ -21,17 +21,15 @@ class LocationService {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      try {
-        await Geolocator.openAppSettings();
-      } catch (e) {
-        debugPrint("Could not open App Settings: $e");
-      }
+      // ИСПРАВЛЕНИЕ ДЛЯ APPLE (Guideline 5.1.1):
+      // Мы убрали автоматический вызов Geolocator.openAppSettings().
+      // Приложение больше не выкидывает пользователя в настройки агрессивно.
+      // Вместо этого мы просто возвращаем ошибку, а UI предложит ввести город вручную.
       return Future.error(
-          'Location permissions are permanently denied. Please enable in Settings.');
+          'Location permissions are permanently denied. Please enable in Settings or set city manually.');
     }
 
-    // ИСПРАВЛЕНИЕ: Жесткая защита от бесконечного поиска спутников на Android.
-    // Если за 7 секунд точная локация не найдена, берем последнюю известную или выдаем ошибку.
+    // Жесткая защита от бесконечного поиска спутников на Android и iOS.
     try {
       return await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.medium,

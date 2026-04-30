@@ -26,11 +26,8 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
-    // ИСПРАВЛЕНИЕ FPS: Читаем провайдер без подписки на все изменения (чтобы таймер не дергал экран)
     final provider = context.read<PrayerProvider>();
 
-    // ИСПРАВЛЕНИЕ FPS: Подписываемся точечно ТОЛЬКО на те поля, которые влияют на UI
     final currentLangCode = context.select<PrayerProvider, String>((p) => p.locale.languageCode);
     final currentMadhab = context.select<PrayerProvider, Madhab>((p) => p.madhab);
     final currentMethod = context.select<PrayerProvider, CalculationMethod>((p) => p.method);
@@ -41,6 +38,9 @@ class SettingsScreen extends StatelessWidget {
     final suhoorAlarmOffset = context.select<PrayerProvider, int>((p) => p.suhoorAlarmOffset);
     final iftarAlarmOffset = context.select<PrayerProvider, int>((p) => p.iftarAlarmOffset);
     final tahajjudAlarmOffset = context.select<PrayerProvider, int>((p) => p.tahajjudAlarmOffset);
+
+    // --- НОВОЕ: Получаем сдвиг для UI ---
+    final hijriAdjustment = context.select<PrayerProvider, int>((p) => p.hijriAdjustment);
 
     final currentLangName = _supportedLanguages.firstWhere(
             (lang) => lang['code'] == currentLangCode,
@@ -114,6 +114,20 @@ class SettingsScreen extends StatelessWidget {
                   value: l10n.fineTuneTimes,
                   icon: Icons.tune,
                   onTap: () => _showAdjustmentPicker(context, provider, l10n),
+                ),
+
+                // --- НОВОЕ: Кнопка корректировки Хиджры ---
+                const Divider(height: 1, indent: 56, endIndent: 16),
+
+                _buildSettingsTile(
+                  context,
+                  // Хардкодим fallback строки, чтобы не требовать регенерации l10n перед релизом
+                  title: currentLangCode == 'ru' ? "Корректировка Хиджры" : "Hijri Adjustment",
+                  value: hijriAdjustment == 0
+                      ? (currentLangCode == 'ru' ? "Автоматически" : "Automatic")
+                      : (hijriAdjustment > 0 ? "+$hijriAdjustment" : "$hijriAdjustment"),
+                  icon: Icons.calendar_month,
+                  onTap: () => _showHijriAdjustmentPicker(context, provider, currentLangCode),
                 ),
 
                 const Divider(height: 1, indent: 56, endIndent: 16),
@@ -433,6 +447,51 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ),
               const SizedBox(height: 32),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // --- НОВОЕ: Диалог для корректировки Хиджры ---
+  void _showHijriAdjustmentPicker(BuildContext context, PrayerProvider provider, String langCode) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.background,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                    langCode == 'ru' ? "Сдвиг даты (Хиджра)" : "Hijri Date Offset",
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                ),
+              ),
+              ...[-2, -1, 0, 1, 2].map((day) {
+                final isSelected = provider.hijriAdjustment == day;
+                String label;
+                if (day == 0) {
+                  label = langCode == 'ru' ? "0 дней (Авто)" : "0 days (Auto)";
+                } else if (day > 0) {
+                  label = "+$day ${langCode == 'ru' ? 'день/дней' : 'days'}";
+                } else {
+                  label = "$day ${langCode == 'ru' ? 'день/дней' : 'days'}";
+                }
+
+                return ListTile(
+                  title: Text(label),
+                  trailing: isSelected ? const Icon(Icons.check, color: AppColors.primary) : null,
+                  onTap: () {
+                    provider.updateHijriAdjustment(day);
+                    Navigator.pop(ctx);
+                  },
+                );
+              }),
             ],
           ),
         );

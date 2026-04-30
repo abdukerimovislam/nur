@@ -29,6 +29,9 @@ class StorageService {
   static const String _keyManualLng = 'manual_lng';
   static const String _keyCountryCode = 'country_code';
 
+  // --- НОВОЕ: Ключ для корректировки Хиджры ---
+  static const String _keyHijriAdjustment = 'hijri_adjustment';
+
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
   }
@@ -113,15 +116,19 @@ class StorageService {
   Future<void> saveCalculationMethodIndex(int index) async =>
       await _prefs.setInt(_keyCalcMethod, index);
 
-  // --- НОВОЕ: МЕТОДЫ ДЛЯ РУЧНОЙ КОРРЕКТИРОВКИ ВРЕМЕНИ НАМАЗОВ (IHTIYAT) ---
-
-  /// Получает сохраненное смещение в минутах для конкретного намаза (fajr, sunrise, dhuhr, asr, maghrib, isha)
+  // --- МЕТОДЫ ДЛЯ РУЧНОЙ КОРРЕКТИРОВКИ ВРЕМЕНИ НАМАЗОВ (IHTIYAT) ---
   int getAdjustment(String prayerName) {
     return _prefs.getInt('adj_$prayerName') ?? 0;
   }
 
-  /// Сохраняет смещение в минутах (может быть как положительным, так и отрицательным)
   Future<void> saveAdjustment(String prayerName, int minutes) async {
     await _prefs.setInt('adj_$prayerName', minutes);
+  }
+
+  // --- НОВОЕ: МЕТОДЫ ДЛЯ КОРРЕКТИРОВКИ ДАТЫ ПО ХИДЖРЕ ---
+  int getHijriAdjustment() => _prefs.getInt(_keyHijriAdjustment) ?? 0;
+
+  Future<void> saveHijriAdjustment(int days) async {
+    await _prefs.setInt(_keyHijriAdjustment, days);
   }
 }

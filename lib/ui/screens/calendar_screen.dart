@@ -38,8 +38,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Future<void> _captureAndShareImage(TrackerProvider tracker, AppLocalizations l10n) async {
     if (_isSharing) return;
-
-    // Защита от вызова до полного построения дерева виджетов
     if (_shareCardKey.currentContext == null) return;
 
     setState(() => _isSharing = true);
@@ -58,13 +56,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
         final text = l10n.shareProgress(tracker.fastedCount, tracker.missedCount);
 
-        // ИСПРАВЛЕНИЕ: Вычисляем позицию экрана для предотвращения краша на iPad
         final RenderBox? box = context.findRenderObject() as RenderBox?;
 
         await Share.shareXFiles(
           [XFile(imagePath.path)],
           text: text,
-          // Без этой строки iPad неминуемо выдаст Fatal Crash
           sharePositionOrigin: box != null ? box.localToGlobal(Offset.zero) & box.size : null,
         );
       }
@@ -78,8 +74,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     final isPrayerLoading = context.select<PrayerProvider, bool>((p) => p.isLoading);
-    final String currentCity = context.select<PrayerProvider, String>((p) => p.city);
     final prayerProvider = context.read<PrayerProvider>();
+    // --- НОВОЕ: Достаем сдвиг Хиджры из провайдера ---
+    final hijriAdjustment = context.select<PrayerProvider, int>((p) => p.hijriAdjustment);
 
     final trackerProvider = context.watch<TrackerProvider>();
     final l10n = AppLocalizations.of(context)!;
@@ -138,7 +135,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 _buildFastingTrackerCard(_selectedDay!, trackerProvider, l10n),
 
               if (_selectedDay != null)
-                _buildHijriRow(_selectedDay!, l10n),
+              // --- НОВОЕ: Передаем сдвиг в UI ---
+                _buildHijriRow(_selectedDay!, hijriAdjustment, l10n),
 
               _buildPrayerList(selectedPrayerTimes, l10n, langCode),
             ],
@@ -380,7 +378,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  Widget _buildHijriRow(DateTime date, AppLocalizations l10n) {
+  // --- НОВОЕ: Применяем сдвиг в UI ---
+  Widget _buildHijriRow(DateTime date, int adjustment, AppLocalizations l10n) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Container(
@@ -390,7 +389,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           children: [
             const Icon(Icons.nights_stay_outlined, color: Colors.white54, size: 20),
             const SizedBox(width: 12),
-            Expanded(child: Text(_formatHijriDate(date, l10n), style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w500, fontSize: 14))),
+            Expanded(child: Text(_formatHijriDate(date, adjustment, l10n), style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w500, fontSize: 14))),
           ],
         ),
       ),
@@ -424,9 +423,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  String _formatHijriDate(DateTime date, AppLocalizations l10n) {
+  // --- НОВОЕ: Передаем сдвиг в библиотеку ---
+  String _formatHijriDate(DateTime date, int adjustment, AppLocalizations l10n) {
     try {
-      final hijri = HijriCalendar.fromDate(date);
+      // Искусственно сдвигаем дату для парсера, чтобы получить нужный день месяца
+      final adjustedDate = date.add(Duration(days: adjustment));
+      final hijri = HijriCalendar.fromDate(adjustedDate);
       return "${hijri.hDay} ${hijri.longMonthName} ${hijri.hYear}";
     } catch (e) { return "-- -- ----"; }
   }

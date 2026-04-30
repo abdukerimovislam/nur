@@ -57,12 +57,12 @@ void main() async {
     debugPrint("Firebase init failed: $e");
   }
 
-  // 5. Инициализация рекламного движка и ATT
-  unawaited(MobileAds.instance.initialize());
+  // 5. Инициализация ATT (СТРОГО СНАЧАЛА!) и затем рекламного движка
+  // ИСПРАВЛЕНИЕ: Жесткое требование App Store. Запрос должен быть до инициализации рекламы.
   if (Platform.isIOS) {
-    // Запрос на отслеживание для Apple (без этого — отказ в сторе)
     await AppTrackingTransparency.requestTrackingAuthorization();
   }
+  unawaited(MobileAds.instance.initialize());
 
   // 6. Инициализация локальных сервисов
   await StorageService().init();
@@ -93,6 +93,21 @@ class RamadanApp extends StatelessWidget {
             onGenerateTitle: (context) =>
             AppLocalizations.of(context)?.appTitle ?? 'NUR: Ramadan',
             debugShowCheckedModeBanner: false,
+
+            // ИСПРАВЛЕНИЕ: Жесткая защита от разрушения верстки (Overflow).
+            // Ограничиваем системное увеличение шрифта максимум до +15%.
+            builder: (context, widget) {
+              final mediaQueryData = MediaQuery.of(context);
+              final constrainedTextScaler = mediaQueryData.textScaler.clamp(
+                minScaleFactor: 1.0,
+                maxScaleFactor: 1.15,
+              );
+
+              return MediaQuery(
+                data: mediaQueryData.copyWith(textScaler: constrainedTextScaler),
+                child: widget!,
+              );
+            },
 
             localizationsDelegates: const [
               AppLocalizations.delegate,
