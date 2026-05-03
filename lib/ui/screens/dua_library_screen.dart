@@ -15,13 +15,6 @@ class DuaLibraryScreen extends StatelessWidget {
     // Используем чистые геттеры из локализации без хардкода
     final List<Map<String, dynamic>> categories = [
       {
-        'id': 'ramadan',
-        'title': l10n.categoryRamadan,
-        'icon': Icons.nights_stay_rounded,
-        'color': AppColors.primary,
-        'count': 3,
-      },
-      {
         'id': 'morning_evening',
         'title': l10n.categoryMorningEvening,
         'icon': Icons.wb_twilight_rounded,
@@ -64,12 +57,14 @@ class DuaLibraryScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
+          icon: const Icon(Icons.arrow_back_ios_new,
+              color: Colors.white, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           l10n.duaLibraryTitle,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),

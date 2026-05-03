@@ -1,7 +1,7 @@
 name: nur_ramadan
-description: Premium minimal Ramadan assistant.
+description: Prayer, Quran AI, widgets, and daily Muslim companion.
 publish_to: 'none'
-version: 1.0.0+12
+version: 1.0.0+13
 
 environment:
   sdk: ">=3.1.0 <4.0.0"
@@ -42,6 +42,7 @@ dependencies:
   url_launcher: ^6.3.2
   flutter_native_splash: ^2.4.7
   upgrader: ^12.5.0
+  home_widget: ^0.9.1
 
 dev_dependencies:
   flutter_test:

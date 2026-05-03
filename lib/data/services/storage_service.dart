@@ -3,7 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageService {
   static final StorageService _instance = StorageService._internal();
+
   factory StorageService() => _instance;
+
   StorageService._internal();
 
   late SharedPreferences _prefs;
@@ -29,23 +31,85 @@ class StorageService {
   static const String _keyManualLng = 'manual_lng';
   static const String _keyCountryCode = 'country_code';
 
-  // --- НОВОЕ: Ключ для корректировки Хиджры ---
+  // Ключ для корректировки Хиджры
   static const String _keyHijriAdjustment = 'hijri_adjustment';
 
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
   }
 
-  // --- МЕТОДЫ ДЛЯ ТАСБИХА ---
+  // ---------------------------------------------------------------------------
+  // UNIVERSAL SHARED PREFERENCES HELPERS
+  // ---------------------------------------------------------------------------
+
+  String? getString(String key) {
+    return _prefs.getString(key);
+  }
+
+  Future<bool> saveString(String key, String value) async {
+    return _prefs.setString(key, value);
+  }
+
+  int? getInt(String key) {
+    return _prefs.getInt(key);
+  }
+
+  Future<bool> saveInt(String key, int value) async {
+    return _prefs.setInt(key, value);
+  }
+
+  bool? getBool(String key) {
+    return _prefs.getBool(key);
+  }
+
+  Future<bool> saveBool(String key, bool value) async {
+    return _prefs.setBool(key, value);
+  }
+
+  double? getDouble(String key) {
+    return _prefs.getDouble(key);
+  }
+
+  Future<bool> saveDouble(String key, double value) async {
+    return _prefs.setDouble(key, value);
+  }
+
+  List<String>? getStringList(String key) {
+    return _prefs.getStringList(key);
+  }
+
+  Future<bool> saveStringList(String key, List<String> value) async {
+    return _prefs.setStringList(key, value);
+  }
+
+  Future<bool> remove(String key) async {
+    return _prefs.remove(key);
+  }
+
+  Future<bool> containsKey(String key) async {
+    return _prefs.containsKey(key);
+  }
+
+  // ---------------------------------------------------------------------------
+  // TASBIH
+  // ---------------------------------------------------------------------------
+
   int getTasbihCount() => _prefs.getInt(_keyTasbihCount) ?? 0;
-  Future<void> saveTasbihCount(int count) async =>
-      await _prefs.setInt(_keyTasbihCount, count);
+
+  Future<void> saveTasbihCount(int count) async {
+    await _prefs.setInt(_keyTasbihCount, count);
+  }
 
   int getTasbihIndex() => _prefs.getInt(_keyTasbihIndex) ?? 0;
-  Future<void> saveTasbihIndex(int index) async =>
-      await _prefs.setInt(_keyTasbihIndex, index);
 
-  // --- МЕТОДЫ ДЛЯ ДНЕВНИКА ПОСТА ---
+  Future<void> saveTasbihIndex(int index) async {
+    await _prefs.setInt(_keyTasbihIndex, index);
+  }
+
+  // ---------------------------------------------------------------------------
+  // FASTING TRACKER
+  // ---------------------------------------------------------------------------
+
   Map<String, String> getFastingData() {
     final String? jsonString = _prefs.getString(_keyFastingData);
     if (jsonString == null) return {};
@@ -63,60 +127,94 @@ class StorageService {
     await _prefs.setString(_keyFastingData, jsonString);
   }
 
-  // --- МЕТОДЫ ДЛЯ ЛОКАЦИИ (Город, Страна, Ручной режим) ---
+  // ---------------------------------------------------------------------------
+  // LOCATION
+  // ---------------------------------------------------------------------------
+
   String? getCity() => _prefs.getString(_keyCity);
-  Future<void> saveCity(String city) async =>
-      await _prefs.setString(_keyCity, city);
+
+  Future<void> saveCity(String city) async {
+    await _prefs.setString(_keyCity, city);
+  }
 
   String? getCountryCode() => _prefs.getString(_keyCountryCode);
-  Future<void> saveCountryCode(String code) async =>
-      await _prefs.setString(_keyCountryCode, code);
+
+  Future<void> saveCountryCode(String code) async {
+    await _prefs.setString(_keyCountryCode, code);
+  }
 
   bool getIsManualLocation() => _prefs.getBool(_keyIsManualLocation) ?? false;
-  Future<void> saveIsManualLocation(bool value) async =>
-      await _prefs.setBool(_keyIsManualLocation, value);
+
+  Future<void> saveIsManualLocation(bool value) async {
+    await _prefs.setBool(_keyIsManualLocation, value);
+  }
 
   double? getManualLat() => _prefs.getDouble(_keyManualLat);
+
   double? getManualLng() => _prefs.getDouble(_keyManualLng);
 
   Future<void> saveManualLocation(
-      double lat, double lng, String city, String countryCode) async {
+      double lat,
+      double lng,
+      String city,
+      String countryCode,
+      ) async {
     await _prefs.setDouble(_keyManualLat, lat);
     await _prefs.setDouble(_keyManualLng, lng);
     await saveCity(city);
     await saveCountryCode(countryCode);
   }
 
-  // --- МЕТОДЫ ДЛЯ НАСТРОЕК (Язык и Будильники) ---
+  // ---------------------------------------------------------------------------
+  // LANGUAGE AND NOTIFICATIONS
+  // ---------------------------------------------------------------------------
+
   String? getLanguage() => _prefs.getString(_keyLanguage);
-  Future<void> saveLanguage(String langCode) async =>
-      await _prefs.setString(_keyLanguage, langCode);
+
+  Future<void> saveLanguage(String langCode) async {
+    await _prefs.setString(_keyLanguage, langCode);
+  }
 
   bool getNotificationsEnabled() => _prefs.getBool(_keyNotifications) ?? true;
-  Future<void> saveNotificationsEnabled(bool value) async =>
-      await _prefs.setBool(_keyNotifications, value);
+
+  Future<void> saveNotificationsEnabled(bool value) async {
+    await _prefs.setBool(_keyNotifications, value);
+  }
 
   int getSuhoorOffset() => _prefs.getInt(_keySuhoorOffset) ?? 30;
-  Future<void> saveSuhoorOffset(int minutes) async =>
-      await _prefs.setInt(_keySuhoorOffset, minutes);
+
+  Future<void> saveSuhoorOffset(int minutes) async {
+    await _prefs.setInt(_keySuhoorOffset, minutes);
+  }
 
   int getIftarOffset() => _prefs.getInt(_keyIftarOffset) ?? 0;
-  Future<void> saveIftarOffset(int minutes) async =>
-      await _prefs.setInt(_keyIftarOffset, minutes);
+
+  Future<void> saveIftarOffset(int minutes) async {
+    await _prefs.setInt(_keyIftarOffset, minutes);
+  }
 
   int getTahajjudOffset() => _prefs.getInt(_keyTahajjudOffset) ?? 0;
-  Future<void> saveTahajjudOffset(int minutes) async =>
-      await _prefs.setInt(_keyTahajjudOffset, minutes);
+
+  Future<void> saveTahajjudOffset(int minutes) async {
+    await _prefs.setInt(_keyTahajjudOffset, minutes);
+  }
 
   int? getMadhabIndex() => _prefs.getInt(_keyMadhab);
-  Future<void> saveMadhabIndex(int index) async =>
-      await _prefs.setInt(_keyMadhab, index);
+
+  Future<void> saveMadhabIndex(int index) async {
+    await _prefs.setInt(_keyMadhab, index);
+  }
 
   int? getCalculationMethodIndex() => _prefs.getInt(_keyCalcMethod);
-  Future<void> saveCalculationMethodIndex(int index) async =>
-      await _prefs.setInt(_keyCalcMethod, index);
 
-  // --- МЕТОДЫ ДЛЯ РУЧНОЙ КОРРЕКТИРОВКИ ВРЕМЕНИ НАМАЗОВ (IHTIYAT) ---
+  Future<void> saveCalculationMethodIndex(int index) async {
+    await _prefs.setInt(_keyCalcMethod, index);
+  }
+
+  // ---------------------------------------------------------------------------
+  // MANUAL PRAYER TIME ADJUSTMENTS
+  // ---------------------------------------------------------------------------
+
   int getAdjustment(String prayerName) {
     return _prefs.getInt('adj_$prayerName') ?? 0;
   }
@@ -125,7 +223,10 @@ class StorageService {
     await _prefs.setInt('adj_$prayerName', minutes);
   }
 
-  // --- НОВОЕ: МЕТОДЫ ДЛЯ КОРРЕКТИРОВКИ ДАТЫ ПО ХИДЖРЕ ---
+  // ---------------------------------------------------------------------------
+  // HIJRI DATE ADJUSTMENT
+  // ---------------------------------------------------------------------------
+
   int getHijriAdjustment() => _prefs.getInt(_keyHijriAdjustment) ?? 0;
 
   Future<void> saveHijriAdjustment(int days) async {

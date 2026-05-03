@@ -14,7 +14,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
@@ -55,7 +56,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 800),
         pageBuilder: (context, animation, secondaryAnimation) {
-          return isFirstLaunch ? const OnboardingScreen() : const MainNavScreen();
+          return isFirstLaunch
+              ? const OnboardingScreen()
+              : const MainNavScreen();
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
@@ -84,7 +87,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
                 // --- СРЕЗАЕМ КРАЯ КАРТИНКИ ---
                 Container(
                   width: 140,
@@ -99,7 +101,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                         spreadRadius: 10,
                       ),
                     ],
-                    border: Border.all(color: AppColors.primary.withOpacity(0.5), width: 2),
+                    border: Border.all(
+                        color: AppColors.primary.withOpacity(0.5), width: 2),
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(30),
@@ -116,11 +119,12 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 Text(
                   l10n.appName,
                   style: const TextStyle(
-                    fontSize: 40,
+                    fontSize: 31,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    letterSpacing: 8,
+                    letterSpacing: 2.4,
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
 

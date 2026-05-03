@@ -97,7 +97,8 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
       _timer?.cancel();
     } else if (state == AppLifecycleState.resumed) {
       if (_coordinates != null) {
@@ -138,7 +139,18 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
         _locale = Locale(savedLang);
       } else {
         final String sysLang = Platform.localeName.split('_')[0];
-        final supportedLanguages = ['en', 'ru', 'ar', 'tr', 'id', 'fr', 'ky', 'kk', 'uz', 'tg'];
+        final supportedLanguages = [
+          'en',
+          'ru',
+          'ar',
+          'tr',
+          'id',
+          'fr',
+          'ky',
+          'kk',
+          'uz',
+          'tg'
+        ];
         _locale = Locale(supportedLanguages.contains(sysLang) ? sysLang : 'en');
       }
 
@@ -194,8 +206,8 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
       _error = null;
       notifyListeners();
 
-      List<Location> locations = await locationFromAddress(query)
-          .timeout(const Duration(seconds: 5));
+      List<Location> locations =
+          await locationFromAddress(query).timeout(const Duration(seconds: 5));
 
       if (locations.isEmpty) {
         _error = "City not found. Please try another name.";
@@ -286,7 +298,8 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
     final now = DateTime.now();
     final params = _getSmartParameters();
 
-    final todayTimes = PrayerTimes(_coordinates!, DateComponents.from(now), params);
+    final todayTimes =
+        PrayerTimes(_coordinates!, DateComponents.from(now), params);
     _prayerTimes = todayTimes;
 
     final fajrToday = todayTimes.fajr;
@@ -295,24 +308,24 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
     if (now.isBefore(fajrToday)) {
       _currentEvent = RamadanEvent.suhoor;
       final yesterday = now.subtract(const Duration(days: 1));
-      final yesterdayTimes = PrayerTimes(_coordinates!, DateComponents.from(yesterday), params);
+      final yesterdayTimes =
+          PrayerTimes(_coordinates!, DateComponents.from(yesterday), params);
 
       _tahajjudTime = SunnahTimes(yesterdayTimes).lastThirdOfTheNight;
       _startTime = yesterdayTimes.maghrib;
       _targetTime = fajrToday;
-
     } else if (now.isBefore(maghribToday)) {
       _currentEvent = RamadanEvent.iftar;
       _tahajjudTime = SunnahTimes(todayTimes).lastThirdOfTheNight;
       _startTime = fajrToday;
       _targetTime = maghribToday;
-
     } else {
       _currentEvent = RamadanEvent.suhoor;
       _tahajjudTime = SunnahTimes(todayTimes).lastThirdOfTheNight;
       _startTime = maghribToday;
       final tomorrow = now.add(const Duration(days: 1));
-      final tomorrowTimes = PrayerTimes(_coordinates!, DateComponents.from(tomorrow), params);
+      final tomorrowTimes =
+          PrayerTimes(_coordinates!, DateComponents.from(tomorrow), params);
       _targetTime = tomorrowTimes.fajr;
     }
   }
@@ -398,7 +411,8 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
         final List<PrayerTimes> calculationDays = [];
 
         for (int i = 0; i < 4; i++) {
-          calculationDays.add(PrayerTimes(_coordinates!, DateComponents.from(now.add(Duration(days: i))), params));
+          calculationDays.add(PrayerTimes(_coordinates!,
+              DateComponents.from(now.add(Duration(days: i))), params));
         }
 
         final notificationService = NotificationService();
@@ -420,75 +434,15 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
             final DateTime time = data['time'] as DateTime;
             if (time.isAfter(now)) {
               final String title =
-              NotificationDictionary.get('prayer_time_title', currentLang);
+                  NotificationDictionary.get('prayer_time_title', currentLang);
               final String body =
-              NotificationDictionary.get('prayer_time_body', currentLang)
-                  .replaceAll('{prayer}', name);
+                  NotificationDictionary.get('prayer_time_body', currentLang)
+                      .replaceAll('{prayer}', name);
               await notificationService.schedulePrayerNotification(
                 id: id,
                 title: title,
                 body: body,
                 scheduledTime: time,
-              );
-            }
-          }
-
-          await _scheduleMotivationalPhases(
-              times.fajr, times.maghrib, notificationIdBase);
-
-          final suhoorWarning = times.fajr.subtract(const Duration(minutes: 5));
-          if (suhoorWarning.isAfter(now)) {
-            await notificationService.schedulePrayerNotification(
-              id: notificationIdBase + 201,
-              title:
-              NotificationDictionary.get('suhoor_5min_title', currentLang),
-              body: NotificationDictionary.get('suhoor_5min_body', currentLang),
-              scheduledTime: suhoorWarning,
-              payload: 'action_dua_suhoor',
-            );
-          }
-
-          final iftarWarning =
-          times.maghrib.subtract(const Duration(minutes: 5));
-          if (iftarWarning.isAfter(now)) {
-            await notificationService.schedulePrayerNotification(
-              id: notificationIdBase + 202,
-              title:
-              NotificationDictionary.get('iftar_5min_title', currentLang),
-              body: NotificationDictionary.get('iftar_5min_body', currentLang),
-              scheduledTime: iftarWarning,
-              payload: 'action_dua_iftar',
-            );
-          }
-
-          if (_suhoorAlarmOffset > 0) {
-            final suhoorAlarmTime =
-            times.fajr.subtract(Duration(minutes: _suhoorAlarmOffset));
-            if (suhoorAlarmTime.isAfter(now)) {
-              await notificationService.schedulePrayerNotification(
-                id: notificationIdBase + 301,
-                title: NotificationDictionary.get(
-                    'suhoor_smart_title', currentLang),
-                body:
-                NotificationDictionary.get('suhoor_smart_body', currentLang)
-                    .replaceAll('{min}', _suhoorAlarmOffset.toString()),
-                scheduledTime: suhoorAlarmTime,
-              );
-            }
-          }
-
-          if (_iftarAlarmOffset > 0) {
-            final iftarAlarmTime =
-            times.maghrib.subtract(Duration(minutes: _iftarAlarmOffset));
-            if (iftarAlarmTime.isAfter(now)) {
-              await notificationService.schedulePrayerNotification(
-                id: notificationIdBase + 302,
-                title: NotificationDictionary.get(
-                    'iftar_smart_title', currentLang),
-                body:
-                NotificationDictionary.get('iftar_smart_body', currentLang)
-                    .replaceAll('{min}', _iftarAlarmOffset.toString()),
-                scheduledTime: iftarAlarmTime,
               );
             }
           }
@@ -503,7 +457,7 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
                 title: NotificationDictionary.get(
                     'tahajjud_smart_title', currentLang),
                 body: NotificationDictionary.get(
-                    'tahajjud_smart_body', currentLang)
+                        'tahajjud_smart_body', currentLang)
                     .replaceAll('{min}', _tahajjudAlarmOffset.toString()),
                 scheduledTime: tahajjudAlarmTime,
               );
@@ -516,31 +470,6 @@ class PrayerProvider extends ChangeNotifier with WidgetsBindingObserver {
       }
     } while (_needsReschedule);
     _isScheduling = false;
-  }
-
-  Future<void> _scheduleMotivationalPhases(
-      DateTime fajr, DateTime maghrib, int idOffset) async {
-    final now = DateTime.now();
-    final String currentLang = _locale.languageCode;
-    final phases = [
-      {'id': 10, 'h': 4, 't': 'phase1_title', 'b': 'phase1_body'},
-      {'id': 11, 'h': 8, 't': 'phase2_title', 'b': 'phase2_body'},
-      {'id': 12, 'h': 12, 't': 'phase3_title', 'b': 'phase3_body'},
-      {'id': 13, 'h': 14, 't': 'phase4_title', 'b': 'phase4_body'}
-    ];
-    for (var phase in phases) {
-      final scheduledTime = fajr.add(Duration(hours: phase['h'] as int));
-      if (scheduledTime.isAfter(now) &&
-          scheduledTime
-              .isBefore(maghrib.subtract(const Duration(minutes: 30)))) {
-        await NotificationService().schedulePrayerNotification(
-          id: (phase['id'] as int) + idOffset,
-          title: NotificationDictionary.get(phase['t'] as String, currentLang),
-          body: NotificationDictionary.get(phase['b'] as String, currentLang),
-          scheduledTime: scheduledTime,
-        );
-      }
-    }
   }
 
   Future<void> _determineCityAndCountry(double lat, double lng,

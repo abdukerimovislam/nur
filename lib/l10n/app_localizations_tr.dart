@@ -9,13 +9,13 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get appTitle => 'Nur';
+  String get appTitle => 'Nur Islam Hub';
 
   @override
-  String get appName => 'NUR';
+  String get appName => 'NUR ISLAM HUB';
 
   @override
-  String get appSubtitle => 'RAMAZAN ASİSTANI';
+  String get appSubtitle => 'MUSLIM COMPANION';
 
   @override
   String get loading => 'Vakitler hesaplanıyor...';

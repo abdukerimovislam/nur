@@ -7,7 +7,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
-    <string>Nur: Ramadan</string>
+    <string>Nur Islam Hub</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
@@ -51,13 +51,13 @@
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NSCameraUsageDescription</key>
-    <string>NUR requires camera access to show the Qibla direction using augmented reality.</string>
+    <string>Nur Islam Hub requires camera access to show the Qibla direction using augmented reality.</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>NUR requires location access to provide accurate Adhan notifications and prayer timings even when the app is in the background.</string>
+    <string>Nur Islam Hub requires location access to provide accurate prayer notifications and prayer timings even when the app is in the background.</string>
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>NUR requires location access to provide accurate Adhan notifications and prayer timings.</string>
+    <string>Nur Islam Hub requires location access to provide accurate prayer notifications and prayer timings.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>NUR requires your location to accurately calculate daily prayer times, Suhoor, and Iftar based on your current city.</string>
+    <string>Nur Islam Hub requires your location to accurately calculate daily prayer times based on your current city.</string>
     <key>NSUserTrackingUsageDescription</key>
     <string>This identifier will be used to deliver personalized ads to you.</string>
     <key>UIApplicationSupportsIndirectInputEvents</key>

@@ -9,13 +9,13 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get appTitle => 'Nur';
+  String get appTitle => 'Nur Islam Hub';
 
   @override
-  String get appName => 'NUR';
+  String get appName => 'NUR ISLAM HUB';
 
   @override
-  String get appSubtitle => 'COMPAGNON DE RAMADAN';
+  String get appSubtitle => 'MUSLIM COMPANION';
 
   @override
   String get loading => 'Calcul des horaires...';

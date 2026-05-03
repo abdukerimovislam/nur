@@ -1,19 +1,18 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:upgrader/upgrader.dart';
 
-import '../../l10n/app_localizations.dart';
 import '../../core/constants/app_colors.dart';
 import '../../data/services/notification_service.dart';
-import '../widgets/dua_bottom_sheet.dart';
 
-import 'home_screen.dart';
 import 'qibla_screen.dart';
-import 'calendar_screen.dart';
+import 'quran_ai_screen.dart';
 import 'settings_screen.dart';
-import 'tasbih_screen.dart';
+import 'today_screen.dart';
+import 'widgets_hub_screen.dart';
 
 class MainNavScreen extends StatefulWidget {
   const MainNavScreen({super.key});
@@ -31,8 +30,6 @@ class _MainNavScreenState extends State<MainNavScreen> {
   void initState() {
     super.initState();
     _initNotificationListener();
-    // ИСПРАВЛЕНИЕ DEADLOCK'а: Вызов NotificationService().requestPermissions()
-    // удален отсюда, так как он конфликтовал с запросом геолокации при запуске.
   }
 
   void _initNotificationListener() async {
@@ -54,17 +51,7 @@ class _MainNavScreenState extends State<MainNavScreen> {
   }
 
   void _onNotificationTapped(String? payload) {
-    if (payload == 'action_dua_suhoor' || payload == 'action_dua_iftar') {
-      final isSuhoor = payload == 'action_dua_suhoor';
-      if (_selectedIndex != 0) {
-        setState(() => _selectedIndex = 0);
-      }
-      Future.delayed(const Duration(milliseconds: 400), () {
-        if (mounted) {
-          DuaBottomSheet.show(context, isSuhoor: isSuhoor);
-        }
-      });
-    }
+    if (payload == null) return;
   }
 
   void _onDestinationSelected(int index) {
@@ -83,22 +70,22 @@ class _MainNavScreenState extends State<MainNavScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     final List<Widget> screens = [
-      const HomeScreen(key: PageStorageKey('home')),
-      const TasbihScreen(key: PageStorageKey('tasbih')),
+      const TodayScreen(key: PageStorageKey('today')),
+      const QuranAIScreen(key: PageStorageKey('quran_ai')),
       QiblaScreen(
         key: const PageStorageKey('qibla'),
         isActive: _selectedIndex == 2,
         onMoveBack: () => _onDestinationSelected(0),
       ),
-      const CalendarScreen(key: PageStorageKey('calendar')),
+      const WidgetsHubScreen(key: PageStorageKey('widgets')),
       const SettingsScreen(key: PageStorageKey('settings')),
     ];
 
     return UpgradeAlert(
-      dialogStyle: Platform.isIOS ? UpgradeDialogStyle.cupertino : UpgradeDialogStyle.material,
+      dialogStyle: Platform.isIOS
+          ? UpgradeDialogStyle.cupertino
+          : UpgradeDialogStyle.material,
       upgrader: Upgrader(
         durationUntilAlertAgain: const Duration(days: 1),
       ),
@@ -107,6 +94,7 @@ class _MainNavScreenState extends State<MainNavScreen> {
         body: Stack(
           children: List.generate(screens.length, (index) {
             final bool active = index == _selectedIndex;
+
             return IgnorePointer(
               ignoring: !active,
               child: FocusScope(
@@ -132,48 +120,94 @@ class _MainNavScreenState extends State<MainNavScreen> {
             );
           }),
         ),
-        bottomNavigationBar: NavigationBarTheme(
-          data: NavigationBarThemeData(
-            labelTextStyle: MaterialStateProperty.resolveWith((states) {
-              if (states.contains(MaterialState.selected)) {
-                return const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primary);
-              }
-              return const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.white70);
-            }),
-          ),
-          child: NavigationBar(
-            backgroundColor: AppColors.surface,
-            elevation: 10,
-            indicatorColor: AppColors.primary.withOpacity(0.15),
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: _onDestinationSelected,
-            destinations: [
-              NavigationDestination(
-                icon: const Icon(Icons.home_outlined, color: Colors.white70),
-                selectedIcon: const Icon(Icons.home, color: AppColors.primary),
-                label: l10n.navHome,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.fingerprint_outlined, color: Colors.white70),
-                selectedIcon: const Icon(Icons.fingerprint, color: AppColors.primary),
-                label: l10n.tasbihTitle,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.explore_outlined, color: Colors.white70),
-                selectedIcon: const Icon(Icons.explore, color: AppColors.primary),
-                label: l10n.navQibla,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.calendar_month_outlined, color: Colors.white70),
-                selectedIcon: const Icon(Icons.calendar_month, color: AppColors.primary),
-                label: l10n.navCalendar,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.settings_outlined, color: Colors.white70),
-                selectedIcon: const Icon(Icons.settings, color: AppColors.primary),
-                label: l10n.settingsTitle,
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: AppColors.background.withOpacity(0.94),
+            border: const Border(
+              top: BorderSide(color: AppColors.border),
+            ),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x66000000),
+                blurRadius: 24,
+                offset: Offset(0, -10),
               ),
             ],
+          ),
+          child: NavigationBarTheme(
+            data: NavigationBarThemeData(
+              labelTextStyle: MaterialStateProperty.resolveWith((states) {
+                if (states.contains(MaterialState.selected)) {
+                  return const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.primary,
+                  );
+                }
+
+                return const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textMuted,
+                );
+              }),
+            ),
+            child: NavigationBar(
+              height: 74,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              indicatorColor: AppColors.primary.withOpacity(0.14),
+              selectedIndex: _selectedIndex,
+              onDestinationSelected: _onDestinationSelected,
+              destinations: const [
+                NavigationDestination(
+                  icon: Icon(Icons.today_outlined, color: AppColors.textMuted),
+                  selectedIcon: Icon(
+                    Icons.today_rounded,
+                    color: AppColors.primary,
+                  ),
+                  label: 'Today',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.graphic_eq_outlined,
+                      color: AppColors.textMuted),
+                  selectedIcon: Icon(
+                    Icons.graphic_eq_rounded,
+                    color: AppColors.primary,
+                  ),
+                  label: 'Quran AI',
+                ),
+                NavigationDestination(
+                  icon:
+                      Icon(Icons.explore_outlined, color: AppColors.textMuted),
+                  selectedIcon: Icon(
+                    Icons.explore,
+                    color: AppColors.primary,
+                  ),
+                  label: 'Qibla',
+                ),
+                NavigationDestination(
+                  icon: Icon(
+                    Icons.auto_awesome_outlined,
+                    color: AppColors.textMuted,
+                  ),
+                  selectedIcon: Icon(
+                    Icons.auto_awesome_rounded,
+                    color: AppColors.primary,
+                  ),
+                  label: 'Inspire',
+                ),
+                NavigationDestination(
+                  icon:
+                      Icon(Icons.settings_outlined, color: AppColors.textMuted),
+                  selectedIcon: Icon(
+                    Icons.settings,
+                    color: AppColors.primary,
+                  ),
+                  label: 'Settings',
+                ),
+              ],
+            ),
           ),
         ),
       ),
