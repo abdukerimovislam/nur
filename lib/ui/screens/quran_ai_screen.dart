@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/constants/app_colors.dart';
+import '../../data/quran/quran_practice_repository.dart';
 import '../../providers/quran_ai_provider.dart';
+import 'ayah_practice_screen.dart';
 import 'nur_premium_screen.dart';
 
 class QuranAIScreen extends StatelessWidget {
@@ -73,10 +75,11 @@ class _Header extends StatelessWidget {
               ),
               SizedBox(height: 7),
               Text(
-                'Practice Quran reading with voice feedback.',
+                'Read an ayah, record your voice, and let Nur compare your reading with the Quran text.',
                 style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 14,
+                  height: 1.35,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -151,7 +154,7 @@ class _HeroPracticeCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'AI RECITATION CHECK',
+                'TEXT-BASED RECITATION CHECK',
                 style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 12,
@@ -161,7 +164,7 @@ class _HeroPracticeCard extends StatelessWidget {
               ),
               const SizedBox(height: 14),
               const Text(
-                'Read, record, improve',
+                'Read, record, compare',
                 style: TextStyle(
                   color: AppColors.textPrimary,
                   fontSize: 33,
@@ -172,7 +175,7 @@ class _HeroPracticeCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               const Text(
-                'Choose an ayah, listen to the correct recitation, record your voice and get feedback on mistakes.',
+                'Nur AI checks whether your recorded reading matches the selected ayah and gives educational practice tips.',
                 style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 14,
@@ -186,11 +189,17 @@ class _HeroPracticeCard extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: canUse
-                      ? () async {
-                    await provider.consumeFreeCheck();
-                    if (context.mounted) {
-                      _showDemoResult(context);
-                    }
+                      ? () {
+                    final surah = QuranPracticeRepository.surahs.first;
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (_) => AyahPracticeScreen(
+                          surah: surah,
+                          initialAyah: surah.ayahs.first,
+                        ),
+                      ),
+                    );
                   }
                       : () => _openPremium(context),
                   style: ElevatedButton.styleFrom(
@@ -202,10 +211,10 @@ class _HeroPracticeCard extends StatelessWidget {
                     ),
                   ),
                   icon: Icon(
-                    canUse ? Icons.mic_rounded : Icons.lock_rounded,
+                    canUse ? Icons.play_arrow_rounded : Icons.lock_rounded,
                   ),
                   label: Text(
-                    canUse ? 'Start AI Check' : 'Unlock Unlimited AI',
+                    canUse ? 'Start Practice' : 'Unlock Unlimited AI',
                     style: const TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 16,
@@ -226,61 +235,6 @@ class _HeroPracticeCard extends StatelessWidget {
       CupertinoPageRoute(
         builder: (_) => const NurPremiumScreen(),
       ),
-    );
-  }
-
-  static void _showDemoResult(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: AppColors.background,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-      ),
-      builder: (_) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 30),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 58,
-                  height: 58,
-                  decoration: BoxDecoration(
-                    color: AppColors.emerald.withOpacity(0.14),
-                    borderRadius: BorderRadius.circular(22),
-                  ),
-                  child: const Icon(
-                    Icons.check_circle_rounded,
-                    color: AppColors.emerald,
-                    size: 32,
-                  ),
-                ),
-                const SizedBox(height: 18),
-                const Text(
-                  'Demo check used',
-                  style: TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'This is a placeholder. Next we will connect real recording, surah selection and AI pronunciation feedback.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 14,
-                    height: 1.45,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }
@@ -338,7 +292,7 @@ class _FreeLimitCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           const Text(
-            'Free users get 3 AI checks per day. Premium unlocks unlimited recitation practice.',
+            'Free users get 3 AI checks per day. Premium unlocks unlimited Quran AI practice.',
             style: TextStyle(
               color: AppColors.textSecondary,
               fontSize: 13,
@@ -369,28 +323,28 @@ class _HowItWorksCard extends StatelessWidget {
           _StepTile(
             number: '1',
             title: 'Choose surah and ayah',
-            subtitle: 'Start with short surahs or beginner-friendly ayahs.',
+            subtitle: 'Start with short, beginner-friendly ayahs.',
             icon: Icons.menu_book_rounded,
           ),
           _Divider(),
           _StepTile(
             number: '2',
-            title: 'Listen to reference audio',
-            subtitle: 'Hear the correct recitation before recording.',
-            icon: Icons.volume_up_rounded,
+            title: 'Read the Quran text',
+            subtitle: 'Use Arabic text and transliteration while practicing.',
+            icon: Icons.chrome_reader_mode_rounded,
           ),
           _Divider(),
           _StepTile(
             number: '3',
             title: 'Record your voice',
-            subtitle: 'Read in one tap and send it for feedback.',
+            subtitle: 'Nur converts your recording to text for comparison.',
             icon: Icons.mic_rounded,
           ),
           _Divider(),
           _StepTile(
             number: '4',
             title: 'Get AI feedback',
-            subtitle: 'See mistakes, highlights and recommendations.',
+            subtitle: 'See matched words, possible missed parts and tips.',
             icon: Icons.auto_awesome_rounded,
           ),
         ],
@@ -495,12 +449,7 @@ class _SurahPracticeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = const [
-      _PracticeItem('Al-Fatiha', 'Beginner essential', '7 ayahs'),
-      _PracticeItem('Al-Ikhlas', 'Short and powerful', '4 ayahs'),
-      _PracticeItem('Al-Falaq', 'Daily protection', '5 ayahs'),
-      _PracticeItem('An-Nas', 'Daily protection', '6 ayahs'),
-    ];
+    final items = QuranPracticeRepository.surahs;
 
     return Container(
       padding: const EdgeInsets.all(18),
@@ -522,7 +471,7 @@ class _SurahPracticeList extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           for (final item in items) ...[
-            _PracticeTile(item: item),
+            _PracticeTile(surah: item),
             if (item != items.last) const SizedBox(height: 10),
           ],
         ],
@@ -533,61 +482,84 @@ class _SurahPracticeList extends StatelessWidget {
 
 class _PracticeTile extends StatelessWidget {
   const _PracticeTile({
-    required this.item,
+    required this.surah,
   });
 
-  final _PracticeItem item;
+  final QuranSurahPractice surah;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.background.withOpacity(0.46),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.menu_book_outlined,
-            color: AppColors.primary,
-            size: 24,
-          ),
-          const SizedBox(width: 13),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.title,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 15.5,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  item.subtitle,
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+        onTap: () {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (_) => AyahPracticeScreen(
+                surah: surah,
+                initialAyah: surah.ayahs.first,
+              ),
             ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: AppColors.background.withOpacity(0.46),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: AppColors.border),
           ),
-          Text(
-            item.meta,
-            style: const TextStyle(
-              color: AppColors.textMuted,
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-            ),
+          child: Row(
+            children: [
+              const Icon(
+                Icons.menu_book_outlined,
+                color: AppColors.primary,
+                size: 24,
+              ),
+              const SizedBox(width: 13),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      surah.englishName,
+                      style: const TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 15.5,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      '${surah.meaning} • ${surah.difficulty.label}',
+                      style: const TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                '${surah.ayahs.length} ayahs',
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: AppColors.textMuted,
+                size: 14,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -616,7 +588,7 @@ class _PrivacyCard extends StatelessWidget {
           SizedBox(width: 14),
           Expanded(
             child: Text(
-              'Voice privacy matters. Before real AI checks are enabled, users should clearly see how voice recordings are processed and whether they are stored.',
+              'Voice privacy matters. Real AI checks should clearly explain how recordings are processed and whether they are stored.',
               style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 13,
@@ -638,12 +610,4 @@ class _Divider extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Divider(height: 1, color: AppColors.divider);
   }
-}
-
-class _PracticeItem {
-  const _PracticeItem(this.title, this.subtitle, this.meta);
-
-  final String title;
-  final String subtitle;
-  final String meta;
 }

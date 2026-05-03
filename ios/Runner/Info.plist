@@ -88,5 +88,7 @@
     <false/>
     <key>UIRequiresFullScreen</key>
     <true/>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Nur Islam Hub needs microphone access so you can record your Quran recitation and receive AI practice feedback.</string>
 </dict>
 </plist>
